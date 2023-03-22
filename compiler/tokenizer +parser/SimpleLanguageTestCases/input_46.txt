@@ -1,0 +1,24 @@
+{
+	data = [321,454,23,542,54];
+
+	j = 0;
+	while (j<4){
+		iMin = j;
+		i = j + 1;
+		while (i < 5){
+			if (data[i] < data[iMin]){
+				iMin = i;
+			}
+			i = i +1;
+		}
+
+		if (iMin <> j){
+			x = data[j];
+			data[j] = data[iMin];
+			data[iMin] = x;
+		}
+
+		j = j + 1;
+	}
+	print(data);
+}

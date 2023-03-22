@@ -1,0 +1,14 @@
+{
+	if(True){
+		a = [1 ,2, 3, 4, 5];
+		if( 6 in a){
+			print(a[2]);
+		} 
+		else{
+			print(a[0]);
+		}
+	}
+	else{
+		print("Incorrect");
+	}
+}

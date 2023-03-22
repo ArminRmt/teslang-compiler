@@ -1,0 +1,21 @@
+{
+	last_easy_if_statement = True;
+	a = 10 // 2;
+	if(last_easy_if_statement){
+		last_easy_if_statement = not last_easy_if_statement;
+		a = a * 2 + a;
+	}
+	if(last_easy_if_statement){
+		last_easy_if_statement = not last_easy_if_statement;
+		a = a / 3;
+	}
+	if(not last_easy_if_statement){
+		last_easy_if_statement = not last_easy_if_statement;
+		a = a * 2 + a;
+	}
+	if(not last_easy_if_statement){
+		last_easy_if_statement = not last_easy_if_statement;
+		a = a / 3;
+	}
+	print(a);
+}

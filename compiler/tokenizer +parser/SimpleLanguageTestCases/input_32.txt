@@ -1,0 +1,10 @@
+{
+    num = 10;
+    ans = 0;
+    i = 0;
+    while (i<10){
+        ans = ans+i;
+        i = i+1;
+    }
+    print(ans);
+}

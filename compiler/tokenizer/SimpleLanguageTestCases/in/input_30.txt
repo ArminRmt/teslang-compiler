@@ -1,0 +1,19 @@
+{
+  a = "abc";
+  b = "def";
+  c = "abcdef";
+  if(a + b == c) {
+    if(True) {
+      if(False) {
+        print("Yes");
+      }
+      else {
+        print("No");
+      }
+    }
+    else {}
+  }
+  else {
+    print("No");
+  }
+}

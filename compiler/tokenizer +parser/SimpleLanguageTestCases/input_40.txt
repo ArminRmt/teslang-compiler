@@ -1,0 +1,10 @@
+{
+    list=[1,2,3];
+    ans=[];
+    i=0;
+    while (i<3){
+        ans=ans+[list[i]];
+        i=i+1;
+    }
+    print(ans);
+}

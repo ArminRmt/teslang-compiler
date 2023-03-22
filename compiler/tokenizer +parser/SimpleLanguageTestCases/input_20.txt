@@ -1,0 +1,1 @@
+{a = 2.5*1;if(("abc"[2] == "cde"[0] or False) and (False or False)){a = 2;}print(a);}

@@ -1,0 +1,15 @@
+{
+	a = "check";
+	b = "e";
+	if (a+b == b+a+b){
+		print("Incorrect");
+	}
+	else{
+		c = "eee";
+		if (b+b+b==c and not a=="chck"){
+			if(False){}
+			else{ print("ok"); }
+		}
+		else{}
+	}
+}

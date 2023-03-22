@@ -1,0 +1,13 @@
+{
+  a = 50;
+  b = 6;
+  if (a // b > 7) {
+    if (2 ** 3 < 10){
+      print("Yes");
+    }
+    else {}
+  }
+  else {
+    print("No");
+  }
+}

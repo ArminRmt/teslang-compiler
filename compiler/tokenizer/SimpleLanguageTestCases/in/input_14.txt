@@ -1,0 +1,7 @@
+{
+	the_variable_Name_is_very_Long = True;
+	if(the_variable_Name_is_very_Long and the_variable_Name_is_very_Long or not the_variable_Name_is_very_Long){
+		the_variable_Name_is_very_Long = not the_variable_Name_is_very_Long;
+	}
+	print(the_variable_Name_is_very_Long);
+}

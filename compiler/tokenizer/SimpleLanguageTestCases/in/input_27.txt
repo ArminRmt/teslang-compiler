@@ -1,0 +1,8 @@
+{
+  if (not(['a', 'b', 'c', 'd'][1] == 'c') and 'a' in "abcd") {
+    print("Correct");
+  }
+  else {
+    print("Incorrect");
+  }
+}

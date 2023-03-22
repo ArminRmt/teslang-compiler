@@ -1,0 +1,14 @@
+{
+	testString = 'the quick brown fox jumps over the lazy dog.';
+	resultString = '';
+	index = 0;
+	while(index < 44){
+		if(True){
+			resultString = testString[index] + resultString;
+			if(True){
+				index = index + 1;
+			}
+		}
+	}
+	print(resultString);
+}

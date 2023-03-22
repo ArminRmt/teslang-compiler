@@ -1,0 +1,12 @@
+{
+	data = [23,123,55,94,62];
+	i = 0;
+	min = 99999;
+	while (i < 5){
+		if (data[i] < min){
+			min = data[i];
+		}
+		i = i + 1;
+	}
+	print(min);
+}
