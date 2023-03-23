@@ -13,7 +13,7 @@ class Node:
     def evaluate(self):  # traverse the AST and execute each statement in the program
         return 0  # indicates that the evaluation was successful.
 
-    def execute(self): # execute a single statement or expression in the program
+    def execute(self):  # execute a single statement or expression in the program
         return 0
 
 
@@ -121,7 +121,7 @@ class BoolOpNode(ExpressionNode):
         self.op = op
         self.v1 = v1
         self.v2 = v2
-        
+
     def evaluate(self):
         if self.op.vid == "and":
             res = self.v1.evaluate() and self.v2.evaluate()
@@ -207,10 +207,10 @@ class PrintNode(StatementNode):
 
 class AssignNode(StatementNode):
     """defvar : VAR TYPE ID
-              | VAR TYPE ID ASSIGN exp"""
-              
-    def __init__(self, vartype, vnode, exp=None):
-        self.vartype = vartype
+    | VAR TYPE ID ASSIGN expr"""
+
+    def __init__(self, type, vnode, exp=None):
+        self.type = type
         self.vnode = vnode
         self.exp = exp
 
@@ -219,8 +219,7 @@ class AssignNode(StatementNode):
             symbol_table[self.vnode.vid] = self.exp.evaluate()
         else:
             symbol_table[self.vnode.vid] = None
-    
-        
+
 
 class AssignToListNode(StatementNode):
     def __init__(self, vnode, ind, exp):
@@ -233,62 +232,52 @@ class AssignToListNode(StatementNode):
 
 
 class ForNode(StatementNode):
-
     def __init__(self, vid, start, end, stmt):
         self.vid = vid
         self.start = start
         self.end = end
         self.stmt = stmt
-        
 
     def execute(self):
-        for i in range(self.start,self.end).evaluate():
+        for i in range(self.start, self.end).evaluate():
             self.stmt.execute()
-            
-
 
 
 class FuncNode(StatementNode):
-    def __init__(self, vartype, vnode, flist, body, expr=None):
-        self.vartype = vartype
+    def __init__(self, type, vnode, flist, body, expr=None):
+        self.type = type
         self.vnode = vnode
         self.flist = flist
         self.body = body
         self.expr = expr
 
     def execute(self):
-        
-        def self.vnode.evaluate()(*args):
-    
+        def func(*args):
 
-        
-        
             argument = []
-            
+
             # Create a dictionary mapping argument names to values
             arg_dict = {arg.id: arg.evaluate() for arg in self.flist}
-            
+
             # Add the arguments to the current environment
             for arg_name, arg_value in zip(arg_dict.keys(), args):
                 argument.append([arg_name, arg_value])
-            
+
             # Evaluate the function body
             self.body.evaluate()
-            
+
             # Return the result of the function
             if self.expr.evaluate() is not None:
                 return self.expr.evaluate()
-        
+
         # Add the function to the current environment
         current_env().define(self.vid.id, func)
-        symbol_table[self.vnode.vid] =  self.vnode.evaluate()
-        # symbol_table[self.vnode.vid] = [func, self.vartype, argument]
-        
+        symbol_table[self.vnode.vid] = func
+        # symbol_table[self.vnode.vid] = [func, self.type, argument]
 
 
 # ID LPAREN clist RPAREN
 class FunctionCallNode(StatementNode):
-
     def __init__(self, name, args):
         self.name = name
         self.args = args
@@ -303,10 +292,9 @@ class TernaryOperatorNode(StatementNode):
         self.cond = cond
         self.expr1 = expr1
         self.expr2 = expr2
-        
+
     def execute(self):
         self.expr1.execute() if self.cond.evaluate() else self.expr2.execute()
-
 
 
 class IfNode(StatementNode):
@@ -349,34 +337,31 @@ reserved = {
     "not": "NOT",
     "and": "AND",
     "or": "OR",
-    "in": "IN",
-    "print": "PRINT",
+    # "in": "IN",
+    # "print": "PRINT",
     "var": "VAR",
     "def": "DEF",
     "for": "FOR",
-    "not": "NOT",
     "to": "TO",
     "return": "RETURN",
-    "null": "NULL"
-    'int' : 'INT',
-    'str' : 'STRING',
-    'vector' : 'VECTOR',
+    "null": "NULL",
+    "int": "INT",
+    "str": "STRING",
+    "vector": "VECTOR",
 }
 
 tokens = [
-    "INT",
-    "STRING",
-    "REAL",
+    # "REAL",
     "LPAREN",
     "RPAREN",
     "LBLOCK",
     "RBLOCK",
-    "BOOL",
-    "EXP",
+    # "BOOL",
+    # "EXP",
     "MULT",
     "DIV",
     "MOD",
-    "INTDIV",
+    # "INTDIV",
     "ADD",
     "SUB",
     "LESS",
@@ -390,18 +375,16 @@ tokens = [
     "RBRACE",
     "SEMI",
     "ID",
-    "COMMENT",
+    # "COMMENT",
     "TYPE",
     "COMMA",
     "COLON",
     "QUESTIONMARK",
-    "TO",
 ] + list(reserved.values())
 
-t_AND = r'and'
-t_OR = r'\o\r'
-t_TO = r'\t\o'
-t_IF = r'\i\f'
+
+t_TO = r"to"
+t_IF = r"if"
 t_COMMA = r","
 t_LPAREN = r"\("
 t_RPAREN = r"\)"
@@ -410,12 +393,12 @@ t_RBLOCK = r"\]"
 t_LBRACE = r"\{"
 t_RBRACE = r"\}"
 t_MOD = r"%"
-t_INTDIV = r"//"
+# t_INTDIV = r"//"
 t_ADD = r"\+"
 t_SUB = r"\-"
 t_MULT = r"\*"
 t_DIV = r"\/"
-t_EXP = r"\*\*"
+# t_EXP = r"\*\*"
 t_LESS = r"<"
 t_LESSEQ = r"<\="
 t_EQUAL = r"\=\="
@@ -431,11 +414,11 @@ t_QUESTIONMARK = r"\?"
 t_ignore = " \t\r\n\f\v\\"
 # t_WHITESPACE = r'(\t|\s)+'
 t_NOT = r"!"
-t_TYPE = r"int|vector|string|null"
+t_TYPE = r"int|vector|str|null"
 t_RETURN = r"return"
 
 
-def t_REAL(token):       # float
+def t_REAL(token):  # float
     r"\d*(\d\.|\.\d)\d*"
     token.value = RealNode(token.value)
     return token
@@ -488,6 +471,8 @@ def t_newline(t):
 """
 illegal character is encountered during lexical analysis
 """
+
+
 def t_error(token):
     print("Illegal character '%s'" % token.value[0])
     token.lexer.skip(1)
@@ -502,11 +487,11 @@ precedence = (
         "right",
         "ASSIGN",
     ),  # expression on the right is evaluated first, and then assigned to the variable on the left
-    ("left", "PRINT"),
+    # ("left", "PRINT"),
     ("left", "OR"),  # logical operators decreesing precedence
     ("left", "AND"),
     ("left", "NOT"),
-    ("left", "UNOT"),
+    # ("left", "UNOT"),
     (
         "left",
         "LESS",
@@ -516,16 +501,16 @@ precedence = (
         "GREATER",
         "GREATEREQ",
     ),  # comparison operators same precedence
-    ("left", "IN"),
+    # ("left", "IN"),
     ("left", "ADD", "SUB"),  # arithmetic operators same precedence
-    ("left", "INTDIV"),  # //
-    ("left", "UMINUS"),  # The unary minus operator, -.
+    # ("left", "INTDIV"),  # //
+    # ("left", "UMINUS"),  # The unary minus operator, -.
     ("left", "MOD"),
     ("left", "MULT", "DIV"),
-    ("right", "EXP"),  # The exponentiation operator, **.
+    # ("right", "EXP"),  # The exponentiation operator, **.
     ("left", "LBLOCK"),  # {
-    ("left", "LIST"),
-    ("left", "INDEX"),
+    ("left", "VECTOR"),
+    # ("left", "INDEX"),
 )
 
 
@@ -541,14 +526,21 @@ def newFCheck(t):
 
 
 def p_prog(p):
-    """prog := | func prog"""
+    """prog :
+    | func prog"""
+
     if len(p) == 3:
-        p[0] = [p[1], p[2]]
+        # p[0] = [p[1], p[2]]
+        p[0] = p[1]
+        p[2].insert(0, p[0])
+        p[0] = p[2]
+    else:
+        p[0] = []
 
 
 def p_func(p):
-    """func : def TYPE ID LPAREN flist RPAREN LBRACE body RBRACE    +
-            | def TYPE ID LPAREN flist RPAREN RETURN expr SEMI      +
+    """func : DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    | DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
     """
 
     newFCheck(p[3])
@@ -556,10 +548,10 @@ def p_func(p):
     p[0] = FuncNode(p[2], p[3], p[5], p[8])
 
 
-
 def p_body(p):
     """body :
-    | stmt body"""
+    | stmt body
+    """
 
     if len(p) == 3:
         p[0] = p[2]
@@ -572,19 +564,18 @@ def p_body(p):
 def p_smt(p):
 
     """
-    stmt : expr SEMI									+
-        | defvar SEMI                                   +
-        | IF LPAREN expr RPAREN stmt                    +
-        | IF LPAREN expr RPAREN stmt ELSE stmt			+
-        | WHILE LPAREN expr RPAREN stmt					+
-        | FOR LPAREN ID EQUAL expr TO expr RPAREN stmt  +?
-        | RETURN expr SEMI                              +
-        | LBRACE body RBRACE                            +
-        | func                                          +
-        how about beatuiful print statment
+    stmt : expr SEMI
+            | defvar SEMI
+            | IF LPAREN expr RPAREN stmt
+            | IF LPAREN expr RPAREN stmt ELSE stmt
+            | WHILE LPAREN expr RPAREN stmt
+            | FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+            | RETURN expr SEMI
+            | LBRACE body RBRACE
+            | func
     """
 
-    if len(p) == 2: # func
+    if len(p) == 2:  # func
         p[0] = p[1]
 
     if len(p) == 3:  # expr SEMICOLON | defvar SEMICOLON
@@ -602,47 +593,44 @@ def p_smt(p):
 
     if len(p) == 8:  # IF LPAREN expr RPAREN stmt ELSE stmt
         p[0] = IfElseNode(p[1].cond, p[1].block, p[3])
-        
 
-	if len(p) == 9: # FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
-		p[0] = ForNode(p[3], p[5], p[7],p[9])
-  
-  
+    if len(p) == 9:  # FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+        p[0] = ForNode(p[3], p[5], p[7], p[9])
+
 
 def p_defvar(p):
-    """defvar : VAR TYPE ID              +
-              | VAR TYPE ID ASSIGN expr  +
+    """defvar : VAR TYPE ID
+    | VAR TYPE ID ASSIGN expr
     """
-                      
-    p[0] = AssignNode(p[2], p[3], p[5])    
 
+    p[0] = AssignNode(p[2], p[3], p[5])
 
 
 def p_expr(p):
-    """expr : expr LBLOCK expr RBLOCK       +
-            | LBLOCK clist RBLOCK           +
-            | expr QUESTIONMARK expr COLON expr  +
-            | expr ADD expr			+
-            | expr SUB expr			+
-            | expr MULT expr		+
-            | expr DIV expr			+
-            | expr MOD expr			+
-            | expr GREATER expr     +
-            | expr LESS expr		+
-            | expr EQUAL expr		+
-            | expr GREATEREQ expr	+
-            | expr LESSEQ expr		+
-            | expr NOTEQUAL expr    +
-            | expr OR expr          +
-            | expr AND expr         +
-            | NOT expr               +
-            | ADD expr				 +
-            | SUB expr				 +
-            | ID					 +
-            | ID ASSIGN expr		 +
-            | ID LPAREN clist RPAREN +
-            | INT					 +
-            | STRING                 +
+    """expr : expr LBLOCK expr RBLOCK
+    | LBLOCK clist RBLOCK
+    | expr QUESTIONMARK expr COLON expr
+    | expr ADD expr
+    | expr SUB expr
+    | expr MULT expr
+    | expr DIV expr
+    | expr MOD expr
+    | expr GREATER expr
+    | expr LESS expr
+    | expr EQUAL expr
+    | expr GREATEREQ expr
+    | expr LESSEQ expr
+    | expr NOTEQUAL expr
+    | expr OR expr
+    | expr AND expr
+    | NOT expr
+    | ADD expr
+    | SUB expr
+    | ID
+    | ID ASSIGN expr
+    | ID LPAREN clist RPAREN
+    | INT
+    | STRING
     """
 
     if len(p) == 2:  # INT | STRING | ID
@@ -659,13 +647,12 @@ def p_expr(p):
             p[0] = p[2]
 
     if len(p) == 4:
-        
+
         if p[1] == t_ASSIGN:  # ID ASSIGN expr  %prec ASSIGN
             p[0] = AssignNode(None, p[1], p[3])
-            
+
         elif p[2] in (
             t_MOD,
-            t_INTDIV,
             t_ADD,
             t_SUB,
             t_MULT,
@@ -673,53 +660,45 @@ def p_expr(p):
             t_EXP,
         ):  # arethmatic
             p[0] = BinOpNode(p[2], p[1], p[3])
-            
-        elif p[2] in (t_AND,t_OR):
-            p[0] = BoolOpNode(p[2],p[1],p[3])
-            
-         """clist : empty
-              | exp
-              | expr COMMA clist
-        """
-        elif p[1] == t_LBLOCK: # LBLOCK clist RBLOCK
+
+        elif p[2] in (t_AND, t_OR):
+            p[0] = BoolOpNode(p[2], p[1], p[3])
+
+        elif p[1] == t_LBLOCK:  # LBLOCK clist RBLOCK
             p[0] = ListNode(p[1])
 
         else:  # compare
             p[0] = CompNode(p[2], p[1], p[3])
-            
-            
 
-    if len(p) == 5: # ID LPAREN clist RPAREN
-        
+    if len(p) == 5:  # ID LPAREN clist RPAREN
+
         if p[1] == t_LPAREN:
             p[0] = FunctionCallNode(p[1], p[3])
-        
-        else: # expr LBLOCK expr RBLOCK %prec INDEX  *** also STRING LBLOCK expression RBLOCK  ***
-            p[0] = IndexNode(p[1], p[3])
-        
-        
-    if len(p) == 6: # expr QUESTIONMARK expr COLON expr
-        p[0] = TernaryOperatorNode(p[1], p[3], p[5])
 
+        else:  # expr LBLOCK expr RBLOCK %prec INDEX  *** also STRING LBLOCK expression RBLOCK  ***
+            p[0] = IndexNode(p[1], p[3])
+
+    if len(p) == 6:  # expr QUESTIONMARK expr COLON expr
+        p[0] = TernaryOperatorNode(p[1], p[3], p[5])
 
 
 # self.name.evaluate(self.args.evaluate())
 def p_clist(p):
-    """clist : empty
-              | exp
-              | expr COMMA clist
+    """clist :
+    | expr
+    | expr COMMA clist
     """
 
-    if len(p) == 1:     # empty
+    if len(p) == 1:  # empty
         p[0] = []
-        
-    elif len(p) == 2:   # exp
+
+    elif len(p) == 2:  # exp
         p[0] = p[1]
         # p[0] = [p[1]]
-        
-    else:               # expr COMMA clist
+
+    else:  # expr COMMA clist
         p[0] = p[1]
-        p[3].insert(0,p[1])
+        p[3].insert(0, p[1])
         p[0] = p[3]
 
 
@@ -729,26 +708,34 @@ def p_clist(p):
 
 
 def p_flist(p):
-    """flist : empty
-              | ID COLON TYPE
-              | ID COLON TYPE COMMA flist
+    """flist :
+    | ID COLON TYPE
+    | ID COLON TYPE COMMA flist
     """
-    if len(p) == 1: # empty
+    if len(p) == 1:  # empty
         p[0] = []
-        
+
     elif len(p) == 6:  # ID COLON TYPE COMMA flist
         p[0] = p[1]
-        p[5].insert(0, p[0])   # inserts it at the beginning of p[5]
+        p[5].insert(0, p[0])  # inserts it at the beginning of p[5]
         p[0] = p[5]
-        
-    else:            #  ID COLON TYPE
+
+    else:  #  ID COLON TYPE
         p[0] = p[1]
 
 
-def p_empty(p):
-    "empty :"
-    pass
+def p_type(p):
+    """type : INT
+    | VECTOR
+    | NULL
+    | STRING
+    """
+    p[0] = p[1]
 
+
+# def p_empty(p):
+#     "empty :"
+#     pass
 
 
 # def p_statement_print(token):
@@ -776,7 +763,6 @@ def p_empty(p):
 #     token[0] = token[2]
 
 
-
 # def p_expression_exp(token):
 #     """expression : expression EXP expression"""
 #     token[0] = ExpNode(token[1], token[3])
@@ -790,7 +776,7 @@ def p_error(tok):
     else:
         # Handle invalid token
         print(
-            f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {tok.lexpos - 2}"
+            f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {tok.lexpos}"
         )
 
     raise SyntaxError
