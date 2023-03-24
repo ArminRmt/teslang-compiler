@@ -11,11 +11,11 @@ lexer.input(data)
 for tok in lexer:
     print(tok.type, "		", tok.value)
 
-
 try:
     ast = yacc.parse(data)
     ast.execute()
 except SyntaxError:
     print("Syntax Error")
 except Exception:
-    print("Semantic Error")
+    print("\nSemantic Error")
+    print(f"({tok.value}) at line {tok.lineno}, column {tok.lexpos}")

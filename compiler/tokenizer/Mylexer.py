@@ -9,19 +9,19 @@ reserved = {
     "and": "AND",
     "or": "OR",
     # "in": "IN",
-    # "print": "PRINT",
+    "print": "PRINT",
     "var": "VAR",
     "def": "DEF",
     "for": "FOR",
     "to": "TO",
     "return": "RETURN",
     "null": "NULL",
-    "int": "INT",
     "str": "STRING",
     "vector": "VECTOR",
 }
 
 tokens = [
+    "INT",
     "LPAREN",
     "RPAREN",
     "LBLOCK",
@@ -46,13 +46,14 @@ tokens = [
     "SEMI",
     "ID",
     # "COMMENT",
-    "TYPE",
     "COMMA",
     "COLON",
     "QUESTIONMARK",
+    "TYPE",
 ] + list(reserved.values())
 
-
+# t_INT = r"\d+"
+# t_TYPE = r"int|vector|str|null"
 t_TO = r"to"
 t_IF = r"if"
 t_COMMA = r","
@@ -84,8 +85,13 @@ t_QUESTIONMARK = r"\?"
 t_ignore = " \t\r\n\f\v\\"
 # t_WHITESPACE = r'(\t|\s)+'
 t_NOT = r"!"
-t_TYPE = r"int|vector|str|null"
 t_RETURN = r"return"
+
+
+def t_TYPE(token):
+    r"int|vector|str|null"
+    token.value = TypeNode(token.value)
+    return token
 
 
 def t_INT(token):
@@ -99,6 +105,13 @@ def t_STRING(token):
     r'"(?:\\.|[^"])*"'
     token.value = StringNode(token.value[1 : len(token.value) - 1])
     return token
+
+
+# def t_STRING(t):
+#     r'"(?:\\"|.)*?"'
+
+#     # hiqen thonjezat dhe karakteret e escape
+#     t.value = bytes(t.value.lstrip('"').rstrip('"'), "utf-8").decode("unicode_escape")
 
 
 def t_COMMENT(t):
@@ -132,11 +145,7 @@ def t_newline(t):
 #     return (token.lexpos - line_start) + 1
 
 
-"""
-illegal character is encountered during lexical analysis
-"""
-
-
+# illegal character is encountered during lexical analysis
 def t_error(token):
     print("Illegal character '%s'" % token.value[0])
     token.lexer.skip(1)

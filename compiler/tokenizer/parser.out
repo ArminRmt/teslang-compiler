@@ -1,1 +1,4033 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> prog
+Rule 1     prog -> <empty>
+Rule 2     prog -> func prog
+Rule 3     func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+Rule 4     func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+Rule 5     body -> <empty>
+Rule 6     body -> stmt body
+Rule 7     stmt -> expr SEMI
+Rule 8     stmt -> defvar SEMI
+Rule 9     stmt -> IF LPAREN expr RPAREN stmt
+Rule 10    stmt -> IF LPAREN expr RPAREN stmt ELSE stmt
+Rule 11    stmt -> WHILE LPAREN expr RPAREN stmt
+Rule 12    stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+Rule 13    stmt -> RETURN expr SEMI
+Rule 14    stmt -> LBRACE body RBRACE
+Rule 15    stmt -> func
+Rule 16    stmt -> print_smt
+Rule 17    defvar -> VAR TYPE ID
+Rule 18    defvar -> VAR TYPE ID ASSIGN expr
+Rule 19    expr -> expr LBLOCK expr RBLOCK
+Rule 20    expr -> LBLOCK clist RBLOCK
+Rule 21    expr -> expr QUESTIONMARK expr COLON expr
+Rule 22    expr -> expr ADD expr
+Rule 23    expr -> expr SUB expr
+Rule 24    expr -> expr MULT expr
+Rule 25    expr -> expr DIV expr
+Rule 26    expr -> expr MOD expr
+Rule 27    expr -> expr GREATER expr
+Rule 28    expr -> expr LESS expr
+Rule 29    expr -> expr EQUAL expr
+Rule 30    expr -> expr GREATEREQ expr
+Rule 31    expr -> expr LESSEQ expr
+Rule 32    expr -> expr NOTEQUAL expr
+Rule 33    expr -> expr OR expr
+Rule 34    expr -> expr AND expr
+Rule 35    expr -> NOT expr
+Rule 36    expr -> ADD expr
+Rule 37    expr -> SUB expr
+Rule 38    expr -> ID
+Rule 39    expr -> ID ASSIGN expr
+Rule 40    expr -> ID LPAREN clist RPAREN
+Rule 41    expr -> INT
+Rule 42    expr -> STRING
+Rule 43    clist -> <empty>
+Rule 44    clist -> expr
+Rule 45    clist -> expr COMMA clist
+Rule 46    flist -> <empty>
+Rule 47    flist -> TYPE ID
+Rule 48    flist -> TYPE ID COMMA flist
+Rule 49    type -> INT
+Rule 50    type -> VECTOR
+Rule 51    type -> NULL
+Rule 52    type -> STRING
+Rule 53    print_smt -> PRINT LPAREN expr RPAREN SEMI
+
+Terminals, with rules where they appear
+
+ADD                  : 22 36
+AND                  : 34
+ASSIGN               : 18 39
+COLON                : 21
+COMMA                : 45 48
+DEF                  : 3 4
+DIV                  : 25
+ELSE                 : 10
+EQUAL                : 12 29
+FOR                  : 12
+GREATER              : 27
+GREATEREQ            : 30
+ID                   : 3 4 12 17 18 38 39 40 47 48
+IF                   : 9 10
+INT                  : 41 49
+LBLOCK               : 19 20
+LBRACE               : 3 14
+LESS                 : 28
+LESSEQ               : 31
+LPAREN               : 3 4 9 10 11 12 40 53
+MOD                  : 26
+MULT                 : 24
+NOT                  : 35
+NOTEQUAL             : 32
+NULL                 : 51
+OR                   : 33
+PRINT                : 53
+QUESTIONMARK         : 21
+RBLOCK               : 19 20
+RBRACE               : 3 14
+RETURN               : 4 13
+RPAREN               : 3 4 9 10 11 12 40 53
+SEMI                 : 4 7 8 13 53
+STRING               : 42 52
+SUB                  : 23 37
+TO                   : 12
+TYPE                 : 3 4 17 18 47 48
+VAR                  : 17 18
+VECTOR               : 50
+WHILE                : 11
+error                : 
+
+Nonterminals, with rules where they appear
+
+body                 : 3 6 14
+clist                : 20 40 45
+defvar               : 8
+expr                 : 4 7 9 10 11 12 12 13 18 19 19 21 21 21 22 22 23 23 24 24 25 25 26 26 27 27 28 28 29 29 30 30 31 31 32 32 33 33 34 34 35 36 37 39 44 45 53
+flist                : 3 4 48
+func                 : 2 15
+print_smt            : 16
+prog                 : 2 0
+stmt                 : 6 9 10 10 11 12
+type                 : 
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . prog
+    (1) prog -> .
+    (2) prog -> . func prog
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+
+    $end            reduce using rule 1 (prog -> .)
+    DEF             shift and go to state 3
+
+    prog                           shift and go to state 1
+    func                           shift and go to state 2
+
+state 1
+
+    (0) S' -> prog .
+
+
+
+state 2
+
+    (2) prog -> func . prog
+    (1) prog -> .
+    (2) prog -> . func prog
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+
+    $end            reduce using rule 1 (prog -> .)
+    DEF             shift and go to state 3
+
+    func                           shift and go to state 2
+    prog                           shift and go to state 4
+
+state 3
+
+    (3) func -> DEF . TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> DEF . TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+
+    TYPE            shift and go to state 5
+
+
+state 4
+
+    (2) prog -> func prog .
+
+    $end            reduce using rule 2 (prog -> func prog .)
+
+
+state 5
+
+    (3) func -> DEF TYPE . ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> DEF TYPE . ID LPAREN flist RPAREN RETURN expr SEMI
+
+    ID              shift and go to state 6
+
+
+state 6
+
+    (3) func -> DEF TYPE ID . LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> DEF TYPE ID . LPAREN flist RPAREN RETURN expr SEMI
+
+    LPAREN          shift and go to state 7
+
+
+state 7
+
+    (3) func -> DEF TYPE ID LPAREN . flist RPAREN LBRACE body RBRACE
+    (4) func -> DEF TYPE ID LPAREN . flist RPAREN RETURN expr SEMI
+    (46) flist -> .
+    (47) flist -> . TYPE ID
+    (48) flist -> . TYPE ID COMMA flist
+
+    RPAREN          reduce using rule 46 (flist -> .)
+    TYPE            shift and go to state 8
+
+    flist                          shift and go to state 9
+
+state 8
+
+    (47) flist -> TYPE . ID
+    (48) flist -> TYPE . ID COMMA flist
+
+    ID              shift and go to state 10
+
+
+state 9
+
+    (3) func -> DEF TYPE ID LPAREN flist . RPAREN LBRACE body RBRACE
+    (4) func -> DEF TYPE ID LPAREN flist . RPAREN RETURN expr SEMI
+
+    RPAREN          shift and go to state 11
+
+
+state 10
+
+    (47) flist -> TYPE ID .
+    (48) flist -> TYPE ID . COMMA flist
+
+    RPAREN          reduce using rule 47 (flist -> TYPE ID .)
+    COMMA           shift and go to state 12
+
+
+state 11
+
+    (3) func -> DEF TYPE ID LPAREN flist RPAREN . LBRACE body RBRACE
+    (4) func -> DEF TYPE ID LPAREN flist RPAREN . RETURN expr SEMI
+
+    LBRACE          shift and go to state 13
+    RETURN          shift and go to state 14
+
+
+state 12
+
+    (48) flist -> TYPE ID COMMA . flist
+    (46) flist -> .
+    (47) flist -> . TYPE ID
+    (48) flist -> . TYPE ID COMMA flist
+
+    RPAREN          reduce using rule 46 (flist -> .)
+    TYPE            shift and go to state 8
+
+    flist                          shift and go to state 15
+
+state 13
+
+    (3) func -> DEF TYPE ID LPAREN flist RPAREN LBRACE . body RBRACE
+    (5) body -> .
+    (6) body -> . stmt body
+    (7) stmt -> . expr SEMI
+    (8) stmt -> . defvar SEMI
+    (9) stmt -> . IF LPAREN expr RPAREN stmt
+    (10) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (11) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (12) stmt -> . FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+    (13) stmt -> . RETURN expr SEMI
+    (14) stmt -> . LBRACE body RBRACE
+    (15) stmt -> . func
+    (16) stmt -> . print_smt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+    (17) defvar -> . VAR TYPE ID
+    (18) defvar -> . VAR TYPE ID ASSIGN expr
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+    (53) print_smt -> . PRINT LPAREN expr RPAREN SEMI
+
+    RBRACE          reduce using rule 5 (body -> .)
+    IF              shift and go to state 22
+    WHILE           shift and go to state 23
+    FOR             shift and go to state 24
+    RETURN          shift and go to state 25
+    LBRACE          shift and go to state 17
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+    VAR             shift and go to state 34
+    DEF             shift and go to state 3
+    PRINT           shift and go to state 35
+
+    body                           shift and go to state 18
+    stmt                           shift and go to state 19
+    expr                           shift and go to state 20
+    defvar                         shift and go to state 21
+    func                           shift and go to state 26
+    print_smt                      shift and go to state 27
+
+state 14
+
+    (4) func -> DEF TYPE ID LPAREN flist RPAREN RETURN . expr SEMI
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 36
+
+state 15
+
+    (48) flist -> TYPE ID COMMA flist .
+
+    RPAREN          reduce using rule 48 (flist -> TYPE ID COMMA flist .)
+
+
+state 16
+
+    (38) expr -> ID .
+    (39) expr -> ID . ASSIGN expr
+    (40) expr -> ID . LPAREN clist RPAREN
+
+    SEMI            reduce using rule 38 (expr -> ID .)
+    LBLOCK          reduce using rule 38 (expr -> ID .)
+    QUESTIONMARK    reduce using rule 38 (expr -> ID .)
+    ADD             reduce using rule 38 (expr -> ID .)
+    SUB             reduce using rule 38 (expr -> ID .)
+    MULT            reduce using rule 38 (expr -> ID .)
+    DIV             reduce using rule 38 (expr -> ID .)
+    MOD             reduce using rule 38 (expr -> ID .)
+    GREATER         reduce using rule 38 (expr -> ID .)
+    LESS            reduce using rule 38 (expr -> ID .)
+    EQUAL           reduce using rule 38 (expr -> ID .)
+    GREATEREQ       reduce using rule 38 (expr -> ID .)
+    LESSEQ          reduce using rule 38 (expr -> ID .)
+    NOTEQUAL        reduce using rule 38 (expr -> ID .)
+    OR              reduce using rule 38 (expr -> ID .)
+    AND             reduce using rule 38 (expr -> ID .)
+    COMMA           reduce using rule 38 (expr -> ID .)
+    RBLOCK          reduce using rule 38 (expr -> ID .)
+    RPAREN          reduce using rule 38 (expr -> ID .)
+    COLON           reduce using rule 38 (expr -> ID .)
+    TO              reduce using rule 38 (expr -> ID .)
+    ASSIGN          shift and go to state 37
+    LPAREN          shift and go to state 38
+
+
+state 17
+
+    (14) stmt -> LBRACE . body RBRACE
+    (5) body -> .
+    (6) body -> . stmt body
+    (7) stmt -> . expr SEMI
+    (8) stmt -> . defvar SEMI
+    (9) stmt -> . IF LPAREN expr RPAREN stmt
+    (10) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (11) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (12) stmt -> . FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+    (13) stmt -> . RETURN expr SEMI
+    (14) stmt -> . LBRACE body RBRACE
+    (15) stmt -> . func
+    (16) stmt -> . print_smt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+    (17) defvar -> . VAR TYPE ID
+    (18) defvar -> . VAR TYPE ID ASSIGN expr
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+    (53) print_smt -> . PRINT LPAREN expr RPAREN SEMI
+
+    RBRACE          reduce using rule 5 (body -> .)
+    IF              shift and go to state 22
+    WHILE           shift and go to state 23
+    FOR             shift and go to state 24
+    RETURN          shift and go to state 25
+    LBRACE          shift and go to state 17
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+    VAR             shift and go to state 34
+    DEF             shift and go to state 3
+    PRINT           shift and go to state 35
+
+    body                           shift and go to state 39
+    stmt                           shift and go to state 19
+    expr                           shift and go to state 20
+    defvar                         shift and go to state 21
+    func                           shift and go to state 26
+    print_smt                      shift and go to state 27
+
+state 18
+
+    (3) func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body . RBRACE
+
+    RBRACE          shift and go to state 40
+
+
+state 19
+
+    (6) body -> stmt . body
+    (5) body -> .
+    (6) body -> . stmt body
+    (7) stmt -> . expr SEMI
+    (8) stmt -> . defvar SEMI
+    (9) stmt -> . IF LPAREN expr RPAREN stmt
+    (10) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (11) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (12) stmt -> . FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+    (13) stmt -> . RETURN expr SEMI
+    (14) stmt -> . LBRACE body RBRACE
+    (15) stmt -> . func
+    (16) stmt -> . print_smt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+    (17) defvar -> . VAR TYPE ID
+    (18) defvar -> . VAR TYPE ID ASSIGN expr
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+    (53) print_smt -> . PRINT LPAREN expr RPAREN SEMI
+
+    RBRACE          reduce using rule 5 (body -> .)
+    IF              shift and go to state 22
+    WHILE           shift and go to state 23
+    FOR             shift and go to state 24
+    RETURN          shift and go to state 25
+    LBRACE          shift and go to state 17
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+    VAR             shift and go to state 34
+    DEF             shift and go to state 3
+    PRINT           shift and go to state 35
+
+    stmt                           shift and go to state 19
+    body                           shift and go to state 41
+    expr                           shift and go to state 20
+    defvar                         shift and go to state 21
+    func                           shift and go to state 26
+    print_smt                      shift and go to state 27
+
+state 20
+
+    (7) stmt -> expr . SEMI
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            shift and go to state 42
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 21
+
+    (8) stmt -> defvar . SEMI
+
+    SEMI            shift and go to state 58
+
+
+state 22
+
+    (9) stmt -> IF . LPAREN expr RPAREN stmt
+    (10) stmt -> IF . LPAREN expr RPAREN stmt ELSE stmt
+
+    LPAREN          shift and go to state 59
+
+
+state 23
+
+    (11) stmt -> WHILE . LPAREN expr RPAREN stmt
+
+    LPAREN          shift and go to state 60
+
+
+state 24
+
+    (12) stmt -> FOR . LPAREN ID EQUAL expr TO expr RPAREN stmt
+
+    LPAREN          shift and go to state 61
+
+
+state 25
+
+    (13) stmt -> RETURN . expr SEMI
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 62
+
+state 26
+
+    (15) stmt -> func .
+
+    IF              reduce using rule 15 (stmt -> func .)
+    WHILE           reduce using rule 15 (stmt -> func .)
+    FOR             reduce using rule 15 (stmt -> func .)
+    RETURN          reduce using rule 15 (stmt -> func .)
+    LBRACE          reduce using rule 15 (stmt -> func .)
+    LBLOCK          reduce using rule 15 (stmt -> func .)
+    NOT             reduce using rule 15 (stmt -> func .)
+    ADD             reduce using rule 15 (stmt -> func .)
+    SUB             reduce using rule 15 (stmt -> func .)
+    ID              reduce using rule 15 (stmt -> func .)
+    INT             reduce using rule 15 (stmt -> func .)
+    STRING          reduce using rule 15 (stmt -> func .)
+    VAR             reduce using rule 15 (stmt -> func .)
+    DEF             reduce using rule 15 (stmt -> func .)
+    PRINT           reduce using rule 15 (stmt -> func .)
+    RBRACE          reduce using rule 15 (stmt -> func .)
+    ELSE            reduce using rule 15 (stmt -> func .)
+
+
+state 27
+
+    (16) stmt -> print_smt .
+
+    IF              reduce using rule 16 (stmt -> print_smt .)
+    WHILE           reduce using rule 16 (stmt -> print_smt .)
+    FOR             reduce using rule 16 (stmt -> print_smt .)
+    RETURN          reduce using rule 16 (stmt -> print_smt .)
+    LBRACE          reduce using rule 16 (stmt -> print_smt .)
+    LBLOCK          reduce using rule 16 (stmt -> print_smt .)
+    NOT             reduce using rule 16 (stmt -> print_smt .)
+    ADD             reduce using rule 16 (stmt -> print_smt .)
+    SUB             reduce using rule 16 (stmt -> print_smt .)
+    ID              reduce using rule 16 (stmt -> print_smt .)
+    INT             reduce using rule 16 (stmt -> print_smt .)
+    STRING          reduce using rule 16 (stmt -> print_smt .)
+    VAR             reduce using rule 16 (stmt -> print_smt .)
+    DEF             reduce using rule 16 (stmt -> print_smt .)
+    PRINT           reduce using rule 16 (stmt -> print_smt .)
+    RBRACE          reduce using rule 16 (stmt -> print_smt .)
+    ELSE            reduce using rule 16 (stmt -> print_smt .)
+
+
+state 28
+
+    (20) expr -> LBLOCK . clist RBLOCK
+    (43) clist -> .
+    (44) clist -> . expr
+    (45) clist -> . expr COMMA clist
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    RBLOCK          reduce using rule 43 (clist -> .)
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    clist                          shift and go to state 63
+    expr                           shift and go to state 64
+
+state 29
+
+    (36) expr -> ADD . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 65
+
+state 30
+
+    (37) expr -> SUB . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 66
+
+state 31
+
+    (35) expr -> NOT . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 67
+
+state 32
+
+    (41) expr -> INT .
+
+    SEMI            reduce using rule 41 (expr -> INT .)
+    LBLOCK          reduce using rule 41 (expr -> INT .)
+    QUESTIONMARK    reduce using rule 41 (expr -> INT .)
+    ADD             reduce using rule 41 (expr -> INT .)
+    SUB             reduce using rule 41 (expr -> INT .)
+    MULT            reduce using rule 41 (expr -> INT .)
+    DIV             reduce using rule 41 (expr -> INT .)
+    MOD             reduce using rule 41 (expr -> INT .)
+    GREATER         reduce using rule 41 (expr -> INT .)
+    LESS            reduce using rule 41 (expr -> INT .)
+    EQUAL           reduce using rule 41 (expr -> INT .)
+    GREATEREQ       reduce using rule 41 (expr -> INT .)
+    LESSEQ          reduce using rule 41 (expr -> INT .)
+    NOTEQUAL        reduce using rule 41 (expr -> INT .)
+    OR              reduce using rule 41 (expr -> INT .)
+    AND             reduce using rule 41 (expr -> INT .)
+    COMMA           reduce using rule 41 (expr -> INT .)
+    RBLOCK          reduce using rule 41 (expr -> INT .)
+    RPAREN          reduce using rule 41 (expr -> INT .)
+    COLON           reduce using rule 41 (expr -> INT .)
+    TO              reduce using rule 41 (expr -> INT .)
+
+
+state 33
+
+    (42) expr -> STRING .
+
+    SEMI            reduce using rule 42 (expr -> STRING .)
+    LBLOCK          reduce using rule 42 (expr -> STRING .)
+    QUESTIONMARK    reduce using rule 42 (expr -> STRING .)
+    ADD             reduce using rule 42 (expr -> STRING .)
+    SUB             reduce using rule 42 (expr -> STRING .)
+    MULT            reduce using rule 42 (expr -> STRING .)
+    DIV             reduce using rule 42 (expr -> STRING .)
+    MOD             reduce using rule 42 (expr -> STRING .)
+    GREATER         reduce using rule 42 (expr -> STRING .)
+    LESS            reduce using rule 42 (expr -> STRING .)
+    EQUAL           reduce using rule 42 (expr -> STRING .)
+    GREATEREQ       reduce using rule 42 (expr -> STRING .)
+    LESSEQ          reduce using rule 42 (expr -> STRING .)
+    NOTEQUAL        reduce using rule 42 (expr -> STRING .)
+    OR              reduce using rule 42 (expr -> STRING .)
+    AND             reduce using rule 42 (expr -> STRING .)
+    COMMA           reduce using rule 42 (expr -> STRING .)
+    RBLOCK          reduce using rule 42 (expr -> STRING .)
+    RPAREN          reduce using rule 42 (expr -> STRING .)
+    COLON           reduce using rule 42 (expr -> STRING .)
+    TO              reduce using rule 42 (expr -> STRING .)
+
+
+state 34
+
+    (17) defvar -> VAR . TYPE ID
+    (18) defvar -> VAR . TYPE ID ASSIGN expr
+
+    TYPE            shift and go to state 68
+
+
+state 35
+
+    (53) print_smt -> PRINT . LPAREN expr RPAREN SEMI
+
+    LPAREN          shift and go to state 69
+
+
+state 36
+
+    (4) func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr . SEMI
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            shift and go to state 70
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 37
+
+    (39) expr -> ID ASSIGN . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 71
+
+state 38
+
+    (40) expr -> ID LPAREN . clist RPAREN
+    (43) clist -> .
+    (44) clist -> . expr
+    (45) clist -> . expr COMMA clist
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    RPAREN          reduce using rule 43 (clist -> .)
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    clist                          shift and go to state 72
+    expr                           shift and go to state 64
+
+state 39
+
+    (14) stmt -> LBRACE body . RBRACE
+
+    RBRACE          shift and go to state 73
+
+
+state 40
+
+    (3) func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .
+
+    DEF             reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    $end            reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    IF              reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    WHILE           reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    FOR             reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    RETURN          reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    LBRACE          reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    LBLOCK          reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    NOT             reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    ADD             reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    SUB             reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    ID              reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    INT             reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    STRING          reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    VAR             reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    PRINT           reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    RBRACE          reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+    ELSE            reduce using rule 3 (func -> DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE .)
+
+
+state 41
+
+    (6) body -> stmt body .
+
+    RBRACE          reduce using rule 6 (body -> stmt body .)
+
+
+state 42
+
+    (7) stmt -> expr SEMI .
+
+    IF              reduce using rule 7 (stmt -> expr SEMI .)
+    WHILE           reduce using rule 7 (stmt -> expr SEMI .)
+    FOR             reduce using rule 7 (stmt -> expr SEMI .)
+    RETURN          reduce using rule 7 (stmt -> expr SEMI .)
+    LBRACE          reduce using rule 7 (stmt -> expr SEMI .)
+    LBLOCK          reduce using rule 7 (stmt -> expr SEMI .)
+    NOT             reduce using rule 7 (stmt -> expr SEMI .)
+    ADD             reduce using rule 7 (stmt -> expr SEMI .)
+    SUB             reduce using rule 7 (stmt -> expr SEMI .)
+    ID              reduce using rule 7 (stmt -> expr SEMI .)
+    INT             reduce using rule 7 (stmt -> expr SEMI .)
+    STRING          reduce using rule 7 (stmt -> expr SEMI .)
+    VAR             reduce using rule 7 (stmt -> expr SEMI .)
+    DEF             reduce using rule 7 (stmt -> expr SEMI .)
+    PRINT           reduce using rule 7 (stmt -> expr SEMI .)
+    RBRACE          reduce using rule 7 (stmt -> expr SEMI .)
+    ELSE            reduce using rule 7 (stmt -> expr SEMI .)
+
+
+state 43
+
+    (19) expr -> expr LBLOCK . expr RBLOCK
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 74
+
+state 44
+
+    (21) expr -> expr QUESTIONMARK . expr COLON expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 75
+
+state 45
+
+    (22) expr -> expr ADD . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 76
+
+state 46
+
+    (23) expr -> expr SUB . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 77
+
+state 47
+
+    (24) expr -> expr MULT . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 78
+
+state 48
+
+    (25) expr -> expr DIV . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 79
+
+state 49
+
+    (26) expr -> expr MOD . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 80
+
+state 50
+
+    (27) expr -> expr GREATER . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 81
+
+state 51
+
+    (28) expr -> expr LESS . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 82
+
+state 52
+
+    (29) expr -> expr EQUAL . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 83
+
+state 53
+
+    (30) expr -> expr GREATEREQ . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 84
+
+state 54
+
+    (31) expr -> expr LESSEQ . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 85
+
+state 55
+
+    (32) expr -> expr NOTEQUAL . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 86
+
+state 56
+
+    (33) expr -> expr OR . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 87
+
+state 57
+
+    (34) expr -> expr AND . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 88
+
+state 58
+
+    (8) stmt -> defvar SEMI .
+
+    IF              reduce using rule 8 (stmt -> defvar SEMI .)
+    WHILE           reduce using rule 8 (stmt -> defvar SEMI .)
+    FOR             reduce using rule 8 (stmt -> defvar SEMI .)
+    RETURN          reduce using rule 8 (stmt -> defvar SEMI .)
+    LBRACE          reduce using rule 8 (stmt -> defvar SEMI .)
+    LBLOCK          reduce using rule 8 (stmt -> defvar SEMI .)
+    NOT             reduce using rule 8 (stmt -> defvar SEMI .)
+    ADD             reduce using rule 8 (stmt -> defvar SEMI .)
+    SUB             reduce using rule 8 (stmt -> defvar SEMI .)
+    ID              reduce using rule 8 (stmt -> defvar SEMI .)
+    INT             reduce using rule 8 (stmt -> defvar SEMI .)
+    STRING          reduce using rule 8 (stmt -> defvar SEMI .)
+    VAR             reduce using rule 8 (stmt -> defvar SEMI .)
+    DEF             reduce using rule 8 (stmt -> defvar SEMI .)
+    PRINT           reduce using rule 8 (stmt -> defvar SEMI .)
+    RBRACE          reduce using rule 8 (stmt -> defvar SEMI .)
+    ELSE            reduce using rule 8 (stmt -> defvar SEMI .)
+
+
+state 59
+
+    (9) stmt -> IF LPAREN . expr RPAREN stmt
+    (10) stmt -> IF LPAREN . expr RPAREN stmt ELSE stmt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 89
+
+state 60
+
+    (11) stmt -> WHILE LPAREN . expr RPAREN stmt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 90
+
+state 61
+
+    (12) stmt -> FOR LPAREN . ID EQUAL expr TO expr RPAREN stmt
+
+    ID              shift and go to state 91
+
+
+state 62
+
+    (13) stmt -> RETURN expr . SEMI
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            shift and go to state 92
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 63
+
+    (20) expr -> LBLOCK clist . RBLOCK
+
+    RBLOCK          shift and go to state 93
+
+
+state 64
+
+    (44) clist -> expr .
+    (45) clist -> expr . COMMA clist
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    RBLOCK          reduce using rule 44 (clist -> expr .)
+    RPAREN          reduce using rule 44 (clist -> expr .)
+    COMMA           shift and go to state 94
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 65
+
+    (36) expr -> ADD expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 36 (expr -> ADD expr .)
+    QUESTIONMARK    reduce using rule 36 (expr -> ADD expr .)
+    ADD             reduce using rule 36 (expr -> ADD expr .)
+    SUB             reduce using rule 36 (expr -> ADD expr .)
+    GREATER         reduce using rule 36 (expr -> ADD expr .)
+    LESS            reduce using rule 36 (expr -> ADD expr .)
+    EQUAL           reduce using rule 36 (expr -> ADD expr .)
+    GREATEREQ       reduce using rule 36 (expr -> ADD expr .)
+    LESSEQ          reduce using rule 36 (expr -> ADD expr .)
+    NOTEQUAL        reduce using rule 36 (expr -> ADD expr .)
+    OR              reduce using rule 36 (expr -> ADD expr .)
+    AND             reduce using rule 36 (expr -> ADD expr .)
+    COMMA           reduce using rule 36 (expr -> ADD expr .)
+    RBLOCK          reduce using rule 36 (expr -> ADD expr .)
+    RPAREN          reduce using rule 36 (expr -> ADD expr .)
+    COLON           reduce using rule 36 (expr -> ADD expr .)
+    TO              reduce using rule 36 (expr -> ADD expr .)
+    LBLOCK          shift and go to state 43
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 36 (expr -> ADD expr .) ]
+  ! MULT            [ reduce using rule 36 (expr -> ADD expr .) ]
+  ! DIV             [ reduce using rule 36 (expr -> ADD expr .) ]
+  ! MOD             [ reduce using rule 36 (expr -> ADD expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! ADD             [ shift and go to state 45 ]
+  ! SUB             [ shift and go to state 46 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 66
+
+    (37) expr -> SUB expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 37 (expr -> SUB expr .)
+    QUESTIONMARK    reduce using rule 37 (expr -> SUB expr .)
+    ADD             reduce using rule 37 (expr -> SUB expr .)
+    SUB             reduce using rule 37 (expr -> SUB expr .)
+    GREATER         reduce using rule 37 (expr -> SUB expr .)
+    LESS            reduce using rule 37 (expr -> SUB expr .)
+    EQUAL           reduce using rule 37 (expr -> SUB expr .)
+    GREATEREQ       reduce using rule 37 (expr -> SUB expr .)
+    LESSEQ          reduce using rule 37 (expr -> SUB expr .)
+    NOTEQUAL        reduce using rule 37 (expr -> SUB expr .)
+    OR              reduce using rule 37 (expr -> SUB expr .)
+    AND             reduce using rule 37 (expr -> SUB expr .)
+    COMMA           reduce using rule 37 (expr -> SUB expr .)
+    RBLOCK          reduce using rule 37 (expr -> SUB expr .)
+    RPAREN          reduce using rule 37 (expr -> SUB expr .)
+    COLON           reduce using rule 37 (expr -> SUB expr .)
+    TO              reduce using rule 37 (expr -> SUB expr .)
+    LBLOCK          shift and go to state 43
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 37 (expr -> SUB expr .) ]
+  ! MULT            [ reduce using rule 37 (expr -> SUB expr .) ]
+  ! DIV             [ reduce using rule 37 (expr -> SUB expr .) ]
+  ! MOD             [ reduce using rule 37 (expr -> SUB expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! ADD             [ shift and go to state 45 ]
+  ! SUB             [ shift and go to state 46 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 67
+
+    (35) expr -> NOT expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 35 (expr -> NOT expr .)
+    QUESTIONMARK    reduce using rule 35 (expr -> NOT expr .)
+    OR              reduce using rule 35 (expr -> NOT expr .)
+    AND             reduce using rule 35 (expr -> NOT expr .)
+    COMMA           reduce using rule 35 (expr -> NOT expr .)
+    RBLOCK          reduce using rule 35 (expr -> NOT expr .)
+    RPAREN          reduce using rule 35 (expr -> NOT expr .)
+    COLON           reduce using rule 35 (expr -> NOT expr .)
+    TO              reduce using rule 35 (expr -> NOT expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+
+  ! LBLOCK          [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! ADD             [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! SUB             [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! MULT            [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! DIV             [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! MOD             [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! GREATER         [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! LESS            [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! EQUAL           [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! GREATEREQ       [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! LESSEQ          [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! NOTEQUAL        [ reduce using rule 35 (expr -> NOT expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 68
+
+    (17) defvar -> VAR TYPE . ID
+    (18) defvar -> VAR TYPE . ID ASSIGN expr
+
+    ID              shift and go to state 95
+
+
+state 69
+
+    (53) print_smt -> PRINT LPAREN . expr RPAREN SEMI
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 96
+
+state 70
+
+    (4) func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .
+
+    DEF             reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    $end            reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    IF              reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    WHILE           reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    FOR             reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    RETURN          reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    LBRACE          reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    LBLOCK          reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    NOT             reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    ADD             reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    SUB             reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    ID              reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    INT             reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    STRING          reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    VAR             reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    PRINT           reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    RBRACE          reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+    ELSE            reduce using rule 4 (func -> DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI .)
+
+
+state 71
+
+    (39) expr -> ID ASSIGN expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 39 (expr -> ID ASSIGN expr .)
+    QUESTIONMARK    reduce using rule 39 (expr -> ID ASSIGN expr .)
+    COMMA           reduce using rule 39 (expr -> ID ASSIGN expr .)
+    RBLOCK          reduce using rule 39 (expr -> ID ASSIGN expr .)
+    RPAREN          reduce using rule 39 (expr -> ID ASSIGN expr .)
+    COLON           reduce using rule 39 (expr -> ID ASSIGN expr .)
+    TO              reduce using rule 39 (expr -> ID ASSIGN expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+  ! LBLOCK          [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! ADD             [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! SUB             [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! MULT            [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! DIV             [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! MOD             [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! GREATER         [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! LESS            [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! EQUAL           [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! GREATEREQ       [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! LESSEQ          [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! NOTEQUAL        [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! OR              [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! AND             [ reduce using rule 39 (expr -> ID ASSIGN expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+
+
+state 72
+
+    (40) expr -> ID LPAREN clist . RPAREN
+
+    RPAREN          shift and go to state 97
+
+
+state 73
+
+    (14) stmt -> LBRACE body RBRACE .
+
+    IF              reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    WHILE           reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    FOR             reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    RETURN          reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    LBRACE          reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    LBLOCK          reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    NOT             reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    ADD             reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    SUB             reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    ID              reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    INT             reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    STRING          reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    VAR             reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    DEF             reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    PRINT           reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    RBRACE          reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+    ELSE            reduce using rule 14 (stmt -> LBRACE body RBRACE .)
+
+
+state 74
+
+    (19) expr -> expr LBLOCK expr . RBLOCK
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    RBLOCK          shift and go to state 98
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 75
+
+    (21) expr -> expr QUESTIONMARK expr . COLON expr
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    COLON           shift and go to state 99
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 76
+
+    (22) expr -> expr ADD expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 22 (expr -> expr ADD expr .)
+    QUESTIONMARK    reduce using rule 22 (expr -> expr ADD expr .)
+    ADD             reduce using rule 22 (expr -> expr ADD expr .)
+    SUB             reduce using rule 22 (expr -> expr ADD expr .)
+    GREATER         reduce using rule 22 (expr -> expr ADD expr .)
+    LESS            reduce using rule 22 (expr -> expr ADD expr .)
+    EQUAL           reduce using rule 22 (expr -> expr ADD expr .)
+    GREATEREQ       reduce using rule 22 (expr -> expr ADD expr .)
+    LESSEQ          reduce using rule 22 (expr -> expr ADD expr .)
+    NOTEQUAL        reduce using rule 22 (expr -> expr ADD expr .)
+    OR              reduce using rule 22 (expr -> expr ADD expr .)
+    AND             reduce using rule 22 (expr -> expr ADD expr .)
+    COMMA           reduce using rule 22 (expr -> expr ADD expr .)
+    RBLOCK          reduce using rule 22 (expr -> expr ADD expr .)
+    RPAREN          reduce using rule 22 (expr -> expr ADD expr .)
+    COLON           reduce using rule 22 (expr -> expr ADD expr .)
+    TO              reduce using rule 22 (expr -> expr ADD expr .)
+    LBLOCK          shift and go to state 43
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 22 (expr -> expr ADD expr .) ]
+  ! MULT            [ reduce using rule 22 (expr -> expr ADD expr .) ]
+  ! DIV             [ reduce using rule 22 (expr -> expr ADD expr .) ]
+  ! MOD             [ reduce using rule 22 (expr -> expr ADD expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! ADD             [ shift and go to state 45 ]
+  ! SUB             [ shift and go to state 46 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 77
+
+    (23) expr -> expr SUB expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 23 (expr -> expr SUB expr .)
+    QUESTIONMARK    reduce using rule 23 (expr -> expr SUB expr .)
+    ADD             reduce using rule 23 (expr -> expr SUB expr .)
+    SUB             reduce using rule 23 (expr -> expr SUB expr .)
+    GREATER         reduce using rule 23 (expr -> expr SUB expr .)
+    LESS            reduce using rule 23 (expr -> expr SUB expr .)
+    EQUAL           reduce using rule 23 (expr -> expr SUB expr .)
+    GREATEREQ       reduce using rule 23 (expr -> expr SUB expr .)
+    LESSEQ          reduce using rule 23 (expr -> expr SUB expr .)
+    NOTEQUAL        reduce using rule 23 (expr -> expr SUB expr .)
+    OR              reduce using rule 23 (expr -> expr SUB expr .)
+    AND             reduce using rule 23 (expr -> expr SUB expr .)
+    COMMA           reduce using rule 23 (expr -> expr SUB expr .)
+    RBLOCK          reduce using rule 23 (expr -> expr SUB expr .)
+    RPAREN          reduce using rule 23 (expr -> expr SUB expr .)
+    COLON           reduce using rule 23 (expr -> expr SUB expr .)
+    TO              reduce using rule 23 (expr -> expr SUB expr .)
+    LBLOCK          shift and go to state 43
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 23 (expr -> expr SUB expr .) ]
+  ! MULT            [ reduce using rule 23 (expr -> expr SUB expr .) ]
+  ! DIV             [ reduce using rule 23 (expr -> expr SUB expr .) ]
+  ! MOD             [ reduce using rule 23 (expr -> expr SUB expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! ADD             [ shift and go to state 45 ]
+  ! SUB             [ shift and go to state 46 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 78
+
+    (24) expr -> expr MULT expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 24 (expr -> expr MULT expr .)
+    QUESTIONMARK    reduce using rule 24 (expr -> expr MULT expr .)
+    ADD             reduce using rule 24 (expr -> expr MULT expr .)
+    SUB             reduce using rule 24 (expr -> expr MULT expr .)
+    MULT            reduce using rule 24 (expr -> expr MULT expr .)
+    DIV             reduce using rule 24 (expr -> expr MULT expr .)
+    MOD             reduce using rule 24 (expr -> expr MULT expr .)
+    GREATER         reduce using rule 24 (expr -> expr MULT expr .)
+    LESS            reduce using rule 24 (expr -> expr MULT expr .)
+    EQUAL           reduce using rule 24 (expr -> expr MULT expr .)
+    GREATEREQ       reduce using rule 24 (expr -> expr MULT expr .)
+    LESSEQ          reduce using rule 24 (expr -> expr MULT expr .)
+    NOTEQUAL        reduce using rule 24 (expr -> expr MULT expr .)
+    OR              reduce using rule 24 (expr -> expr MULT expr .)
+    AND             reduce using rule 24 (expr -> expr MULT expr .)
+    COMMA           reduce using rule 24 (expr -> expr MULT expr .)
+    RBLOCK          reduce using rule 24 (expr -> expr MULT expr .)
+    RPAREN          reduce using rule 24 (expr -> expr MULT expr .)
+    COLON           reduce using rule 24 (expr -> expr MULT expr .)
+    TO              reduce using rule 24 (expr -> expr MULT expr .)
+    LBLOCK          shift and go to state 43
+
+  ! LBLOCK          [ reduce using rule 24 (expr -> expr MULT expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! ADD             [ shift and go to state 45 ]
+  ! SUB             [ shift and go to state 46 ]
+  ! MULT            [ shift and go to state 47 ]
+  ! DIV             [ shift and go to state 48 ]
+  ! MOD             [ shift and go to state 49 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 79
+
+    (25) expr -> expr DIV expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 25 (expr -> expr DIV expr .)
+    QUESTIONMARK    reduce using rule 25 (expr -> expr DIV expr .)
+    ADD             reduce using rule 25 (expr -> expr DIV expr .)
+    SUB             reduce using rule 25 (expr -> expr DIV expr .)
+    MULT            reduce using rule 25 (expr -> expr DIV expr .)
+    DIV             reduce using rule 25 (expr -> expr DIV expr .)
+    MOD             reduce using rule 25 (expr -> expr DIV expr .)
+    GREATER         reduce using rule 25 (expr -> expr DIV expr .)
+    LESS            reduce using rule 25 (expr -> expr DIV expr .)
+    EQUAL           reduce using rule 25 (expr -> expr DIV expr .)
+    GREATEREQ       reduce using rule 25 (expr -> expr DIV expr .)
+    LESSEQ          reduce using rule 25 (expr -> expr DIV expr .)
+    NOTEQUAL        reduce using rule 25 (expr -> expr DIV expr .)
+    OR              reduce using rule 25 (expr -> expr DIV expr .)
+    AND             reduce using rule 25 (expr -> expr DIV expr .)
+    COMMA           reduce using rule 25 (expr -> expr DIV expr .)
+    RBLOCK          reduce using rule 25 (expr -> expr DIV expr .)
+    RPAREN          reduce using rule 25 (expr -> expr DIV expr .)
+    COLON           reduce using rule 25 (expr -> expr DIV expr .)
+    TO              reduce using rule 25 (expr -> expr DIV expr .)
+    LBLOCK          shift and go to state 43
+
+  ! LBLOCK          [ reduce using rule 25 (expr -> expr DIV expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! ADD             [ shift and go to state 45 ]
+  ! SUB             [ shift and go to state 46 ]
+  ! MULT            [ shift and go to state 47 ]
+  ! DIV             [ shift and go to state 48 ]
+  ! MOD             [ shift and go to state 49 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 80
+
+    (26) expr -> expr MOD expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 26 (expr -> expr MOD expr .)
+    QUESTIONMARK    reduce using rule 26 (expr -> expr MOD expr .)
+    ADD             reduce using rule 26 (expr -> expr MOD expr .)
+    SUB             reduce using rule 26 (expr -> expr MOD expr .)
+    MOD             reduce using rule 26 (expr -> expr MOD expr .)
+    GREATER         reduce using rule 26 (expr -> expr MOD expr .)
+    LESS            reduce using rule 26 (expr -> expr MOD expr .)
+    EQUAL           reduce using rule 26 (expr -> expr MOD expr .)
+    GREATEREQ       reduce using rule 26 (expr -> expr MOD expr .)
+    LESSEQ          reduce using rule 26 (expr -> expr MOD expr .)
+    NOTEQUAL        reduce using rule 26 (expr -> expr MOD expr .)
+    OR              reduce using rule 26 (expr -> expr MOD expr .)
+    AND             reduce using rule 26 (expr -> expr MOD expr .)
+    COMMA           reduce using rule 26 (expr -> expr MOD expr .)
+    RBLOCK          reduce using rule 26 (expr -> expr MOD expr .)
+    RPAREN          reduce using rule 26 (expr -> expr MOD expr .)
+    COLON           reduce using rule 26 (expr -> expr MOD expr .)
+    TO              reduce using rule 26 (expr -> expr MOD expr .)
+    LBLOCK          shift and go to state 43
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+
+  ! LBLOCK          [ reduce using rule 26 (expr -> expr MOD expr .) ]
+  ! MULT            [ reduce using rule 26 (expr -> expr MOD expr .) ]
+  ! DIV             [ reduce using rule 26 (expr -> expr MOD expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! ADD             [ shift and go to state 45 ]
+  ! SUB             [ shift and go to state 46 ]
+  ! MOD             [ shift and go to state 49 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 81
+
+    (27) expr -> expr GREATER expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 27 (expr -> expr GREATER expr .)
+    QUESTIONMARK    reduce using rule 27 (expr -> expr GREATER expr .)
+    GREATER         reduce using rule 27 (expr -> expr GREATER expr .)
+    LESS            reduce using rule 27 (expr -> expr GREATER expr .)
+    EQUAL           reduce using rule 27 (expr -> expr GREATER expr .)
+    GREATEREQ       reduce using rule 27 (expr -> expr GREATER expr .)
+    LESSEQ          reduce using rule 27 (expr -> expr GREATER expr .)
+    NOTEQUAL        reduce using rule 27 (expr -> expr GREATER expr .)
+    OR              reduce using rule 27 (expr -> expr GREATER expr .)
+    AND             reduce using rule 27 (expr -> expr GREATER expr .)
+    COMMA           reduce using rule 27 (expr -> expr GREATER expr .)
+    RBLOCK          reduce using rule 27 (expr -> expr GREATER expr .)
+    RPAREN          reduce using rule 27 (expr -> expr GREATER expr .)
+    COLON           reduce using rule 27 (expr -> expr GREATER expr .)
+    TO              reduce using rule 27 (expr -> expr GREATER expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 27 (expr -> expr GREATER expr .) ]
+  ! ADD             [ reduce using rule 27 (expr -> expr GREATER expr .) ]
+  ! SUB             [ reduce using rule 27 (expr -> expr GREATER expr .) ]
+  ! MULT            [ reduce using rule 27 (expr -> expr GREATER expr .) ]
+  ! DIV             [ reduce using rule 27 (expr -> expr GREATER expr .) ]
+  ! MOD             [ reduce using rule 27 (expr -> expr GREATER expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 82
+
+    (28) expr -> expr LESS expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 28 (expr -> expr LESS expr .)
+    QUESTIONMARK    reduce using rule 28 (expr -> expr LESS expr .)
+    GREATER         reduce using rule 28 (expr -> expr LESS expr .)
+    LESS            reduce using rule 28 (expr -> expr LESS expr .)
+    EQUAL           reduce using rule 28 (expr -> expr LESS expr .)
+    GREATEREQ       reduce using rule 28 (expr -> expr LESS expr .)
+    LESSEQ          reduce using rule 28 (expr -> expr LESS expr .)
+    NOTEQUAL        reduce using rule 28 (expr -> expr LESS expr .)
+    OR              reduce using rule 28 (expr -> expr LESS expr .)
+    AND             reduce using rule 28 (expr -> expr LESS expr .)
+    COMMA           reduce using rule 28 (expr -> expr LESS expr .)
+    RBLOCK          reduce using rule 28 (expr -> expr LESS expr .)
+    RPAREN          reduce using rule 28 (expr -> expr LESS expr .)
+    COLON           reduce using rule 28 (expr -> expr LESS expr .)
+    TO              reduce using rule 28 (expr -> expr LESS expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 28 (expr -> expr LESS expr .) ]
+  ! ADD             [ reduce using rule 28 (expr -> expr LESS expr .) ]
+  ! SUB             [ reduce using rule 28 (expr -> expr LESS expr .) ]
+  ! MULT            [ reduce using rule 28 (expr -> expr LESS expr .) ]
+  ! DIV             [ reduce using rule 28 (expr -> expr LESS expr .) ]
+  ! MOD             [ reduce using rule 28 (expr -> expr LESS expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 83
+
+    (29) expr -> expr EQUAL expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 29 (expr -> expr EQUAL expr .)
+    QUESTIONMARK    reduce using rule 29 (expr -> expr EQUAL expr .)
+    GREATER         reduce using rule 29 (expr -> expr EQUAL expr .)
+    LESS            reduce using rule 29 (expr -> expr EQUAL expr .)
+    EQUAL           reduce using rule 29 (expr -> expr EQUAL expr .)
+    GREATEREQ       reduce using rule 29 (expr -> expr EQUAL expr .)
+    LESSEQ          reduce using rule 29 (expr -> expr EQUAL expr .)
+    NOTEQUAL        reduce using rule 29 (expr -> expr EQUAL expr .)
+    OR              reduce using rule 29 (expr -> expr EQUAL expr .)
+    AND             reduce using rule 29 (expr -> expr EQUAL expr .)
+    COMMA           reduce using rule 29 (expr -> expr EQUAL expr .)
+    RBLOCK          reduce using rule 29 (expr -> expr EQUAL expr .)
+    RPAREN          reduce using rule 29 (expr -> expr EQUAL expr .)
+    COLON           reduce using rule 29 (expr -> expr EQUAL expr .)
+    TO              reduce using rule 29 (expr -> expr EQUAL expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 29 (expr -> expr EQUAL expr .) ]
+  ! ADD             [ reduce using rule 29 (expr -> expr EQUAL expr .) ]
+  ! SUB             [ reduce using rule 29 (expr -> expr EQUAL expr .) ]
+  ! MULT            [ reduce using rule 29 (expr -> expr EQUAL expr .) ]
+  ! DIV             [ reduce using rule 29 (expr -> expr EQUAL expr .) ]
+  ! MOD             [ reduce using rule 29 (expr -> expr EQUAL expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 84
+
+    (30) expr -> expr GREATEREQ expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    QUESTIONMARK    reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    GREATER         reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    LESS            reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    EQUAL           reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    GREATEREQ       reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    LESSEQ          reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    NOTEQUAL        reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    OR              reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    AND             reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    COMMA           reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    RBLOCK          reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    RPAREN          reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    COLON           reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    TO              reduce using rule 30 (expr -> expr GREATEREQ expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 30 (expr -> expr GREATEREQ expr .) ]
+  ! ADD             [ reduce using rule 30 (expr -> expr GREATEREQ expr .) ]
+  ! SUB             [ reduce using rule 30 (expr -> expr GREATEREQ expr .) ]
+  ! MULT            [ reduce using rule 30 (expr -> expr GREATEREQ expr .) ]
+  ! DIV             [ reduce using rule 30 (expr -> expr GREATEREQ expr .) ]
+  ! MOD             [ reduce using rule 30 (expr -> expr GREATEREQ expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 85
+
+    (31) expr -> expr LESSEQ expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 31 (expr -> expr LESSEQ expr .)
+    QUESTIONMARK    reduce using rule 31 (expr -> expr LESSEQ expr .)
+    GREATER         reduce using rule 31 (expr -> expr LESSEQ expr .)
+    LESS            reduce using rule 31 (expr -> expr LESSEQ expr .)
+    EQUAL           reduce using rule 31 (expr -> expr LESSEQ expr .)
+    GREATEREQ       reduce using rule 31 (expr -> expr LESSEQ expr .)
+    LESSEQ          reduce using rule 31 (expr -> expr LESSEQ expr .)
+    NOTEQUAL        reduce using rule 31 (expr -> expr LESSEQ expr .)
+    OR              reduce using rule 31 (expr -> expr LESSEQ expr .)
+    AND             reduce using rule 31 (expr -> expr LESSEQ expr .)
+    COMMA           reduce using rule 31 (expr -> expr LESSEQ expr .)
+    RBLOCK          reduce using rule 31 (expr -> expr LESSEQ expr .)
+    RPAREN          reduce using rule 31 (expr -> expr LESSEQ expr .)
+    COLON           reduce using rule 31 (expr -> expr LESSEQ expr .)
+    TO              reduce using rule 31 (expr -> expr LESSEQ expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 31 (expr -> expr LESSEQ expr .) ]
+  ! ADD             [ reduce using rule 31 (expr -> expr LESSEQ expr .) ]
+  ! SUB             [ reduce using rule 31 (expr -> expr LESSEQ expr .) ]
+  ! MULT            [ reduce using rule 31 (expr -> expr LESSEQ expr .) ]
+  ! DIV             [ reduce using rule 31 (expr -> expr LESSEQ expr .) ]
+  ! MOD             [ reduce using rule 31 (expr -> expr LESSEQ expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 86
+
+    (32) expr -> expr NOTEQUAL expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    QUESTIONMARK    reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    GREATER         reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    LESS            reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    EQUAL           reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    GREATEREQ       reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    LESSEQ          reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    NOTEQUAL        reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    OR              reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    AND             reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    COMMA           reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    RBLOCK          reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    RPAREN          reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    COLON           reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    TO              reduce using rule 32 (expr -> expr NOTEQUAL expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+
+  ! LBLOCK          [ reduce using rule 32 (expr -> expr NOTEQUAL expr .) ]
+  ! ADD             [ reduce using rule 32 (expr -> expr NOTEQUAL expr .) ]
+  ! SUB             [ reduce using rule 32 (expr -> expr NOTEQUAL expr .) ]
+  ! MULT            [ reduce using rule 32 (expr -> expr NOTEQUAL expr .) ]
+  ! DIV             [ reduce using rule 32 (expr -> expr NOTEQUAL expr .) ]
+  ! MOD             [ reduce using rule 32 (expr -> expr NOTEQUAL expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! GREATER         [ shift and go to state 50 ]
+  ! LESS            [ shift and go to state 51 ]
+  ! EQUAL           [ shift and go to state 52 ]
+  ! GREATEREQ       [ shift and go to state 53 ]
+  ! LESSEQ          [ shift and go to state 54 ]
+  ! NOTEQUAL        [ shift and go to state 55 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 87
+
+    (33) expr -> expr OR expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 33 (expr -> expr OR expr .)
+    QUESTIONMARK    reduce using rule 33 (expr -> expr OR expr .)
+    OR              reduce using rule 33 (expr -> expr OR expr .)
+    COMMA           reduce using rule 33 (expr -> expr OR expr .)
+    RBLOCK          reduce using rule 33 (expr -> expr OR expr .)
+    RPAREN          reduce using rule 33 (expr -> expr OR expr .)
+    COLON           reduce using rule 33 (expr -> expr OR expr .)
+    TO              reduce using rule 33 (expr -> expr OR expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    AND             shift and go to state 57
+
+  ! LBLOCK          [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! ADD             [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! SUB             [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! MULT            [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! DIV             [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! MOD             [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! GREATER         [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! LESS            [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! EQUAL           [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! GREATEREQ       [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! LESSEQ          [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! NOTEQUAL        [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! AND             [ reduce using rule 33 (expr -> expr OR expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! OR              [ shift and go to state 56 ]
+
+
+state 88
+
+    (34) expr -> expr AND expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 34 (expr -> expr AND expr .)
+    QUESTIONMARK    reduce using rule 34 (expr -> expr AND expr .)
+    OR              reduce using rule 34 (expr -> expr AND expr .)
+    AND             reduce using rule 34 (expr -> expr AND expr .)
+    COMMA           reduce using rule 34 (expr -> expr AND expr .)
+    RBLOCK          reduce using rule 34 (expr -> expr AND expr .)
+    RPAREN          reduce using rule 34 (expr -> expr AND expr .)
+    COLON           reduce using rule 34 (expr -> expr AND expr .)
+    TO              reduce using rule 34 (expr -> expr AND expr .)
+    LBLOCK          shift and go to state 43
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+
+  ! LBLOCK          [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! ADD             [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! SUB             [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! MULT            [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! DIV             [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! MOD             [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! GREATER         [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! LESS            [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! EQUAL           [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! GREATEREQ       [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! LESSEQ          [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! NOTEQUAL        [ reduce using rule 34 (expr -> expr AND expr .) ]
+  ! QUESTIONMARK    [ shift and go to state 44 ]
+  ! OR              [ shift and go to state 56 ]
+  ! AND             [ shift and go to state 57 ]
+
+
+state 89
+
+    (9) stmt -> IF LPAREN expr . RPAREN stmt
+    (10) stmt -> IF LPAREN expr . RPAREN stmt ELSE stmt
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    RPAREN          shift and go to state 100
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 90
+
+    (11) stmt -> WHILE LPAREN expr . RPAREN stmt
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    RPAREN          shift and go to state 101
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 91
+
+    (12) stmt -> FOR LPAREN ID . EQUAL expr TO expr RPAREN stmt
+
+    EQUAL           shift and go to state 102
+
+
+state 92
+
+    (13) stmt -> RETURN expr SEMI .
+
+    IF              reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    WHILE           reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    FOR             reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    RETURN          reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    LBRACE          reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    LBLOCK          reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    NOT             reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    ADD             reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    SUB             reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    ID              reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    INT             reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    STRING          reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    VAR             reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    DEF             reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    PRINT           reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    RBRACE          reduce using rule 13 (stmt -> RETURN expr SEMI .)
+    ELSE            reduce using rule 13 (stmt -> RETURN expr SEMI .)
+
+
+state 93
+
+    (20) expr -> LBLOCK clist RBLOCK .
+
+    SEMI            reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    LBLOCK          reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    QUESTIONMARK    reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    ADD             reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    SUB             reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    MULT            reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    DIV             reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    MOD             reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    GREATER         reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    LESS            reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    EQUAL           reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    GREATEREQ       reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    LESSEQ          reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    NOTEQUAL        reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    OR              reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    AND             reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    COMMA           reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    RBLOCK          reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    RPAREN          reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    COLON           reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+    TO              reduce using rule 20 (expr -> LBLOCK clist RBLOCK .)
+
+
+state 94
+
+    (45) clist -> expr COMMA . clist
+    (43) clist -> .
+    (44) clist -> . expr
+    (45) clist -> . expr COMMA clist
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    RBLOCK          reduce using rule 43 (clist -> .)
+    RPAREN          reduce using rule 43 (clist -> .)
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 64
+    clist                          shift and go to state 103
+
+state 95
+
+    (17) defvar -> VAR TYPE ID .
+    (18) defvar -> VAR TYPE ID . ASSIGN expr
+
+    SEMI            reduce using rule 17 (defvar -> VAR TYPE ID .)
+    ASSIGN          shift and go to state 104
+
+
+state 96
+
+    (53) print_smt -> PRINT LPAREN expr . RPAREN SEMI
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    RPAREN          shift and go to state 105
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 97
+
+    (40) expr -> ID LPAREN clist RPAREN .
+
+    SEMI            reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    LBLOCK          reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    QUESTIONMARK    reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    ADD             reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    SUB             reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    MULT            reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    DIV             reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    MOD             reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    GREATER         reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    LESS            reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    EQUAL           reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    GREATEREQ       reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    LESSEQ          reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    NOTEQUAL        reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    OR              reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    AND             reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    COMMA           reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    RBLOCK          reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    RPAREN          reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    COLON           reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+    TO              reduce using rule 40 (expr -> ID LPAREN clist RPAREN .)
+
+
+state 98
+
+    (19) expr -> expr LBLOCK expr RBLOCK .
+
+    SEMI            reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    LBLOCK          reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    QUESTIONMARK    reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    ADD             reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    SUB             reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    MULT            reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    DIV             reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    MOD             reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    GREATER         reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    LESS            reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    EQUAL           reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    GREATEREQ       reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    LESSEQ          reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    NOTEQUAL        reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    OR              reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    AND             reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    COMMA           reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    RBLOCK          reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    RPAREN          reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    COLON           reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+    TO              reduce using rule 19 (expr -> expr LBLOCK expr RBLOCK .)
+
+
+state 99
+
+    (21) expr -> expr QUESTIONMARK expr COLON . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 106
+
+state 100
+
+    (9) stmt -> IF LPAREN expr RPAREN . stmt
+    (10) stmt -> IF LPAREN expr RPAREN . stmt ELSE stmt
+    (7) stmt -> . expr SEMI
+    (8) stmt -> . defvar SEMI
+    (9) stmt -> . IF LPAREN expr RPAREN stmt
+    (10) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (11) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (12) stmt -> . FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+    (13) stmt -> . RETURN expr SEMI
+    (14) stmt -> . LBRACE body RBRACE
+    (15) stmt -> . func
+    (16) stmt -> . print_smt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+    (17) defvar -> . VAR TYPE ID
+    (18) defvar -> . VAR TYPE ID ASSIGN expr
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+    (53) print_smt -> . PRINT LPAREN expr RPAREN SEMI
+
+    IF              shift and go to state 22
+    WHILE           shift and go to state 23
+    FOR             shift and go to state 24
+    RETURN          shift and go to state 25
+    LBRACE          shift and go to state 17
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+    VAR             shift and go to state 34
+    DEF             shift and go to state 3
+    PRINT           shift and go to state 35
+
+    expr                           shift and go to state 20
+    stmt                           shift and go to state 107
+    defvar                         shift and go to state 21
+    func                           shift and go to state 26
+    print_smt                      shift and go to state 27
+
+state 101
+
+    (11) stmt -> WHILE LPAREN expr RPAREN . stmt
+    (7) stmt -> . expr SEMI
+    (8) stmt -> . defvar SEMI
+    (9) stmt -> . IF LPAREN expr RPAREN stmt
+    (10) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (11) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (12) stmt -> . FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+    (13) stmt -> . RETURN expr SEMI
+    (14) stmt -> . LBRACE body RBRACE
+    (15) stmt -> . func
+    (16) stmt -> . print_smt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+    (17) defvar -> . VAR TYPE ID
+    (18) defvar -> . VAR TYPE ID ASSIGN expr
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+    (53) print_smt -> . PRINT LPAREN expr RPAREN SEMI
+
+    IF              shift and go to state 22
+    WHILE           shift and go to state 23
+    FOR             shift and go to state 24
+    RETURN          shift and go to state 25
+    LBRACE          shift and go to state 17
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+    VAR             shift and go to state 34
+    DEF             shift and go to state 3
+    PRINT           shift and go to state 35
+
+    expr                           shift and go to state 20
+    stmt                           shift and go to state 108
+    defvar                         shift and go to state 21
+    func                           shift and go to state 26
+    print_smt                      shift and go to state 27
+
+state 102
+
+    (12) stmt -> FOR LPAREN ID EQUAL . expr TO expr RPAREN stmt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 109
+
+state 103
+
+    (45) clist -> expr COMMA clist .
+
+    RBLOCK          reduce using rule 45 (clist -> expr COMMA clist .)
+    RPAREN          reduce using rule 45 (clist -> expr COMMA clist .)
+
+
+state 104
+
+    (18) defvar -> VAR TYPE ID ASSIGN . expr
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 110
+
+state 105
+
+    (53) print_smt -> PRINT LPAREN expr RPAREN . SEMI
+
+    SEMI            shift and go to state 111
+
+
+state 106
+
+    (21) expr -> expr QUESTIONMARK expr COLON expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+  ! shift/reduce conflict for LBLOCK resolved as shift
+  ! shift/reduce conflict for QUESTIONMARK resolved as shift
+  ! shift/reduce conflict for ADD resolved as shift
+  ! shift/reduce conflict for SUB resolved as shift
+  ! shift/reduce conflict for MULT resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for MOD resolved as shift
+  ! shift/reduce conflict for GREATER resolved as shift
+  ! shift/reduce conflict for LESS resolved as shift
+  ! shift/reduce conflict for EQUAL resolved as shift
+  ! shift/reduce conflict for GREATEREQ resolved as shift
+  ! shift/reduce conflict for LESSEQ resolved as shift
+  ! shift/reduce conflict for NOTEQUAL resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+    SEMI            reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .)
+    COMMA           reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .)
+    RBLOCK          reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .)
+    RPAREN          reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .)
+    COLON           reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .)
+    TO              reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .)
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+  ! LBLOCK          [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! QUESTIONMARK    [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! ADD             [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! SUB             [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! MULT            [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! DIV             [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! MOD             [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! GREATER         [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! LESS            [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! EQUAL           [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! GREATEREQ       [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! LESSEQ          [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! NOTEQUAL        [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! OR              [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+  ! AND             [ reduce using rule 21 (expr -> expr QUESTIONMARK expr COLON expr .) ]
+
+
+state 107
+
+    (9) stmt -> IF LPAREN expr RPAREN stmt .
+    (10) stmt -> IF LPAREN expr RPAREN stmt . ELSE stmt
+
+  ! shift/reduce conflict for ELSE resolved as shift
+    IF              reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    WHILE           reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    FOR             reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    RETURN          reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    LBRACE          reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    LBLOCK          reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    NOT             reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    ADD             reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    SUB             reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    ID              reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    INT             reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    STRING          reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    VAR             reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    DEF             reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    PRINT           reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    RBRACE          reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .)
+    ELSE            shift and go to state 112
+
+  ! ELSE            [ reduce using rule 9 (stmt -> IF LPAREN expr RPAREN stmt .) ]
+
+
+state 108
+
+    (11) stmt -> WHILE LPAREN expr RPAREN stmt .
+
+    IF              reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    WHILE           reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    FOR             reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    RETURN          reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    LBRACE          reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    LBLOCK          reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    NOT             reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    ADD             reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    SUB             reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    ID              reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    INT             reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    STRING          reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    VAR             reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    DEF             reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    PRINT           reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    RBRACE          reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+    ELSE            reduce using rule 11 (stmt -> WHILE LPAREN expr RPAREN stmt .)
+
+
+state 109
+
+    (12) stmt -> FOR LPAREN ID EQUAL expr . TO expr RPAREN stmt
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    TO              shift and go to state 113
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 110
+
+    (18) defvar -> VAR TYPE ID ASSIGN expr .
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    SEMI            reduce using rule 18 (defvar -> VAR TYPE ID ASSIGN expr .)
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 111
+
+    (53) print_smt -> PRINT LPAREN expr RPAREN SEMI .
+
+    IF              reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    WHILE           reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    FOR             reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    RETURN          reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    LBRACE          reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    LBLOCK          reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    NOT             reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    ADD             reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    SUB             reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    ID              reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    INT             reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    STRING          reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    VAR             reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    DEF             reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    PRINT           reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    RBRACE          reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+    ELSE            reduce using rule 53 (print_smt -> PRINT LPAREN expr RPAREN SEMI .)
+
+
+state 112
+
+    (10) stmt -> IF LPAREN expr RPAREN stmt ELSE . stmt
+    (7) stmt -> . expr SEMI
+    (8) stmt -> . defvar SEMI
+    (9) stmt -> . IF LPAREN expr RPAREN stmt
+    (10) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (11) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (12) stmt -> . FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+    (13) stmt -> . RETURN expr SEMI
+    (14) stmt -> . LBRACE body RBRACE
+    (15) stmt -> . func
+    (16) stmt -> . print_smt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+    (17) defvar -> . VAR TYPE ID
+    (18) defvar -> . VAR TYPE ID ASSIGN expr
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+    (53) print_smt -> . PRINT LPAREN expr RPAREN SEMI
+
+    IF              shift and go to state 22
+    WHILE           shift and go to state 23
+    FOR             shift and go to state 24
+    RETURN          shift and go to state 25
+    LBRACE          shift and go to state 17
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+    VAR             shift and go to state 34
+    DEF             shift and go to state 3
+    PRINT           shift and go to state 35
+
+    expr                           shift and go to state 20
+    stmt                           shift and go to state 114
+    defvar                         shift and go to state 21
+    func                           shift and go to state 26
+    print_smt                      shift and go to state 27
+
+state 113
+
+    (12) stmt -> FOR LPAREN ID EQUAL expr TO . expr RPAREN stmt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+
+    expr                           shift and go to state 115
+
+state 114
+
+    (10) stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .
+
+    IF              reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    WHILE           reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    FOR             reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    RETURN          reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    LBRACE          reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    LBLOCK          reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    NOT             reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    ADD             reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    SUB             reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    ID              reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    INT             reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    STRING          reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    VAR             reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    DEF             reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    PRINT           reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    RBRACE          reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+    ELSE            reduce using rule 10 (stmt -> IF LPAREN expr RPAREN stmt ELSE stmt .)
+
+
+state 115
+
+    (12) stmt -> FOR LPAREN ID EQUAL expr TO expr . RPAREN stmt
+    (19) expr -> expr . LBLOCK expr RBLOCK
+    (21) expr -> expr . QUESTIONMARK expr COLON expr
+    (22) expr -> expr . ADD expr
+    (23) expr -> expr . SUB expr
+    (24) expr -> expr . MULT expr
+    (25) expr -> expr . DIV expr
+    (26) expr -> expr . MOD expr
+    (27) expr -> expr . GREATER expr
+    (28) expr -> expr . LESS expr
+    (29) expr -> expr . EQUAL expr
+    (30) expr -> expr . GREATEREQ expr
+    (31) expr -> expr . LESSEQ expr
+    (32) expr -> expr . NOTEQUAL expr
+    (33) expr -> expr . OR expr
+    (34) expr -> expr . AND expr
+
+    RPAREN          shift and go to state 116
+    LBLOCK          shift and go to state 43
+    QUESTIONMARK    shift and go to state 44
+    ADD             shift and go to state 45
+    SUB             shift and go to state 46
+    MULT            shift and go to state 47
+    DIV             shift and go to state 48
+    MOD             shift and go to state 49
+    GREATER         shift and go to state 50
+    LESS            shift and go to state 51
+    EQUAL           shift and go to state 52
+    GREATEREQ       shift and go to state 53
+    LESSEQ          shift and go to state 54
+    NOTEQUAL        shift and go to state 55
+    OR              shift and go to state 56
+    AND             shift and go to state 57
+
+
+state 116
+
+    (12) stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN . stmt
+    (7) stmt -> . expr SEMI
+    (8) stmt -> . defvar SEMI
+    (9) stmt -> . IF LPAREN expr RPAREN stmt
+    (10) stmt -> . IF LPAREN expr RPAREN stmt ELSE stmt
+    (11) stmt -> . WHILE LPAREN expr RPAREN stmt
+    (12) stmt -> . FOR LPAREN ID EQUAL expr TO expr RPAREN stmt
+    (13) stmt -> . RETURN expr SEMI
+    (14) stmt -> . LBRACE body RBRACE
+    (15) stmt -> . func
+    (16) stmt -> . print_smt
+    (19) expr -> . expr LBLOCK expr RBLOCK
+    (20) expr -> . LBLOCK clist RBLOCK
+    (21) expr -> . expr QUESTIONMARK expr COLON expr
+    (22) expr -> . expr ADD expr
+    (23) expr -> . expr SUB expr
+    (24) expr -> . expr MULT expr
+    (25) expr -> . expr DIV expr
+    (26) expr -> . expr MOD expr
+    (27) expr -> . expr GREATER expr
+    (28) expr -> . expr LESS expr
+    (29) expr -> . expr EQUAL expr
+    (30) expr -> . expr GREATEREQ expr
+    (31) expr -> . expr LESSEQ expr
+    (32) expr -> . expr NOTEQUAL expr
+    (33) expr -> . expr OR expr
+    (34) expr -> . expr AND expr
+    (35) expr -> . NOT expr
+    (36) expr -> . ADD expr
+    (37) expr -> . SUB expr
+    (38) expr -> . ID
+    (39) expr -> . ID ASSIGN expr
+    (40) expr -> . ID LPAREN clist RPAREN
+    (41) expr -> . INT
+    (42) expr -> . STRING
+    (17) defvar -> . VAR TYPE ID
+    (18) defvar -> . VAR TYPE ID ASSIGN expr
+    (3) func -> . DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
+    (4) func -> . DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+    (53) print_smt -> . PRINT LPAREN expr RPAREN SEMI
+
+    IF              shift and go to state 22
+    WHILE           shift and go to state 23
+    FOR             shift and go to state 24
+    RETURN          shift and go to state 25
+    LBRACE          shift and go to state 17
+    LBLOCK          shift and go to state 28
+    NOT             shift and go to state 31
+    ADD             shift and go to state 29
+    SUB             shift and go to state 30
+    ID              shift and go to state 16
+    INT             shift and go to state 32
+    STRING          shift and go to state 33
+    VAR             shift and go to state 34
+    DEF             shift and go to state 3
+    PRINT           shift and go to state 35
+
+    expr                           shift and go to state 20
+    stmt                           shift and go to state 117
+    defvar                         shift and go to state 21
+    func                           shift and go to state 26
+    print_smt                      shift and go to state 27
+
+state 117
+
+    (12) stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .
+
+    IF              reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    WHILE           reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    FOR             reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    RETURN          reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    LBRACE          reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    LBLOCK          reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    NOT             reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    ADD             reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    SUB             reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    ID              reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    INT             reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    STRING          reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    VAR             reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    DEF             reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    PRINT           reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    RBRACE          reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+    ELSE            reduce using rule 12 (stmt -> FOR LPAREN ID EQUAL expr TO expr RPAREN stmt .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for LBLOCK in state 106 resolved as shift
+WARNING: shift/reduce conflict for QUESTIONMARK in state 106 resolved as shift
+WARNING: shift/reduce conflict for ADD in state 106 resolved as shift
+WARNING: shift/reduce conflict for SUB in state 106 resolved as shift
+WARNING: shift/reduce conflict for MULT in state 106 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 106 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 106 resolved as shift
+WARNING: shift/reduce conflict for GREATER in state 106 resolved as shift
+WARNING: shift/reduce conflict for LESS in state 106 resolved as shift
+WARNING: shift/reduce conflict for EQUAL in state 106 resolved as shift
+WARNING: shift/reduce conflict for GREATEREQ in state 106 resolved as shift
+WARNING: shift/reduce conflict for LESSEQ in state 106 resolved as shift
+WARNING: shift/reduce conflict for NOTEQUAL in state 106 resolved as shift
+WARNING: shift/reduce conflict for OR in state 106 resolved as shift
+WARNING: shift/reduce conflict for AND in state 106 resolved as shift
+WARNING: shift/reduce conflict for ELSE in state 107 resolved as shift

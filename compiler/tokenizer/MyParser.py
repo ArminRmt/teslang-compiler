@@ -14,7 +14,7 @@ precedence = (
         "right",
         "ASSIGN",
     ),  # expression on the right is evaluated first, and then assigned to the variable on the left
-    # ("left", "PRINT"),
+    ("left", "PRINT"),
     ("left", "OR"),  # logical operators decreesing precedence
     ("left", "AND"),
     ("left", "NOT"),
@@ -57,12 +57,12 @@ def p_prog(p):
     | func prog"""
 
     if len(p) == 3:
-        # p[0] = [p[1], p[2]]
-        p[0] = p[1]
-        p[2].insert(0, p[0])
         p[0] = p[2]
+        p[0].s1.insert(0, p[1])
     else:
-        p[0] = []
+        p[0] = BlockNode([])
+        p[0].s1 = []
+    # print("--------------------", p[0], "-----------")
 
 
 def p_func(p):
@@ -70,15 +70,14 @@ def p_func(p):
     | DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
     """
 
-    newFCheck(p[3])
+    # newFCheck(p[3])
 
     p[0] = FuncNode(p[2], p[3], p[5], p[8])
 
 
 def p_body(p):
     """body :
-    | stmt body
-    """
+    | stmt body"""
 
     if len(p) == 3:
         p[0] = p[2]
@@ -91,7 +90,7 @@ def p_body(p):
 def p_smt(p):
 
     """
-    stmt : expr SEMI
+    stmt :    expr SEMI
             | defvar SEMI
             | IF LPAREN expr RPAREN stmt
             | IF LPAREN expr RPAREN stmt ELSE stmt
@@ -100,6 +99,7 @@ def p_smt(p):
             | RETURN expr SEMI
             | LBRACE body RBRACE
             | func
+            | print_smt
     """
 
     if len(p) == 2:  # func
@@ -236,19 +236,18 @@ def p_clist(p):
 
 def p_flist(p):
     """flist :
-    | ID COLON TYPE
-    | ID COLON TYPE COMMA flist
+    | TYPE ID
+    | TYPE ID COMMA flist
     """
     if len(p) == 1:  # empty
         p[0] = []
 
-    elif len(p) == 6:  # ID COLON TYPE COMMA flist
-        p[0] = p[1]
-        p[5].insert(0, p[0])  # inserts it at the beginning of p[5]
-        p[0] = p[5]
+    elif len(p) == 5:  # TYPE ID COMMA flist
+        p[0] = p[4]
+        p[0].insert(0, [p[1], p[2]])  # inserts it at the beginning of p[0]
 
-    else:  #  ID COLON TYPE
-        p[0] = p[1]
+    else:  #  TYPE ID
+        p[0] = [p[1], p[2]]
 
 
 def p_type(p):
@@ -260,14 +259,14 @@ def p_type(p):
     p[0] = p[1]
 
 
+def p_statement_print(p):
+    "print_smt : PRINT LPAREN expr RPAREN SEMI %prec PRINT"
+    p[0] = PrintNode(p[3])
+
+
 # def p_empty(p):
 #     "empty :"
 #     pass
-
-
-# def p_statement_print(token):
-#     "print_smt : PRINT LPAREN expression RPAREN SEMI %prec PRINT"
-#     token[0] = PrintNode(token[3])
 
 
 # def p_statment_assign_to_list(token):

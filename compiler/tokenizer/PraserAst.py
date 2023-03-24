@@ -37,6 +37,17 @@ class IntNode(ExpressionNode):
         return str(self.val)
 
 
+class TypeNode(ExpressionNode):
+    def __init__(self, val):
+        self.val = val
+
+    def evaluate(self):
+        return self.val
+
+    def __str__(self):
+        return self.val
+
+
 class RealNode(ExpressionNode):
     def __init__(self, val):
         self.val = float(val)
@@ -266,7 +277,7 @@ class FuncNode(StatementNode):
                 return self.expr.evaluate()
 
         # Add the function to the current environment
-        current_env().define(self.vid.id, func)
+        # current_env().define(self.vid.id, func)
         symbol_table[self.vnode.vid] = func
         # symbol_table[self.vnode.vid] = [func, self.type, argument]
 
