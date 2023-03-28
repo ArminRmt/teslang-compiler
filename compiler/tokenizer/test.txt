@@ -1,3 +1,2 @@
-def str a(str c) {
-    int b = 2
-}
+def int res(int c) return 5;
+res(8)
