@@ -46,6 +46,7 @@ def p_body(p):
     """
 
     if len(p) == 3:
+        # p[0] = [p[1]] + p[2]
         p[0] = [p[1], p[2]]
 
 
@@ -81,7 +82,7 @@ def p_if_statement(p):
 
 
 def p_ifelse_statement(p):
-    "if_statement : IF LPAREN expr RPAREN stmt ELSE stmt"
+    "ifelse_statement : IF LPAREN expr RPAREN stmt ELSE stmt"
     p[0] = PraserAst(action="condition", params=[p[3], p[5], p[7]])
 
 
@@ -145,16 +146,11 @@ def p_expr(p):
     | ID
     | INT
     | STRING
-    | builtin_scan
-    | builtin_print
-    | builtin_list
-    | builtin_length
-    | builtin_exit
+    | builtin_methods
     """
 
     if len(p) == 2:  # INT | STRING | ID | builtin_methods
         p[0] = p[1]
-        p[0] = PraserAst(action="assign", params=[p[1], p[1].type])
 
     if len(p) == 3:  # | NOT expr | SUB expr | ADD expr
         if p[0] == "-":
@@ -166,7 +162,7 @@ def p_expr(p):
 
     if len(p) == 4:
         if p[2] == "&&" or p[2] == "||":
-            p[0] = mAST(action="logop", params=p[1:])
+            p[0] = PraserAst(action="logop", params=p[1:])
         elif p[2] == "=":  # ID ASSIGN expr
             p[0] = PraserAst(action="assign", params=[p[1], p.type, p[3]])
         elif p[1] == "=":  # LBLOCK clist RBLOCK
@@ -176,12 +172,13 @@ def p_expr(p):
 
     if len(p) == 5:
         if p[2] == "(":  # ID LPAREN clist RPAREN
-            pass
+            # p[0] = PraserAst(action="FunctoinCall", params=[p[1], p[3]])
+            p[0] = p[1]
         else:  # expr LBLOCK expr RBLOCK
-            pass
+            p[0] = PraserAst(action="Index", params=[p[1], p[3]])
 
     if len(p) == 6:  # expr QUESTIONMARK expr COLON expr
-        pass
+        p[0] = PraserAst(action="thearnaryOp", params=[p[1], p[3], p[5]])
 
 
 def p_clist(p):
@@ -196,66 +193,41 @@ def p_clist(p):
     elif len(p) == 4:  # expr COMMA clist
         p[0] = [p[1]] + p[3]
 
-
-# def p_flist(p):
-#     """
-#     flist : TYPE ID
-#           | TYPE ID COMMA flist
-#           | empty
-#     """
-#     if len(p) == 3:  #  TYPE ID
-#         p[0] = [[p[1], p[2]]]
-#         PraserAst(action="arguman_assign", params=[p[2], p[1]])
-
-#     elif len(p) == 5:  # TYPE ID COMMA flist
-#         p[0] = [[p[1], p[2]]] + p[4]
-#         PraserAst(action="arguman_assign ", params=[p[2], p[1], p[4]])
-
-
-# symbol_table[self.vnode.vid] = self.exp.evaluate()
-
-# arg_dict = {arg.id: arg.evaluate() for arg in self.flist}
+    # p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3] if len(p) == 4 else None
 
 
 def p_type(p):
-    """type : INT
-    | VECTOR
-    | NULL
-    | STRING
+    """
+    type : INT
+         | VECTOR
+         | NULL
+         | STRING
     """
     p[0] = p[1]
 
 
 def p_empty(p):
     "empty :"
-    if len(p) == 1:  # prog
-        print("last grammer empty prog")
     p[0] = []
 
 
-def p_builtin_length(p):
-    "expression : LENGTH LPAREN expr RPAREN"
-    p[0] = len(p[3])
+def p_builtin_methods(p):
+    """
+    builtin_methods : LENGTH LPAREN expr RPAREN
+                    | SCAN LPAREN RPAREN
+                    | PRINT LPAREN expr RPAREN
+                    | LPAREN expr RPAREN
+                    | EXIT LPAREN expr RPAREN
+    """
+    cases = {
+        "length": PraserAst(action="builtin_length", params=[p[3]]),
+        # "scan": input(),
+        "print": PraserAst(action="print", params=[p[3]]),
+        "(": PraserAst(action="builtin_list", params=[p[2]]),
+        # "exit": sys.exit(int(p[3])),
+    }
 
-
-def p_builtin_scan(p):
-    """builtin_scan : SCAN LPAREN RPAREN"""
-    p[0] = input()
-
-
-def p_builtin_print(p):
-    """builtin_print : PRINT LPAREN expr RPAREN"""
-    print(p[3])
-
-
-def p_builtin_list(p):  # return list with n element
-    """builtin_list : LPAREN expr RPAREN"""
-    p[0] = list(range(int(p[2])))
-
-
-def p_builtin_exit(p):
-    """builtin_exit : EXIT LPAREN expr RPAREN"""
-    sys.exit(int(p[3]))
+    p[0] = cases.get(p[1], None)  #  If the key is not found, None is returned.
 
 
 def p_error(tok):

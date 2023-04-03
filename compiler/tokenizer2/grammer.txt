@@ -1,5 +1,5 @@
-prog :
-| func prog
+prog : func prog
+     | empty
 func : def TYPE ID LPAREN flist RPAREN LBRACE body RBRACE | def TYPE ID LPAREN flist RPAREN RETURN expr SEMI
 stmt : expr SEMI | defvar SEMI | IF LPAREN expr RPAREN stmt | IF LPAREN expr RPAREN stmt ELSE stmt| WHILE LPAREN expr RPAREN stmt	| FOR LPAREN ID EQUAL expr TO expr RPAREN stmt | RETURN expr SEMI   | LBRACE body RBRACE  | func 
 defvar : VAR TYPE ID | VAR TYPE ID ASSIGN expr

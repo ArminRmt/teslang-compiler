@@ -1,1 +1,1 @@
-def int res(int c) return 5;
+def int res(int c) { print("salam"); }

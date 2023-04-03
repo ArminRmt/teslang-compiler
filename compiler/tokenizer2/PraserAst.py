@@ -88,6 +88,32 @@ class PraserAst:
         elif self.action == "print":
             print(" ".join(str(PraserAst.resolve(x)) for x in list(self.params)))
 
+        elif self.action == "builtin_length":
+            restult = len(self.params[0])
+
+        elif self.action == "builtin_list":
+            res = []
+            for i in range(self.params[0]):
+                res.append(None)
+            result = res
+
+            # restult = list(range(int(self.params[0])))
+
+        # elif self.action == "FunctoinCall":
+        #     pass
+
+        elif self.action == "Index":
+            result = PraserAst.resolve(self.params[0])[
+                PraserAst.resolve(self.params[1])
+            ]
+
+        elif self.action == "thearnaryOp":
+            result = (
+                ParserAst.resolve(self.params[1])
+                if ParserAst.resolve(self.params[0])
+                else ParserAst.resolve(self.params[2])
+            )
+
         # elif self.action == "get":
         #     result = symbols.get(self.params[0], 0)
 

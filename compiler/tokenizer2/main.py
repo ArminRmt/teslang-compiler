@@ -18,9 +18,9 @@ data = f.read()
 # f.close()
 
 
-# lexer.input(data)
-# for tok in lexer:
-#     print(tok.type, "		", tok.value)
+lexer.input(data)
+for tok in lexer:
+    print(tok.type, "		", tok.value)
 
 
 try:
@@ -36,4 +36,3 @@ except SyntaxError:
 
 except Exception:
     print("\nSemantic Error")
-    print(f"({tok.value}) at line {tok.lineno}, column {tok.lexpos}")

@@ -13,7 +13,6 @@ tokens = (
     "TYPE",
     "BUILTIN_METHODES",
     "SCAN",
-    "PRINT",
     "LIST",
     "LENGTH",
     "EXIT",
@@ -25,6 +24,9 @@ reserved = {
     "while": "WHILE",
     # "in": "IN",
     "print": "PRINT",
+    "scan": "SCAN",
+    "length": "LENGTH",
+    "exit": "EXIT",
     "var": "VAR",
     "def": "DEF",
     "for": "FOR",
@@ -129,10 +131,10 @@ def t_TYPE(t):
     return t
 
 
-def t_BUILTIN_METHODES(t):
-    r"scan|print|list|length|exit"
-    # r"scan()|print([a-zA-Z_][a-zA-Z_0-9]*)|list()|length([a-zA-Z_][a-zA-Z_0-9])|exit(\d+)"
-    return t
+# def t_BUILTIN_METHODES(t):
+#     # r"scan|print|list|length|exit"
+#     r"scan()|print([a-zA-Z_][a-zA-Z_0-9]*)|list()|length([a-zA-Z_][a-zA-Z_0-9])|exit(\d+)"
+#     return t
 
 
 def t_COMMENT(t):
