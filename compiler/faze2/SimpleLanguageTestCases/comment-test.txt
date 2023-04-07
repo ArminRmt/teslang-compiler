@@ -1,0 +1,2 @@
+
+lexer.input('foo = 42\n# This is a comment\nbar = 3.14')

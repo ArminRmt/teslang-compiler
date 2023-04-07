@@ -19,19 +19,29 @@ class PraserAst:
         self.params = params
 
     def execute(self):
+
         result = None
+
         if self.action == "function":  # TYPE ID  flist body/expr
-            symbol = SymbolTable(
-                self.params[1],
-                self.params[0],
-                True,
-                False,
-                len(self.params[2]),
-            )
 
-            [symbol.add_parameter(x[1]) for x in self.params[2]]
+            if self.params[1] in idenInfo.keys():
+                print("function", self.params[1], "already exist!")
+                print("\nSemantic Error")
+            else:
+                symbol = SymbolTable(
+                    self.params[1],
+                    self.params[0],
+                    True,
+                    False,
+                    len(self.params[2]),
+                )
 
-            idenInfo[self.params[1]] = symbol
+                [symbol.add_parameter(x[1]) for x in self.params[2]]
+
+                result = idenInfo[self.params[1]] = symbol
+
+                print(idenInfo)
+            # print(idenInfo.keys())
 
         elif self.action == "condition":
             if PraserAst.resolve(self.params[0]):
@@ -41,7 +51,7 @@ class PraserAst:
 
         elif self.action == "while":
             while PraserAst.resolve(self.params[0]):
-                PraserAst.resolve(self.params[1])
+                result = PraserAst.resolve(self.params[1])
 
         elif self.action == "for":
 
@@ -55,7 +65,7 @@ class PraserAst:
             idenInfo[self.params[0]] = symbol
 
             for i in range(self.params[1], self.params[2]):
-                PraserAst.resolve(self.params[3])
+                result = PraserAst.resolve(self.params[3])
 
         elif self.action == "assign":
 
@@ -72,7 +82,8 @@ class PraserAst:
 
             idenInfo[self.params[0]] = symbol
 
-            result = idenInfo[self.params[0]].value
+            result = idenInfo[self.params[0]]
+            # result = idenInfo[self.params[0]].value
 
         elif self.action == "arguman_assign":
 

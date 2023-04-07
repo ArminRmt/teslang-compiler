@@ -25,6 +25,9 @@ class SymbolTable:
     def get_parameter_types(self):
         return [p[0] for p in self.param_list]
 
+    def get_names(self):
+        return [p for p in self.name]
+
     def assign_value(self, value):
         if self.is_assigned_value == True:
             self.value = value

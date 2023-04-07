@@ -10,7 +10,7 @@ from PraserAst import PraserAst
 lexer = lex.lex(module=Mylexer)
 
 # Build the parser
-parser = yacc.yacc(module=MyParser)
+parser = yacc.yacc(module=MyParser, debug=True)
 
 
 f = open("test.txt", "r")
@@ -18,21 +18,29 @@ data = f.read()
 # f.close()
 
 
+# faze 1
 lexer.input(data)
-for tok in lexer:
-    print(tok.type, "		", tok.value)
+# for tok in lexer:
+#     print(tok.type, "		", tok.value)
 
 
-try:
-    for x in parser.parse(data):
-        PraserAst.resolve(x)
-except SyntaxError:
-    # stack_state_str = ", ".join([s.state for s in parser.stack])
-    # stack_rule_str = ", ".join([s.name for s in parser.symstack])
-    # print(
-    #     f"Syntax error\nState stack: {stack_state_str}. Rule stack: {stack_rule_str}."
-    # )
-    print("Syntax error")
+for x in parser.parse(data):
+    print(x)
+    PraserAst.resolve(x)
 
-except Exception:
-    print("\nSemantic Error")
+# for x in yacc.parse(data):
+#     PraserAst.resolve(x)
+
+# try:
+#     for x in parser.parse(data):
+#         PraserAst.resolve(x)
+# except SyntaxError:
+#     # stack_state_str = ", ".join([s.state for s in parser.stack])
+#     # stack_rule_str = ", ".join([s.name for s in parser.symstack])
+#     # print(
+#     #     f"Syntax error\nState stack: {stack_state_str}. Rule stack: {stack_rule_str}."
+#     # )
+#     print("Syntax error")
+
+# except Exception:
+#     print("\nSemantic Error")

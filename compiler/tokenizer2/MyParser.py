@@ -1,17 +1,11 @@
 import Mylexer
 import sys
 from PraserAst import PraserAst
-
+from Mylexer import find_column
 
 funcNames = ["scan", "print", "list", "length", "exit"]
 
 # function with the same name has already been defined
-def newFCheck(t):
-    if t in funcNames:
-        print("function", t, "already exist!")
-        raise Exception
-    else:
-        funcNames.append(t)
 
 
 # import some required globals from tokenizer
@@ -27,6 +21,7 @@ def p_prog(p):
     """
 
     if len(p) == 3:
+        # print("p =", vars(p))
         p[0] = [p[1], p[2]]
 
 
@@ -34,9 +29,9 @@ def p_func(p):
     """func : DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
     | DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
     """
-    # newFCheck(p[3])
-
+    # print("p =", vars(p))
     p[0] = PraserAst(action="function", params=[p[2], p[3], p[5], p[8]])
+    # p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
 
 
 def p_body(p):
@@ -46,7 +41,7 @@ def p_body(p):
     """
 
     if len(p) == 3:
-        # p[0] = [p[1]] + p[2]
+        # print("p =", vars(p))
         p[0] = [p[1], p[2]]
 
 
@@ -100,10 +95,13 @@ def p_defvar(p):
     """defvar : VAR TYPE ID
     | VAR TYPE ID ASSIGN expr
     """
+
     if len(p) == 6:
         p[0] = PraserAst(action="assign", params=[p[3], p[2], p[5]])
+        # p[0] = [p[2], p[3], p[5]]
     else:
         p[0] = PraserAst(action="assign", params=[p[3], p[2]])
+        # p[0] = [p[2], p[3]]
 
 
 def p_flist(p):
@@ -113,11 +111,11 @@ def p_flist(p):
           | empty
     """
     if len(p) == 3:  #  TYPE ID
-        p[0] = [[p[1], p[2]]]
+        p[0] = [(p[1], p[2])]
         PraserAst(action="arguman_assign", params=[p[2], p[1]])
 
     elif len(p) == 5:  # TYPE ID COMMA flist
-        p[0] = [[p[1], p[2]]] + p[4]
+        p[0] = [(p[1], p[2])] + p[4]
         PraserAst(action="arguman_assign ", params=[p[2], p[1], p[4]])
 
 
@@ -192,6 +190,7 @@ def p_clist(p):
         p[0] = [p[1]]
     elif len(p) == 4:  # expr COMMA clist
         p[0] = [p[1]] + p[3]
+        # p[0] = [p[1], p[3]]
 
     # p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3] if len(p) == 4 else None
 
@@ -238,7 +237,7 @@ def p_error(tok):
     else:
         # Handle invalid token
         print(
-            f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {tok.lexpos}"
+            f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {find_column(tok)}"
         )
 
-    raise SyntaxError
+    # raise SyntaxError

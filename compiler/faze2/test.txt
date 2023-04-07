@@ -1,0 +1,6 @@
+def str res(int c) {
+    return 5;
+}
+
+def int main() return 2;
+
