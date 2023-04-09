@@ -74,26 +74,23 @@ def p_stmt(p):
 
 def p_if_statement(p):
     "if_statement : IF LPAREN expr RPAREN stmt"
-    PraserAst(action="condition", params=[p[3], p[5]])
-    p[0] = [p[1], p[2], p[3], p[4], p[5]]
+    p[0] = PraserAst(action="condition", params=[p[3], p[5]]).execute()
 
 
 def p_ifelse_statement(p):
     "ifelse_statement : IF LPAREN expr RPAREN stmt ELSE stmt"
-    PraserAst(action="condition", params=[p[3], p[5], p[7]])
-    p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7]]
+    p[0] = PraserAst(action="condition", params=[p[3], p[5], p[7]]).execute()
 
 
 def p_while_statement(p):
     "while_statement : WHILE LPAREN expr RPAREN stmt"
-    PraserAst(action="while", params=[p[3], p[5]])
-    p[0] = [p[1], p[2], p[3], p[4], p[5]]
+    p[0] = PraserAst(action="while", params=[p[3], p[5]]).execute()
 
 
 def p_for_statement(p):
     "for_statement : FOR LPAREN ID EQUAL expr TO expr RPAREN stmt"
-    PraserAst(action="for", params=[p[3], p[5], p[7], p[9]])
-    p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
+    # p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
+    p[0] = PraserAst(action="for", params=[p[3], p[5], p[7], p[9]]).execute()
 
 
 def p_defvar(p):
@@ -102,11 +99,12 @@ def p_defvar(p):
     """
 
     if len(p) == 6:
-        PraserAst(action="assign", params=[p[3], p[2], p[5]])
-        p[0] = [p[2], p[3], p[5]]
+        p[0] = PraserAst(action="assign", params=[p[3], p[2], p[5]]).execute()
+
+        # p[0] = [p[2], p[3], p[5]]
     else:
-        PraserAst(action="assign", params=[p[3], p[2]])
-        p[0] = [p[2], p[3]]
+        PraserAst(action="assign", params=[p[3], p[2]]).execute()
+        p[0] = [p[1], p[2], p[3]]
 
 
 def p_flist(p):
@@ -117,11 +115,11 @@ def p_flist(p):
     """
     if len(p) == 3:  #  TYPE ID
         p[0] = [(p[1], p[2])]
-        PraserAst(action="arguman_assign", params=[p[2], p[1]])
+        PraserAst(action="arguman", params=[p[2], p[1]]).execute()
 
     elif len(p) == 5:  # TYPE ID COMMA flist
         p[0] = [(p[1], p[2])] + p[4]
-        PraserAst(action="arguman_assign ", params=[p[2], p[1], p[4]])
+        PraserAst(action="arguman", params=[p[2], p[1], p[4]]).execute()
 
 
 def p_expr(p):
@@ -156,36 +154,34 @@ def p_expr(p):
         p[0] = p[1]
         # PraserAst(action="return_type", params=[p[1]]).execute()
 
-    if len(p) == 3:  # | NOT expr | SUB expr | ADD expr
+    elif len(p) == 3:  # | NOT expr | SUB expr | ADD expr
         p[0] = [p[1], p[2]]
         if p[0] == "-":
-            PraserAst(action="binop", params=[-1, "*", p[2]])
+            PraserAst(action="binop", params=[-1, "*", p[2]]).execute()
         elif p[0] == "!":
-            PraserAst(action="UnaryNot", params=[p[2]])
+            PraserAst(action="UnaryNot", params=[p[2]]).execute()
 
-    if len(p) == 4:
-        p[0] = [p[1], p[2], p[3]]
+    elif len(p) == 4:
+        # p[0] = [p[1], p[2], p[3]]
 
         if p[2] == "&&" or p[2] == "||":
-            p[0] = PraserAst(action="logop", params=p[1:])
+            p[0] = PraserAst(action="logop", params=p[1:]).execute()
         elif p[2] == "=":  # ID ASSIGN expr
-            PraserAst(action="assign", params=[p[1], p.type, p[3]])
-        elif p[1] == "=":  # LBLOCK clist RBLOCK
-            PraserAst(action="ListNode", params=[p[2]])
+            PraserAst(action="assign", params=[p[1], p.type, p[3]]).execute()
+        elif p[1] == "[":  # LBLOCK clist RBLOCK    making list
+            p[0] = PraserAst(action="ListNode", params=[p[2]]).execute()
         else:
-            PraserAst(action="binop", params=p[1:])
+            p[0] = PraserAst(action="binop", params=p[1:]).execute()
 
-    if len(p) == 5:
+    elif len(p) == 5:
         if p[2] == "(":  # ID LPAREN clist RPAREN
-            # p[0] = PraserAst(action="FunctoinCall", params=[p[1], p[3]])
-            p[0] = p[1]
-        else:  # expr LBLOCK expr RBLOCK
-            PraserAst(action="Index", params=[p[1], p[3]])
+            PraserAst(action="FunctoinCall", params=[p[1], p[3]]).execute()
             p[0] = [p[1], p[2], p[3], p[4]]
+        else:  # expr LBLOCK expr RBLOCK           list index
+            p[0] = PraserAst(action="ArrayIndex", params=[p[1], p[3]]).execute()
 
-    if len(p) == 6:  # expr QUESTIONMARK expr COLON expr
-        PraserAst(action="thearnaryOp", params=[p[1], p[3], p[5]])
-        p[0] = [p[1], p[2], p[3], p[4], p[5]]
+    elif len(p) == 6:  # expr QUESTIONMARK expr COLON expr
+        p[0] = PraserAst(action="thearnaryOp", params=[p[1], p[3], p[5]]).execute()
 
 
 def p_clist(p):
@@ -199,6 +195,7 @@ def p_clist(p):
         p[0] = [p[1]]
     elif len(p) == 4:  # expr COMMA clist
         p[0] = [p[1]] + p[3]
+
         # p[0] = [p[1], p[3]]
 
     # p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3] if len(p) == 4 else None
@@ -228,10 +225,10 @@ def p_builtin_methods(p):
                     | EXIT LPAREN expr RPAREN
     """
     cases = {
-        "length": PraserAst(action="builtin_length", params=[p[3]]),
+        "length": PraserAst(action="builtin_length", params=[p[3]]).execute(),
         # "scan": input(),
-        "print": PraserAst(action="print", params=[p[3]]),
-        "(": PraserAst(action="builtin_list", params=[p[2]]),
+        "print": PraserAst(action="print", params=[p[3]]).execute(),
+        "(": PraserAst(action="builtin_list", params=[p[2]]).execute(),
         # "exit": sys.exit(int(p[3])),
     }
 

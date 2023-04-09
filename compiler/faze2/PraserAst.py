@@ -33,11 +33,13 @@ class PraserAst:
                     self.params[0],
                     True,
                     False,
+                    False,
                     len(self.params[2]) if self.params[2] else 0,
                 )
 
                 if self.params[2] != None:
                     [symbol.add_parameter(x[1]) for x in self.params[2]]
+                    [symbol.add_parameter_type(x[0]) for x in self.params[2]]
 
                 idenInfo[self.params[1]] = symbol
 
@@ -78,6 +80,7 @@ class PraserAst:
                 None,
                 False,
                 False,
+                False,
                 0,
             )
             idenInfo[self.params[0]] = symbol
@@ -85,29 +88,30 @@ class PraserAst:
             for i in range(self.params[1], self.params[2]):
                 result = self.params[3]
 
+        # TYPE ID expr
         elif self.action == "assign":
             symbol = SymbolTable(
                 self.params[0],
                 self.params[1],
                 False,
                 False,
+                True if isinstance(self.params[2], (list)) else False,
                 0,
             )
-            if len(self.params > 2):
+            if len(self.params) == 1 or len(self.params) > 2:
                 symbol.is_assigned_value = True
                 symbol.assign_value(self.params[2])
 
             idenInfo[self.params[0]] = symbol
+            result = idenInfo[self.params[0]].value
 
-            result = idenInfo[self.params[0]]
-            # result = idenInfo[self.params[0]].value
-
-        elif self.action == "arguman_assign":
+        elif self.action == "arguman":
             symbol = SymbolTable(
                 self.params[0],
                 self.params[1],
                 False,
                 True,
+                False,
                 0,
             )
             idenInfo[self.params[0]] = symbol
@@ -126,11 +130,54 @@ class PraserAst:
 
             # restult = list(range(int(self.params[0])))
 
-        # elif self.action == "FunctoinCall":
-        #     pass
+        # ID clist
+        elif self.action == "FunctoinCall":
+            if not self.params[0] in idenInfo.keys():
+                print("### semantic error ###\nNo such a function exist!")
+            else:
+                for x in idenInfo:
+                    if idenInfo[x].is_function and idenInfo[x].name == self.params[0]:
+                        f = idenInfo[x]
+                # f = next((idenInfo[x] for x in idenInfo if callable(idenInfo[x]) and idenInfo[x].__name__ == self.params[0]), None)
 
-        elif self.action == "Index":
-            result = self.params[0][self.params[1]]
+                # number of params wrong
+                if not f.num_params == len(self.params[1]):
+                    print(
+                        "### semantic error ###\nfunction",
+                        f.name,
+                        "expects",
+                        f.num_params,
+                        "parameter but it's given",
+                        len(self.params[1]),
+                        "!!",
+                    )
+                # params type has mistakes
+                param_type_list = f.param_type_list
+                for j in self.params[1]:
+                    if not type(j).__name__ in param_type_list:
+                        print(
+                            "### semantic error ###\nwrong arguman type",
+                            "in order expects on of",
+                            param_type_list,
+                            "but it's given",
+                            type(j).__name__,
+                        )
+                        # break
+
+        # expr[expr]
+        elif self.action == "ArrayIndex":
+            for x in idenInfo:
+                if idenInfo[x].is_array and idenInfo[x].name == self.params[0]:
+                    result = idenInfo[x].value[self.params[1]]
+                    break
+
+        # clist
+        elif self.action == "ListNode":
+            res = []
+            for n in self.params[0]:
+                res.append(n)
+
+            result = res
 
         elif self.action == "thearnaryOp":
             result = self.params[1] if self.params[0] else self.params[2]
@@ -140,13 +187,6 @@ class PraserAst:
 
         elif self.action == "UnaryNot":
             result = not self.params[0]
-
-        elif self.action == "ListNode":
-            res = []
-            for n in self.params[0]:
-                res.append(n)
-
-            result = res
 
         elif self.action == "logop":
             params = list(self.params)

@@ -1,6 +1,4 @@
-def str res(int c) {
-    return 5;
+def int baba(int d) {
+    var int arr = [1,2,3];
+    arr[1];
 }
-
-def int main() return 2;
-
