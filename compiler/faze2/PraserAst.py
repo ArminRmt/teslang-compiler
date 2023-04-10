@@ -88,19 +88,67 @@ class PraserAst:
             for i in range(self.params[1], self.params[2]):
                 result = self.params[3]
 
+        # var int b;
+        # b = "easfe";
         # TYPE ID expr
         elif self.action == "assign":
+            if (  # identifire declared, now want to get value
+                idenInfo[self.params[0]]
+                and idenInfo[self.params[0]].is_function == False
+                and idenInfo[self.params[0]].is_argumman == False
+            ):
+                if type(self.params[2]).__name__ == idenInfo[self.params[0]].var_type:
+                    idenInfo[self.params[0]].is_assigned_value = True
+                    idenInfo[self.params[0]].assign_value(self.params[2])
+                else:
+                    print(
+                        "### semantic error ###\nvariable",
+                        idenInfo[self.params[0]].name,
+                        "should assign",
+                        idenInfo[self.params[0]].var_type,
+                        "but given",
+                        type(self.params[2]).__name__,
+                    )
+
+                result = idenInfo[self.params[0]].value
+
+            else:
+                symbol = SymbolTable(
+                    self.params[0],
+                    self.params[1],
+                    False,
+                    False,
+                    True if isinstance(self.params[2], (list)) else False,
+                    0,
+                )
+                if len(self.params) == 1 or len(self.params) > 2:
+                    symbol.is_assigned_value = True
+                    symbol.assign_value(self.params[2])
+
+                idenInfo[self.params[0]] = symbol
+                result = idenInfo[self.params[0]].value
+
+        elif self.action == "arguman":
+            symbol = SymbolTable(
+                self.params[0],
+                self.params[1],
+                False,
+                True,
+                False,
+                0,
+            )
+            idenInfo[self.params[0]] = symbol
+
+        # ID TYPE
+        elif self.action == "declare":
             symbol = SymbolTable(
                 self.params[0],
                 self.params[1],
                 False,
                 False,
-                True if isinstance(self.params[2], (list)) else False,
+                False,
                 0,
             )
-            if len(self.params) == 1 or len(self.params) > 2:
-                symbol.is_assigned_value = True
-                symbol.assign_value(self.params[2])
 
             idenInfo[self.params[0]] = symbol
             result = idenInfo[self.params[0]].value
@@ -186,14 +234,18 @@ class PraserAst:
         #     result = symbols.get(self.params[0], 0)
 
         elif self.action == "UnaryNot":
-            result = not self.params[0]
+            result = (
+                not self.params[0]
+                if isinstance(self.params[0], int)
+                else not idenInfo[self.params[0]].value
+            )
 
         elif self.action == "logop":
             params = list(self.params)
             result = params.pop()
             while len(params) >= 2:
                 prev = result
-                op = params.pop()  # operator ("AND" or "OR")
+                op = params.pop()  # operator ("&&" or "||")
                 comp = params.pop()
                 debug("[LOGOP]", prev, op, comp)
                 result = {
@@ -204,9 +256,20 @@ class PraserAst:
                 ](prev, comp)
 
         elif self.action == "binop":
-            a = self.params[0]
-            b = self.params[2]
+            a = (
+                self.params[0]
+                if isinstance(self.params[0], int)
+                else idenInfo[self.params[0]].value
+            )
+
             op = self.params[1]
+
+            b = (
+                self.params[2]
+                if isinstance(self.params[2], int)
+                else idenInfo[self.params[2]].value
+            )
+
             result = {
                 "+": lambda a, b: a + b,
                 "-": lambda a, b: a - b,

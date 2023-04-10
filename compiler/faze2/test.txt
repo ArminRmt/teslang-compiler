@@ -1,4 +1,3 @@
-def int baba(int d) {
-    var int arr = [1,2,3];
-    arr[1];
+def int res(int a) {
+    var int b = 2;
 }

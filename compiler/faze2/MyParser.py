@@ -101,10 +101,9 @@ def p_defvar(p):
     if len(p) == 6:
         p[0] = PraserAst(action="assign", params=[p[3], p[2], p[5]]).execute()
 
-        # p[0] = [p[2], p[3], p[5]]
     else:
-        PraserAst(action="assign", params=[p[3], p[2]]).execute()
-        p[0] = [p[1], p[2], p[3]]
+        p[0] = PraserAst(action="declare", params=[p[3], p[2]]).execute()
+        # print(p[0])
 
 
 def p_flist(p):
@@ -152,22 +151,21 @@ def p_expr(p):
 
     if len(p) == 2:  # INT | STRING | ID | builtin_methods
         p[0] = p[1]
-        # PraserAst(action="return_type", params=[p[1]]).execute()
 
     elif len(p) == 3:  # | NOT expr | SUB expr | ADD expr
-        p[0] = [p[1], p[2]]
-        if p[0] == "-":
-            PraserAst(action="binop", params=[-1, "*", p[2]]).execute()
-        elif p[0] == "!":
-            PraserAst(action="UnaryNot", params=[p[2]]).execute()
+        if p[1] == "-":
+            p[0] = PraserAst(action="binop", params=[-1, "*", p[2]]).execute()
+        elif p[1] == "+":
+            p[0] = PraserAst(action="binop", params=[1, "*", p[2]]).execute()
+        else:
+            p[0] = PraserAst(action="UnaryNot", params=[p[2]]).execute()
 
     elif len(p) == 4:
-        # p[0] = [p[1], p[2], p[3]]
-
         if p[2] == "&&" or p[2] == "||":
             p[0] = PraserAst(action="logop", params=p[1:]).execute()
         elif p[2] == "=":  # ID ASSIGN expr
-            PraserAst(action="assign", params=[p[1], p.type, p[3]]).execute()
+            p[0] = PraserAst(action="assign", params=[p[1], None, p[3]]).execute()
+            # _______________________ type should be expr type   ______________________________________________________________
         elif p[1] == "[":  # LBLOCK clist RBLOCK    making list
             p[0] = PraserAst(action="ListNode", params=[p[2]]).execute()
         else:
@@ -195,8 +193,6 @@ def p_clist(p):
         p[0] = [p[1]]
     elif len(p) == 4:  # expr COMMA clist
         p[0] = [p[1]] + p[3]
-
-        # p[0] = [p[1], p[3]]
 
     # p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3] if len(p) == 4 else None
 
