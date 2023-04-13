@@ -94,16 +94,16 @@ def p_for_statement(p):
 
 
 def p_defvar(p):
-    """defvar : VAR TYPE ID
-    | VAR TYPE ID ASSIGN expr
+    """
+    defvar : VAR TYPE ID
+           | VAR TYPE ID ASSIGN expr
     """
 
     if len(p) == 6:
-        p[0] = PraserAst(action="assign", params=[p[3], p[2], p[5]]).execute()
+        p[0] = PraserAst(action="declare_assign", params=[p[3], p[2], p[5]]).execute()
 
     else:
         p[0] = PraserAst(action="declare", params=[p[3], p[2]]).execute()
-        # print(p[0])
 
 
 def p_flist(p):
@@ -164,7 +164,7 @@ def p_expr(p):
         if p[2] == "&&" or p[2] == "||":
             p[0] = PraserAst(action="logop", params=p[1:]).execute()
         elif p[2] == "=":  # ID ASSIGN expr
-            p[0] = PraserAst(action="assign", params=[p[1], None, p[3]]).execute()
+            p[0] = PraserAst(action="assign", params=[p[1], p[3]]).execute()
             # _______________________ type should be expr type   ______________________________________________________________
         elif p[1] == "[":  # LBLOCK clist RBLOCK    making list
             p[0] = PraserAst(action="ListNode", params=[p[2]]).execute()

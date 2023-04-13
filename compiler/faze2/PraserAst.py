@@ -88,31 +88,56 @@ class PraserAst:
             for i in range(self.params[1], self.params[2]):
                 result = self.params[3]
 
-        # var int b;
-        # b = "easfe";
-        # TYPE ID expr
-        elif self.action == "assign":
-            if (  # identifire declared, now want to get value
-                idenInfo[self.params[0]]
-                and idenInfo[self.params[0]].is_function == False
-                and idenInfo[self.params[0]].is_argumman == False
-            ):
-                if type(self.params[2]).__name__ == idenInfo[self.params[0]].var_type:
-                    idenInfo[self.params[0]].is_assigned_value = True
-                    idenInfo[self.params[0]].assign_value(self.params[2])
+        # ID TYPE
+        elif self.action == "declare":
+            type_list = ["str", "int", "null", "vector"]
+            # if self.params[1] not in type_list:
+            #     print("wrong type", "types must be one of the following", type_list)
+            symbol = SymbolTable(
+                self.params[0],
+                self.params[1],
+                False,
+                False,
+                False,
+                0,
+            )
+            idenInfo[self.params[0]] = symbol
+            result = idenInfo[self.params[0]].value  # .value ??????
+
+        # ID expr
+        elif self.action == "assign":  # identifire declared, now want to get value
+            var = None
+            for x in idenInfo:
+                if (
+                    idenInfo[x].name == self.params[0]
+                    and not idenInfo[x].is_function
+                    and not idenInfo[x].is_argumman
+                ):
+                    var = idenInfo[x]
+                    break
+
+            if var:
+                if type(self.params[1]).__name__ == var.var_type:
+                    var.is_assigned_value = True
+                    var.assign_value(self.params[1])
                 else:
                     print(
                         "### semantic error ###\nvariable",
-                        idenInfo[self.params[0]].name,
+                        var.name,
                         "should assign",
-                        idenInfo[self.params[0]].var_type,
+                        var.var_type,
                         "but given",
-                        type(self.params[2]).__name__,
+                        type(self.params[1]).__name__,
                     )
 
-                result = idenInfo[self.params[0]].value
+                result = var.value
 
             else:
+                print("### semantic error ###\nvariable has not been declared yet")
+
+        # ID TYPE expr
+        elif self.action == "declare_assign":
+            if type(self.params[2]).__name__ == self.params[1]:
                 symbol = SymbolTable(
                     self.params[0],
                     self.params[1],
@@ -121,12 +146,22 @@ class PraserAst:
                     True if isinstance(self.params[2], (list)) else False,
                     0,
                 )
-                if len(self.params) == 1 or len(self.params) > 2:
-                    symbol.is_assigned_value = True
-                    symbol.assign_value(self.params[2])
+
+                symbol.is_assigned_value = True
+                symbol.assign_value(self.params[2])
 
                 idenInfo[self.params[0]] = symbol
                 result = idenInfo[self.params[0]].value
+
+            else:
+                print(
+                    "### semantic error ###\nvariable",
+                    self.params[0],
+                    "should assign",
+                    self.params[1],
+                    "but given",
+                    type(self.params[2]).__name__,
+                )
 
         elif self.action == "arguman":
             symbol = SymbolTable(
@@ -138,20 +173,6 @@ class PraserAst:
                 0,
             )
             idenInfo[self.params[0]] = symbol
-
-        # ID TYPE
-        elif self.action == "declare":
-            symbol = SymbolTable(
-                self.params[0],
-                self.params[1],
-                False,
-                False,
-                False,
-                0,
-            )
-
-            idenInfo[self.params[0]] = symbol
-            result = idenInfo[self.params[0]].value
 
         elif self.action == "arguman":
             symbol = SymbolTable(
@@ -270,21 +291,33 @@ class PraserAst:
                 else idenInfo[self.params[2]].value
             )
 
-            result = {
-                "+": lambda a, b: a + b,
-                "-": lambda a, b: a - b,
-                "*": lambda a, b: a * b,
-                "/": lambda a, b: a / b,
-                "%": lambda a, b: a % b,
-                "**": lambda a, b: a**b,
-                ">": lambda a, b: (a > b),
-                ">=": lambda a, b: (a >= b),
-                "<": lambda a, b: (a < b),
-                "<=": lambda a, b: (a <= b),
-                "==": lambda a, b: (a == b),
-                "!=": lambda a, b: (a != b),
-            }[op](a, b)
-            debug("[BINOP]", a, op, b, result)
+            if a is not None and b is not None:
+                result = {
+                    "+": lambda a, b: a + b,
+                    "-": lambda a, b: a - b,
+                    "*": lambda a, b: a * b,
+                    "/": lambda a, b: a / b,
+                    "%": lambda a, b: a % b,
+                    "**": lambda a, b: a**b,
+                    ">": lambda a, b: (a > b),
+                    ">=": lambda a, b: (a >= b),
+                    "<": lambda a, b: (a < b),
+                    "<=": lambda a, b: (a <= b),
+                    "==": lambda a, b: (a == b),
+                    "!=": lambda a, b: (a != b),
+                }[op](a, b)
+                debug("[BINOP]", a, op, b, result)
+
+            else:
+                print(
+                    "### semantic error ###\nUnassigned Variables",
+                    [
+                        x
+                        for x in (self.params[0], self.params[2])
+                        if idenInfo[x].value is None
+                    ],
+                    "couldn't be used",
+                )
 
         else:
             print("Error, unsupported operation:", str(self))

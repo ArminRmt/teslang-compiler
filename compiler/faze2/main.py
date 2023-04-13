@@ -21,5 +21,5 @@ lexer.input(data)
 
 
 # Build the parser
-parser = yacc.yacc(module=MyParser, debug=True)
-parser.parse(tracking=True)
+parser = yacc.yacc(module=MyParser)
+parser.parse()
