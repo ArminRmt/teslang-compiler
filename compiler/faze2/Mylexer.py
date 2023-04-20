@@ -6,11 +6,11 @@ states = (("string", "inclusive"),)
 
 # List of basic token names.
 tokens = (
-    "INT",
+    # "INT",
     "SEMI",
     "ID",
     # "COMMENT",
-    "TYPE",
+    # "TYPE",
     "BUILTIN_METHODES",
     "SCAN",
     "LIST",
@@ -34,6 +34,7 @@ reserved = {
     "return": "RETURN",
     "null": "NULL",
     "str": "STRING",
+    "int": "INT",
     "vector": "VECTOR",
 }
 
@@ -130,9 +131,10 @@ def find_column(token):
     return token.lexpos - last_cr
 
 
-def t_TYPE(t):
-    r"int|vector|str|null"
-    return t
+# def t_TYPE(t):
+#     r"int|vector|str|null"
+#     t.type = reserved.get(t.value.lower())
+#     return t
 
 
 # def t_BUILTIN_METHODES(t):

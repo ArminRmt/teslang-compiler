@@ -27,6 +27,7 @@ class PraserAst:
             if self.params[1] in idenInfo.keys():
                 print("### Semantic Error ###")
                 print("function", self.params[1], "already exist!")
+
             else:
                 symbol = SymbolTable(
                     self.params[1],
@@ -43,7 +44,36 @@ class PraserAst:
 
                 idenInfo[self.params[1]] = symbol
 
+                result = symbol.name
+
                 # print(symbol)
+
+        # ID TYPE
+        elif self.action == "func_arguman":
+            symbol = SymbolTable(
+                self.params[0],
+                self.params[1],
+                False,
+                True,
+                False,
+                0,
+            )
+
+            symbol.is_assigned_value = True
+            symbol.assign_value(self.params[1])
+            result = symbol.value
+
+            idenInfo[self.params[0]] = symbol
+
+            # result = [(self.params[0], self.params[1])]
+
+        elif self.action == "type_check":
+            valid_types = ["str", "int", "null", "vector"]
+
+            if self.params[0] in valid_types:
+                print("unaxpected type of identifire")
+            else:
+                result = self.params[0]
 
         elif self.action == "return_type":
             if type(self.params[0]).__name__ != self.params[1]:
@@ -51,14 +81,39 @@ class PraserAst:
                     "### semantic error ###\nfunction return type does not match with what it actually returns!"
                 )
 
+        # stack expr
         elif self.action == "return_type2":
+            function_retuen_type = None
+            # print(self.params[0][2].value)
+            # for item in self.params[0]:
+            #     if isinstance(item, LexToken) and item.type == "type":
+            #         function_retuen_type = item.value
+            #         break
+
             for item in self.params[0]:
-                if isinstance(item, LexToken) and item.type == "TYPE":
-                    function_retuen_type = item.value
+                if isinstance(item, LexToken) and item.type == "ID":
+                    function_name = item.value
                     break
+
             if function_retuen_type != type(self.params[1]).__name__:
+                obj = None
+                for item in idenInfo:
+                    if idenInfo[item].name == self.params[1]:
+                        obj = item
+                        break
+
+                print(vars(obj))
+
                 print(
-                    "### semantic error ###\nfunction return type does not match with what it actually returns!"
+                    "### semantic error ###\nfunction",
+                    function_name,
+                    "wrong return type expected",
+                    self.params[0][3].value,
+                    "but returned",
+                    # idenInfo[self.params[1]].var_type
+                    # if isinstance(self.params[1], int) == False
+                    # else type(self.params[1]).__name__,
+                    # "instead.",
                 )
                 # print(
                 #     f"\nunexpected token  at line {self.params[2].lineno}, column {find_column(self.params[2])}"
@@ -106,6 +161,15 @@ class PraserAst:
 
         # ID expr
         elif self.action == "assign":  # identifire declared, now want to get value
+            # [$end, LexToken(DEF,'def',21,190), LexToken(TYPE,'int',21,194), LexToken(ID,'main',21,198), LexToken(LPAREN,'(',21,202), flist, LexToken(RPAREN,')',21,203), LexToken(LBRACE,'{',21,205), stmt, stmt]
+
+            for item in self.params[2]:
+                if isinstance(item, LexToken) and item.type == "ID":
+                    function_name = item.value
+                    break
+
+                #  and idenInfo[item.value].is_function
+
             var = None
             for x in idenInfo:
                 if (
@@ -120,18 +184,21 @@ class PraserAst:
                 if type(self.params[1]).__name__ == var.var_type:
                     var.is_assigned_value = True
                     var.assign_value(self.params[1])
+                    result = var.value
                 else:
                     print(
-                        "### semantic error ###\nvariable",
+                        "### semantic error ###\nfunctoin",
+                        function_name,
+                        ": variable",
                         var.name,
-                        "should assign",
+                        "expected to be of type",
+                        type(self.params[1]).__name__
+                        if type(self.params[1]).__name__ != "list"
+                        else "vector",
+                        "but it is",
                         var.var_type,
-                        "but given",
-                        type(self.params[1]).__name__,
+                        "instead",
                     )
-
-                result = var.value
-
             else:
                 print("### semantic error ###\nvariable has not been declared yet")
 
@@ -163,28 +230,6 @@ class PraserAst:
                     type(self.params[2]).__name__,
                 )
 
-        elif self.action == "arguman":
-            symbol = SymbolTable(
-                self.params[0],
-                self.params[1],
-                False,
-                True,
-                False,
-                0,
-            )
-            idenInfo[self.params[0]] = symbol
-
-        elif self.action == "arguman":
-            symbol = SymbolTable(
-                self.params[0],
-                self.params[1],
-                False,
-                True,
-                False,
-                0,
-            )
-            idenInfo[self.params[0]] = symbol
-
         elif self.action == "print":
             print(" ".join(str(x) for x in list(self.params)))
 
@@ -209,6 +254,20 @@ class PraserAst:
                         f = idenInfo[x]
                 # f = next((idenInfo[x] for x in idenInfo if callable(idenInfo[x]) and idenInfo[x].__name__ == self.params[0]), None)
 
+                # func_params = f.get_parameter()
+                # for x in func_params:
+                #     symbol = SymbolTable(
+                #         x,
+                #         type(x),
+                #         False,
+                #         True,
+                #         False,
+                #         0,
+                #     )
+                #     symbol.is_assigned_value = True
+                #     symbol.assign_value(x)
+                #     idenInfo[x] = symbol
+
                 # number of params wrong
                 if not f.num_params == len(self.params[1]):
                     print(
@@ -216,22 +275,32 @@ class PraserAst:
                         f.name,
                         "expects",
                         f.num_params,
-                        "parameter but it's given",
+                        "arguments but got",
                         len(self.params[1]),
-                        "!!",
                     )
                 # params type has mistakes
                 param_type_list = f.param_type_list
-                for j in self.params[1]:
+                # ['A', 'a']
+                for j_index, j in enumerate(self.params[1]):
                     if not type(j).__name__ in param_type_list:
                         print(
-                            "### semantic error ###\nwrong arguman type",
-                            "in order expects on of",
-                            param_type_list,
+                            "### semantic error ###\nfunction",
+                            f.name,
+                            "expected",
+                            j,
+                            "to be of type of",
+                            param_type_list[j_index],
                             "but it's given",
-                            type(j).__name__,
+                            idenInfo[j].var_type  # if varible with value is given
+                            if isinstance(j, int) == False
+                            and idenInfo[j].value is not None
+                            else "null"  # if varible without value is given
+                            if idenInfo[j].value is None
+                            else type(j).__name__,  # if numbe is given
                         )
                         # break
+
+                # f.name(self.params[1])
 
         # expr[expr]
         elif self.action == "ArrayIndex":
@@ -291,6 +360,12 @@ class PraserAst:
                 else idenInfo[self.params[2]].value
             )
 
+            # for item in self.params[2:]:
+            #     if isinstance(item, LexToken) and item.type == "ID":
+            #         function_name = item.value
+            #         break
+
+            # and op in "+-*/%**><=" and type(a) == type(b) and type(a) in [int, float] and type(b) in [int, float]
             if a is not None and b is not None:
                 result = {
                     "+": lambda a, b: a + b,
@@ -310,17 +385,18 @@ class PraserAst:
 
             else:
                 print(
-                    "### semantic error ###\nUnassigned Variables",
+                    "### semantic error ###\nfunctoin",
+                    "find",
+                    ": Variables",
                     [
                         x
                         for x in (self.params[0], self.params[2])
-                        if idenInfo[x].value is None
+                        if isinstance(x, int) == False
+                        and idenInfo[x].is_argumman == False
+                        # if idenInfo[x].value is None
                     ],
-                    "couldn't be used",
+                    "is used before being assigned.",
                 )
-
-        else:
-            print("Error, unsupported operation:", str(self))
 
         debug("Resolving", str(self), result)
 

@@ -1,17 +1,19 @@
 import Mylexer
-import sys
 from PraserAst import PraserAst
 from Mylexer import find_column
+from ply.lex import LexToken
+
+# from main import parser
+
+# from ParserAst import failing_rules
+
 
 funcNames = ["scan", "print", "list", "length", "exit"]
-
-# function with the same name has already been defined
-
+failed_rules = []
 
 # import some required globals from tokenizer
 tokens = Mylexer.tokens
 precedence = Mylexer.precedence
-astList = []
 
 
 def p_prog(p):
@@ -26,10 +28,14 @@ def p_prog(p):
 
 
 def p_func(p):
-    """func : DEF TYPE ID LPAREN flist RPAREN LBRACE body RBRACE
-    | DEF TYPE ID LPAREN flist RPAREN RETURN expr SEMI
+    """func : DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
+    | DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     """
-    PraserAst(action="function", params=[p[2], p[3], p[5], p[8]]).execute()
+
+    p[0] = PraserAst(action="function", params=[p[2], p[3], p[5], p[8]]).execute()
+
+    # if p[0] is None:
+    #     failed_rules.append("p_func")
     if p[9] == ";":
         PraserAst(action="return_type", params=[p[8], p[2]]).execute()
     p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
@@ -69,7 +75,7 @@ def p_stmt(p):
     if len(p) == 4:  #  RETURN expr SEMI | LBRACE body RBRACE
         p[0] = p[2]
         if p[1] == "return":
-            PraserAst(action="return_type2", params=[p.stack, p[2], p]).execute()
+            PraserAst(action="return_type2", params=[p.stack, p[2]]).execute()
 
 
 def p_if_statement(p):
@@ -88,37 +94,73 @@ def p_while_statement(p):
 
 
 def p_for_statement(p):
-    "for_statement : FOR LPAREN ID EQUAL expr TO expr RPAREN stmt"
+    "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt"
     # p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
     p[0] = PraserAst(action="for", params=[p[3], p[5], p[7], p[9]]).execute()
 
 
 def p_defvar(p):
     """
-    defvar : VAR TYPE ID
-           | VAR TYPE ID ASSIGN expr
+    defvar : VAR type ID
+           | VAR type ID ASSIGN expr
     """
 
     if len(p) == 6:
         p[0] = PraserAst(action="declare_assign", params=[p[3], p[2], p[5]]).execute()
-
     else:
         p[0] = PraserAst(action="declare", params=[p[3], p[2]]).execute()
 
 
 def p_flist(p):
     """
-    flist : TYPE ID
-          | TYPE ID COMMA flist
+    flist :  type ID
+          |  type ID COMMA flist
           | empty
     """
+
     if len(p) == 3:  #  TYPE ID
         p[0] = [(p[1], p[2])]
-        PraserAst(action="arguman", params=[p[2], p[1]]).execute()
+        # PraserAst(action="type_check", params=[p[1]]).execute()
+        PraserAst(action="func_arguman", params=[p[2], p[1]]).execute()
+        # PraserAst(action="type_cheak", params=[p[1]]).execute()
 
     elif len(p) == 5:  # TYPE ID COMMA flist
         p[0] = [(p[1], p[2])] + p[4]
-        PraserAst(action="arguman", params=[p[2], p[1], p[4]]).execute()
+        PraserAst(action="func_arguman", params=[p[2], p[1]]).execute()
+
+
+# def p_flist_error(p):
+#     """
+#     flist : error ID
+#     """
+#     valid_types = ['str', 'int', 'null', 'vector']
+#     print("grammer flist has error type should be in",valid_types)
+
+
+def p_type(p):
+    """
+    type : INT
+         | VECTOR
+         | NULL
+         | STRING
+    """
+    p[0] = p[1]
+
+    # p[0] = PraserAst(action="type_check", params=[p[1]]).execute()
+
+
+# def p_type_error(p):
+#     """
+#     type : error
+#     """
+
+#     for item in p.stack:
+#         if isinstance(item, LexToken) and item.type == "ID":
+#             function_name = item.value
+#             break
+
+#     print("\n↪ function", function_name)
+#     print("↪ types must be one of the following 'int', 'string', 'vector', 'null'")
 
 
 def p_expr(p):
@@ -164,12 +206,13 @@ def p_expr(p):
         if p[2] == "&&" or p[2] == "||":
             p[0] = PraserAst(action="logop", params=p[1:]).execute()
         elif p[2] == "=":  # ID ASSIGN expr
-            p[0] = PraserAst(action="assign", params=[p[1], p[3]]).execute()
+            p[0] = PraserAst(action="assign", params=[p[1], p[3], p.stack]).execute()
             # _______________________ type should be expr type   ______________________________________________________________
         elif p[1] == "[":  # LBLOCK clist RBLOCK    making list
             p[0] = PraserAst(action="ListNode", params=[p[2]]).execute()
         else:
             p[0] = PraserAst(action="binop", params=p[1:]).execute()
+            # PraserAst(action="binop2", params=[p[0], p[2], p.stack]).execute()
 
     elif len(p) == 5:
         if p[2] == "(":  # ID LPAREN clist RPAREN
@@ -197,16 +240,6 @@ def p_clist(p):
     # p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3] if len(p) == 4 else None
 
 
-def p_type(p):
-    """
-    type : INT
-         | VECTOR
-         | NULL
-         | STRING
-    """
-    p[0] = p[1]
-
-
 def p_empty(p):
     "empty :"
     p[0] = []
@@ -231,6 +264,14 @@ def p_builtin_methods(p):
     p[0] = cases.get(p[1], None)  #  If the key is not found, None is returned.
 
 
+# class SyntaxError():
+#     def __init__(self, token):
+#         self.token = token
+
+#     def __str__(self):
+#         return f"{self.message} at line {self.token.lineno}, position {self.token.lexpos}, near '{self.token.value}'"
+
+
 def p_error(tok):
     if tok is None:
         # Handle unexpected end of input
@@ -238,7 +279,13 @@ def p_error(tok):
     else:
         # Handle invalid token
         print(
-            f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {find_column(tok)}"
+            f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {find_column(tok)}",
+            end="",
         )
 
-    # raise SyntaxError
+
+#     if failed_rules:
+#         print("Failed rules:")
+#     for rule in failed_rules:
+#         print(f" - {rule}")
+#     failing_rules = []  # Clear for next error

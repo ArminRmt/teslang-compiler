@@ -259,7 +259,6 @@ class FuncNode(StatementNode):
 
     def execute(self):
         def func(*args):
-
             argument = []
 
             # Create a dictionary mapping argument names to values

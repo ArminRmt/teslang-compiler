@@ -1,3 +1,9 @@
-def int res(int a) {
-    var rgwrg b;
+
+def int main() {
+    var int A = 2;
+    var int a;
+
+    find(A);
+
+    return A;
 }

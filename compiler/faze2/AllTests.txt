@@ -79,3 +79,33 @@ def int main() {
 
     return A;
 }
+
+
+
+
+
+
+
+def int find(vector A, int n) {
+    var int k;
+    var int j;
+
+    for (i = 0 to 5) {
+        if (n == k) {
+            return j;
+        }
+        j = j + 1;
+    }   
+
+    return -1;
+}
+
+
+def int main() {
+    var int A = 2;
+    var int a;
+
+    find(A);
+
+    return A;
+}
