@@ -18,8 +18,6 @@
 
 
 
-
-
 Error:
 function 'find': wrong type 'float' found. types must be one of the
 following 'int', 'string', 'vector’
@@ -28,9 +26,9 @@ following 'int', 'string', 'vector’
 # Error:
 # function 'find': Variable 'j' is not defined.
 
-Error:
-function 'main': wrong return type. expected 'vector' but got 'int'
-instead.
+# Error:
+# function 'main': wrong return type. expected 'vector' but got 'int'
+# instead.
 
-Warning:
-expected return type for function 'main' is 'int'!
+# Warning:
+# expected return type for function 'main' is 'int'!

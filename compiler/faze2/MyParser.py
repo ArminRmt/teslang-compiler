@@ -3,6 +3,7 @@ from PraserAst import PraserAst
 from Mylexer import find_column
 from ply.lex import LexToken
 
+
 # from main import parser
 
 # from ParserAst import failing_rules
@@ -33,12 +34,12 @@ def p_func(p):
     """
 
     p[0] = PraserAst(action="function", params=[p[2], p[3], p[5], p[8]]).execute()
-
     # if p[0] is None:
     #     failed_rules.append("p_func")
     if p[9] == ";":
         PraserAst(action="return_type", params=[p[8], p[2]]).execute()
-    p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
+
+    # p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
 
 
 def p_body(p):

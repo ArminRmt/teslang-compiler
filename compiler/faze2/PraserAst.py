@@ -3,6 +3,7 @@ DEBUG_MODE = False
 from SymbolTable import SymbolTable
 from ply.lex import LexToken
 from Mylexer import find_column
+from main import find_position
 
 idenInfo = {}
 
@@ -10,6 +11,22 @@ idenInfo = {}
 def debug(*params):
     if DEBUG_MODE:
         print("[DBG] %s" % (" : ".join(str(x) for x in params),))
+
+
+class MyException(Exception):
+    def __init__(self, message, res, followed_string):
+        self.message = message
+        self.followed_string = followed_string
+        self.res = res
+        super().__init__(message)
+
+
+class MyException2(Exception):
+    def __init__(self, message, res, followed_string):
+        self.message = message
+        self.followed_string = followed_string
+        self.res = res
+        super().__init__(message)
 
 
 class PraserAst:
@@ -83,41 +100,25 @@ class PraserAst:
 
         # stack expr
         elif self.action == "return_type2":
-            function_retuen_type = None
-            # print(self.params[0][2].value)
-            # for item in self.params[0]:
-            #     if isinstance(item, LexToken) and item.type == "type":
-            #         function_retuen_type = item.value
-            #         break
-
             for item in self.params[0]:
                 if isinstance(item, LexToken) and item.type == "ID":
                     function_name = item.value
                     break
 
-            if function_retuen_type != type(self.params[1]).__name__:
-                obj = None
-                for item in idenInfo:
-                    if idenInfo[item].name == self.params[1]:
-                        obj = item
-                        break
-
-                print(vars(obj))
-
+            if self.params[0][3].value != idenInfo[self.params[1]].var_type:
                 print(
                     "### semantic error ###\nfunction",
                     function_name,
                     "wrong return type expected",
-                    self.params[0][3].value,
+                    self.params[0][2].value,
                     "but returned",
-                    # idenInfo[self.params[1]].var_type
-                    # if isinstance(self.params[1], int) == False
-                    # else type(self.params[1]).__name__,
-                    # "instead.",
+                    idenInfo[self.params[1]].var_type,
+                    "instead.",
                 )
-                # print(
-                #     f"\nunexpected token  at line {self.params[2].lineno}, column {find_column(self.params[2])}"
-                # )
+
+                # raise Exception(self.params[1], "return")
+                # raise MyException("semantic error", self.params[1], "return")
+                find_position(self.params[1], "return")
 
         elif self.action == "condition":
             if self.params[0]:
@@ -397,6 +398,9 @@ class PraserAst:
                     ],
                     "is used before being assigned.",
                 )
+
+                # raise Exception(self.params[2], self.params[0])
+                # raise MyException2("semantic error", self.params[2], self.params[0])
 
         debug("Resolving", str(self), result)
 
