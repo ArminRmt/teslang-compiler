@@ -29,18 +29,18 @@ parser = yacc.yacc(module=MyParser)
 parser.parse(lexer=lexer)
 
 
-def find_position(followed_string, res):
-    start_index = data.find(followed_string)
+# def find_position(followed_string, res):
+#     start_index = data.find(followed_string)
 
-    # Add the length of the specific string to get the start position of the following string
-    res_start_position = start_index + len(followed_string)
+#     # Add the length of the specific string to get the start position of the following string
+#     res_start_position = start_index + len(followed_string)
 
-    res_index = data.find(res)
+#     res_index = data.find(res)
 
-    line_number = data.count("\n", 0, res_index) + 1
-    column_number = res_index - data.rfind("\n", 0, res_index)
+#     line_number = data.count("\n", 0, res_index) + 1
+#     column_number = res_index - data.rfind("\n", 0, res_index)
 
-    print(f"The position of '{res}' is line {line_number}, column {column_number - 1}.")
+#     print(f"The position of '{res}' is line {line_number}, column {column_number - 1}.")
 
 
 # try:

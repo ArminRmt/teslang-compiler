@@ -2,10 +2,26 @@ DEBUG_MODE = False
 
 from SymbolTable import SymbolTable
 from ply.lex import LexToken
-from Mylexer import find_column
-from main import find_position
+
+# from Mylexer import find_column
+
+from main import data
 
 idenInfo = {}
+
+
+def find_position(input_str, followed_string, res):
+    start_index = input_str.find(followed_string)
+
+    # Add the length of the specific string to get the start position of the following string
+    res_start_position = start_index + len(followed_string)
+
+    res_index = input_str.find(res)
+
+    line_number = input_str.count("\n", 0, res_index) + 1
+    column_number = res_index - input_str.rfind("\n", 0, res_index)
+
+    print(f"The position of '{res}' is line {line_number}, column {column_number - 1}.")
 
 
 def debug(*params):
@@ -63,8 +79,6 @@ class PraserAst:
 
                 result = symbol.name
 
-                # print(symbol)
-
         # ID TYPE
         elif self.action == "func_arguman":
             symbol = SymbolTable(
@@ -105,20 +119,39 @@ class PraserAst:
                     function_name = item.value
                     break
 
-            if self.params[0][3].value != idenInfo[self.params[1]].var_type:
+            for item in self.params[0]:
+                if item.type == "type":
+                    function_reutrn_type = item.value
+
+            what_function_reutrns = (
+                idenInfo[self.params[1]].var_type
+                if isinstance(self.params[1], object) == True
+                else self.params[1]
+            )
+
+            if function_reutrn_type != what_function_reutrns:
                 print(
                     "### semantic error ###\nfunction",
                     function_name,
                     "wrong return type expected",
-                    self.params[0][2].value,
+                    function_reutrn_type,
                     "but returned",
-                    idenInfo[self.params[1]].var_type,
+                    what_function_reutrns,
                     "instead.",
                 )
 
-                # raise Exception(self.params[1], "return")
-                # raise MyException("semantic error", self.params[1], "return")
-                find_position(self.params[1], "return")
+            # raise Exception(self.params[1], "return")
+            # raise MyException("semantic error", self.params[1], "return")
+            find_position(data, self.params[1], "return")
+
+            # start_index = data.find(self.params[1])
+            # res_index = data.find("return")
+            # line_number = data.count("\n", 0, res_index) + 1
+            # column_number = res_index - data.rfind("\n", 0, res_index)
+
+            # print(
+            #     f"The position of '{self.params[1]}' is line {line_number}, column {column_number - 1}."
+            # )
 
         elif self.action == "condition":
             if self.params[0]:
@@ -146,7 +179,7 @@ class PraserAst:
 
         # ID TYPE
         elif self.action == "declare":
-            type_list = ["str", "int", "null", "vector"]
+            # type_list = ["str", "int", "null", "vector"]
             # if self.params[1] not in type_list:
             #     print("wrong type", "types must be one of the following", type_list)
             symbol = SymbolTable(
