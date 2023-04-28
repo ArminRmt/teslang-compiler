@@ -13,7 +13,7 @@ tokens = (
     # "TYPE",
     "BUILTIN_METHODES",
     "SCAN",
-    "LIST",
+    # "LIST",
     "LENGTH",
     "EXIT",
 )
@@ -22,6 +22,7 @@ reserved = {
     "if": "IF",
     "else": "ELSE",
     "while": "WHILE",
+    "list": "LIST",
     # "in": "IN",
     "print": "PRINT",
     "scan": "SCAN",

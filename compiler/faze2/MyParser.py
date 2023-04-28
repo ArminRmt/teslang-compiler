@@ -170,6 +170,7 @@ def p_type(p):
 def p_expr(p):
     """expr : expr QUESTIONMARK expr COLON expr
     | ID LPAREN clist RPAREN
+    | ID LBLOCK expr RBLOCK ASSIGN expr
     | expr LBLOCK expr RBLOCK
     | LBLOCK clist RBLOCK
     | expr ADD expr
@@ -228,6 +229,9 @@ def p_expr(p):
     elif len(p) == 6:  # expr QUESTIONMARK expr COLON expr
         p[0] = PraserAst(action="thearnaryOp", params=[p[1], p[3], p[5]]).execute()
 
+    elif len(p) == 7:  # ID LBLOCK expr RBLOCK ASSIGN expr
+        p[0] = PraserAst(action="list_assignment", params=[p[1], p[3], p[6]]).execute()
+
 
 def p_clist(p):
     """
@@ -254,18 +258,21 @@ def p_builtin_methods(p):
     builtin_methods : LENGTH LPAREN expr RPAREN
                     | SCAN LPAREN RPAREN
                     | PRINT LPAREN expr RPAREN
-                    | LPAREN expr RPAREN
+                    | LIST LPAREN expr RPAREN
                     | EXIT LPAREN expr RPAREN
     """
-    cases = {
-        "length": PraserAst(action="builtin_length", params=[p[3]]).execute(),
-        # "scan": input(),
-        "print": PraserAst(action="print", params=[p[3]]).execute(),
-        "(": PraserAst(action="builtin_list", params=[p[2]]).execute(),
-        # "exit": sys.exit(int(p[3])),
-    }
+    if p[1] == "list":
+        p[0] = PraserAst(action="builtin_list", params=[p[3]]).execute()
 
-    p[0] = cases.get(p[1], None)  #  If the key is not found, None is returned.
+    # cases = {
+    #     # "length": PraserAst(action="builtin_length", params=[p[3]]).execute(),
+    #     # "scan": input(),
+    #     # "print": PraserAst(action="print", params=[p[3]]).execute(),
+    #     "list": PraserAst(action="builtin_list", params=[p[3]]).execute(),
+    #     # "exit": sys.exit(int(p[3])),
+    # }
+
+    # p[0] = cases.get(p[1], None)  #  If the key is not found, None is returned.
 
 
 # class SyntaxError():

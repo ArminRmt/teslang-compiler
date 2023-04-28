@@ -3,25 +3,8 @@ DEBUG_MODE = False
 from SymbolTable import SymbolTable
 from ply.lex import LexToken
 
-# from Mylexer import find_column
-
-from main import data
 
 idenInfo = {}
-
-
-def find_position(input_str, followed_string, res):
-    start_index = input_str.find(followed_string)
-
-    # Add the length of the specific string to get the start position of the following string
-    res_start_position = start_index + len(followed_string)
-
-    res_index = input_str.find(res)
-
-    line_number = input_str.count("\n", 0, res_index) + 1
-    column_number = res_index - input_str.rfind("\n", 0, res_index)
-
-    print(f"The position of '{res}' is line {line_number}, column {column_number - 1}.")
 
 
 def debug(*params):
@@ -123,11 +106,19 @@ class PraserAst:
                 if item.type == "type":
                     function_reutrn_type = item.value
 
-            what_function_reutrns = (
-                idenInfo[self.params[1]].var_type
-                if isinstance(self.params[1], object) == True
-                else self.params[1]
-            )
+            # what_function_reutrns = (
+            #     self.params[1]
+            #     if isinstance(self.params[1], int)
+            #     else idenInfo[self.params[1]].var_type
+            # )
+
+            if isinstance(self.params[1], int):
+                what_function_reutrns = self.params[1]
+            else:
+                if self.params[1] in idenInfo:
+                    what_function_reutrns = idenInfo[self.params[1]].var_type
+                else:
+                    raise ValueError(f"Unknown variable name: {self.params[1]}")
 
             if function_reutrn_type != what_function_reutrns:
                 print(
@@ -140,18 +131,9 @@ class PraserAst:
                     "instead.",
                 )
 
-            # raise Exception(self.params[1], "return")
-            # raise MyException("semantic error", self.params[1], "return")
-            find_position(data, self.params[1], "return")
-
-            # start_index = data.find(self.params[1])
-            # res_index = data.find("return")
-            # line_number = data.count("\n", 0, res_index) + 1
-            # column_number = res_index - data.rfind("\n", 0, res_index)
-
-            # print(
-            #     f"The position of '{self.params[1]}' is line {line_number}, column {column_number - 1}."
-            # )
+                # raise Exception(self.params[1], "return")
+                # raise MyException("semantic error", , self.params[1])
+                # raise MyException("semantic error", self.params[1], "return")
 
         elif self.action == "condition":
             if self.params[0]:
@@ -193,7 +175,7 @@ class PraserAst:
             idenInfo[self.params[0]] = symbol
             result = idenInfo[self.params[0]].value  # .value ??????
 
-        # ID expr
+        # ID expr p.stack
         elif self.action == "assign":  # identifire declared, now want to get value
             # [$end, LexToken(DEF,'def',21,190), LexToken(TYPE,'int',21,194), LexToken(ID,'main',21,198), LexToken(LPAREN,'(',21,202), flist, LexToken(RPAREN,')',21,203), LexToken(LBRACE,'{',21,205), stmt, stmt]
 
@@ -216,6 +198,9 @@ class PraserAst:
 
             if var:
                 if type(self.params[1]).__name__ == var.var_type:
+                    # if var.is_array:
+                    #     var.value = idenInfo[x].value[self.params[1]]
+                    # else:
                     var.is_assigned_value = True
                     var.assign_value(self.params[1])
                     result = var.value
@@ -270,13 +255,49 @@ class PraserAst:
         elif self.action == "builtin_length":
             restult = len(self.params[0])
 
+        # ID expr expr
+        elif self.action == "list_assignment":
+            if self.params[0] in idenInfo:
+                if idenInfo[self.params[0]].is_array:
+                    for x in idenInfo:
+                        if idenInfo[x].is_array and idenInfo[x].name == self.params[0]:
+                            idenInfo[self.params[0]].value[
+                                self.params[1]
+                            ] = self.params[2]
+                else:
+                    print("### semantic error ###\nvariable is not an array")
+            else:
+                print("### semantic error ###\nvariable has not been declared yet")
+
+        # expr[expr]
+        elif self.action == "ArrayIndex":
+            if self.params[0] in idenInfo:
+                if idenInfo[self.params[0]].is_array:
+                    for x in idenInfo:
+                        if idenInfo[x].is_array and idenInfo[x].name == self.params[0]:
+                            result = idenInfo[x].value[self.params[1]]
+                            break
+
+        # expr
         elif self.action == "builtin_list":
             res = []
             for i in range(self.params[0]):
                 res.append(None)
+
             result = res
 
             # restult = list(range(int(self.params[0])))
+
+        ##################################################################
+        # clist
+        elif self.action == "ListNode":
+            res = []
+            for n in self.params[0]:
+                res.append(n)
+
+            # idenInfo[self.params[0]].value = res
+            result = res
+        ##################################################################
 
         # ID clist
         elif self.action == "FunctoinCall":
@@ -335,21 +356,6 @@ class PraserAst:
                         # break
 
                 # f.name(self.params[1])
-
-        # expr[expr]
-        elif self.action == "ArrayIndex":
-            for x in idenInfo:
-                if idenInfo[x].is_array and idenInfo[x].name == self.params[0]:
-                    result = idenInfo[x].value[self.params[1]]
-                    break
-
-        # clist
-        elif self.action == "ListNode":
-            res = []
-            for n in self.params[0]:
-                res.append(n)
-
-            result = res
 
         elif self.action == "thearnaryOp":
             result = self.params[1] if self.params[0] else self.params[2]
@@ -432,8 +438,10 @@ class PraserAst:
                     "is used before being assigned.",
                 )
 
+                # raise MyException("semantic error", self.params[1], "=")
+
                 # raise Exception(self.params[2], self.params[0])
-                # raise MyException2("semantic error", self.params[2], self.params[0])
+                # raise MyException("semantic error", "=", self.params[0])
 
         debug("Resolving", str(self), result)
 

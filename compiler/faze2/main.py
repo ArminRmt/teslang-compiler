@@ -2,8 +2,10 @@ import ply.lex as lex
 import ply.yacc as yacc
 import MyParser
 import Mylexer
+import re
 
-# from PraserAst import MyException
+from PraserAst import MyException
+
 # from PraserAst import MyException2
 
 
@@ -26,21 +28,41 @@ lexer.input(data)
 
 # Build the parser
 parser = yacc.yacc(module=MyParser)
-parser.parse(lexer=lexer)
+# parser.parse(lexer=lexer)
 
 
-# def find_position(followed_string, res):
-#     start_index = data.find(followed_string)
+def find_position(followed_string, res):
+    start_index = data.find(followed_string)
 
-#     # Add the length of the specific string to get the start position of the following string
-#     res_start_position = start_index + len(followed_string)
+    # Add the length of the specific string to get the start position of the following string
+    res_start_position = start_index + len(followed_string)
 
-#     res_index = data.find(res)
+    res_index = data.find(res)
 
-#     line_number = data.count("\n", 0, res_index) + 1
-#     column_number = res_index - data.rfind("\n", 0, res_index)
+    line_number = data.count("\n", 0, res_index) + 1
+    column_number = res_index - data.rfind("\n", 0, res_index)
 
-#     print(f"The position of '{res}' is line {line_number}, column {column_number - 1}.")
+    print(
+        f"'{followed_string}' is line {line_number}, column {column_number + len(res)}."
+    )
+
+
+def find_var_position(var_name, followed_string):
+    if followed_string == "return":
+        var_regex = r"return\s+(\w+)\s*;"  # return A;
+    elif followed_string == "=":
+        # var_regex = (
+        #     r"var\s+int\s+(\w+)\s*=\s*(\w+)\s*\+\s*(\d+)\s*;"  #     var int b = c + 1;
+        # )
+        var_regex = r"var\s+int\s+(\w+)\s*=\s*([-\w\s()+*/]*\d|[^\W\d_]+)\s*;"
+
+    var_match = re.search(var_regex, data)
+    if var_match:
+        line_num = data.count("\n", 0, var_match.start()) + 1
+        col_num = var_match.start() - data.rfind("\n", 0, var_match.start())
+        return f"{var_name} is declared at line {line_num}, column {col_num}"
+    else:
+        return f"{var_name} is not declared in the code"
 
 
 # try:
@@ -52,13 +74,20 @@ parser.parse(lexer=lexer)
 #         print(f"{e.args[0].__class__.__name__}: {e.args[0]} at the end of file")
 
 
-# try:
-#     parser.parse(lexer=lexer)
-# except MyException as e:
-#     if e is not None:
-#         find_position(data, e.followed_string, e.res)
-#     else:
-#         print(f"Error: {e.message}")
+try:
+    parser.parse(lexer=lexer)
+except MyException as e:
+    if e is not None:
+        # find_position(e.followed_string, e.res)
+        print(
+            find_var_position(
+                e.res,
+                e.followed_string,
+            )
+        )
+
+    else:
+        print(f"Error: {e.message}")
 
 # except MyException2 as e2:
 #     if e2 is not None:
