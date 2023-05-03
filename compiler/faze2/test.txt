@@ -22,7 +22,9 @@ def int main() {
     A[1] = 2;
     A[2] = 3;
 
+    print(find(A, a));
     print(find(A));
+    print(find(a, A));
 
     return A;
 }

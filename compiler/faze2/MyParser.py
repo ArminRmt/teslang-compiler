@@ -11,7 +11,6 @@ from Mylexer import find_column
 
 
 funcNames = ["scan", "print", "list", "length", "exit"]
-failed_rules = []
 
 # import some required globals from tokenizer
 tokens = Mylexer.tokens
@@ -33,7 +32,7 @@ def p_func(p):
     """func : DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     | DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     """
-
+    # breakpoint()
     p[0] = PraserAst(action="function", params=[p[2], p[3], p[5], p[8]]).execute()
 
     # if p[0] is None:
@@ -79,7 +78,11 @@ def p_stmt(p):
         p[0] = p[2]
         if p[1] == "return":
             # breakpoint()
-            PraserAst(action="return_type2", params=[p.stack, p[2]]).execute()
+            return_line = p.slice[1].lineno - 4
+            # print(p.slice[1])
+            PraserAst(
+                action="return_type2", params=[p.stack, p[2], return_line]
+            ).execute()
 
 
 def p_if_statement(p):
@@ -200,28 +203,41 @@ def p_expr(p):
         p[0] = p[1]
 
     elif len(p) == 3:  # | NOT expr | SUB expr | ADD expr
+        return_line = p.slice[1].lineno
         if p[1] == "-":
-            p[0] = PraserAst(action="binop", params=[-1, "*", p[2]]).execute()
+            p[0] = PraserAst(
+                action="binop", params=[-1, "*", p[2], return_line]
+            ).execute()
         elif p[1] == "+":
-            p[0] = PraserAst(action="binop", params=[1, "*", p[2]]).execute()
+            p[0] = PraserAst(
+                action="binop", params=[1, "*", p[2], return_line]
+            ).execute()
         else:
-            p[0] = PraserAst(action="UnaryNot", params=[p[2]]).execute()
+            p[0] = PraserAst(action="UnaryNot", params=[p[2], return_line]).execute()
 
     elif len(p) == 4:
         if p[2] == "&&" or p[2] == "||":
             p[0] = PraserAst(action="logop", params=p[1:]).execute()
         elif p[2] == "=":  # ID ASSIGN expr
-            p[0] = PraserAst(action="assign", params=[p[1], p[3], p.stack]).execute()
+            return_line = p.slice[2].lineno - 4
+
+            p[0] = PraserAst(
+                action="assign", params=[p[1], p[3], p.stack, return_line]
+            ).execute()
             # _______________________ type should be expr type   ______________________________________________________________
         elif p[1] == "[":  # LBLOCK clist RBLOCK    making list
             p[0] = PraserAst(action="ListNode", params=[p[2]]).execute()
         else:
-            p[0] = PraserAst(action="binop", params=p[1:]).execute()
+            return_line = p.lineno(2) - 2
+            p[0] = PraserAst(
+                action="binop", params=p[1:], return_line=return_line
+            ).execute()
             # PraserAst(action="binop2", params=[p[0], p[2], p.stack]).execute()
 
     elif len(p) == 5:
         if p[2] == "(":  # ID LPAREN clist RPAREN
-            PraserAst(action="FunctoinCall", params=[p[1], p[3]]).execute()
+            return_line = p.slice[1].lineno - 11
+            PraserAst(action="FunctoinCall", params=[p[1], p[3], return_line]).execute()
             p[0] = [p[1], p[2], p[3], p[4]]
         else:  # expr LBLOCK expr RBLOCK           list index
             p[0] = PraserAst(action="ArrayIndex", params=[p[1], p[3]]).execute()
@@ -230,7 +246,12 @@ def p_expr(p):
         p[0] = PraserAst(action="thearnaryOp", params=[p[1], p[3], p[5]]).execute()
 
     elif len(p) == 7:  # ID LBLOCK expr RBLOCK ASSIGN expr
-        p[0] = PraserAst(action="list_assignment", params=[p[1], p[3], p[6]]).execute()
+        return_line = p.slice[2].lineno - 8
+        # return_line = p.lineno(4)
+
+        p[0] = PraserAst(
+            action="list_assignment", params=[p[1], p[3], p[6], return_line]
+        ).execute()
 
 
 def p_clist(p):

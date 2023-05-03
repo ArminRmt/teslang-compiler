@@ -11,11 +11,11 @@ tokens = (
     "ID",
     # "COMMENT",
     # "TYPE",
-    "BUILTIN_METHODES",
-    "SCAN",
+    # "BUILTIN_METHODES",
+    # "SCAN",
     # "LIST",
-    "LENGTH",
-    "EXIT",
+    # "LENGTH",
+    # "EXIT",
 )
 
 reserved = {

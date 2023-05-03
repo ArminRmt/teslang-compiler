@@ -2,6 +2,10 @@ DEBUG_MODE = False
 
 from SymbolTable import SymbolTable
 from ply.lex import LexToken
+from colorama import init
+
+init()
+from colorama import Fore, Style, Back
 
 
 idenInfo = {}
@@ -32,9 +36,10 @@ class PraserAst:
     action = None
     params = None
 
-    def __init__(self, action=None, params=None):
+    def __init__(self, action=None, params=None, return_line=None):
         self.action = action
         self.params = params
+        self.return_line = return_line
 
     def execute(self):
         result = None
@@ -42,7 +47,7 @@ class PraserAst:
         if self.action == "function":  # TYPE ID  flist body/expr
             if self.params[1] in idenInfo.keys():
                 print("### Semantic Error ###")
-                print("function", self.params[1], "already exist!")
+                print("function", self.params[1], "already exist!\n")
 
             else:
                 symbol = SymbolTable(
@@ -92,7 +97,7 @@ class PraserAst:
         elif self.action == "return_type":
             if type(self.params[0]).__name__ != self.params[1]:
                 print(
-                    "### semantic error ###\nfunction return type does not match with what it actually returns!"
+                    "### semantic error ###\nfunction return type does not match with what it actually returns!\n"
                 )
 
         # stack expr
@@ -106,14 +111,8 @@ class PraserAst:
                 if item.type == "type":
                     function_reutrn_type = item.value
 
-            # what_function_reutrns = (
-            #     self.params[1]
-            #     if isinstance(self.params[1], int)
-            #     else idenInfo[self.params[1]].var_type
-            # )
-
             if isinstance(self.params[1], int):
-                what_function_reutrns = self.params[1]
+                what_function_reutrns = type(self.params[1]).__name__
             else:
                 if self.params[1] in idenInfo:
                     what_function_reutrns = idenInfo[self.params[1]].var_type
@@ -122,18 +121,28 @@ class PraserAst:
 
             if function_reutrn_type != what_function_reutrns:
                 print(
-                    "### semantic error ###\nfunction",
+                    Fore.RED
+                    + "### semantic error ###"
+                    + Style.RESET_ALL
+                    + "\n"
+                    + Fore.GREEN
+                    + "Line:",
+                    self.params[2],
+                    Style.RESET_ALL,
+                    "function",
+                    Fore.YELLOW,
                     function_name,
+                    Style.RESET_ALL,
                     "wrong return type expected",
                     function_reutrn_type,
                     "but returned",
                     what_function_reutrns,
-                    "instead.",
+                    "instead.\n",
                 )
 
-                # raise Exception(self.params[1], "return")
-                # raise MyException("semantic error", , self.params[1])
-                # raise MyException("semantic error", self.params[1], "return")
+            # raise Exception(self.params[1], "return")
+            # raise MyException("semantic error", , self.params[1])
+            # raise MyException("semantic error", self.params[1], "return")
 
         elif self.action == "condition":
             if self.params[0]:
@@ -176,7 +185,7 @@ class PraserAst:
             result = idenInfo[self.params[0]].value  # .value ??????
 
         # ID expr p.stack
-        elif self.action == "assign":  # identifire declared, now want to get value
+        elif self.action == "   ":  # identifire declared, now want to get value
             # [$end, LexToken(DEF,'def',21,190), LexToken(TYPE,'int',21,194), LexToken(ID,'main',21,198), LexToken(LPAREN,'(',21,202), flist, LexToken(RPAREN,')',21,203), LexToken(LBRACE,'{',21,205), stmt, stmt]
 
             for item in self.params[2]:
@@ -206,8 +215,18 @@ class PraserAst:
                     result = var.value
                 else:
                     print(
-                        "### semantic error ###\nfunctoin",
+                        Fore.RED
+                        + "### semantic error ###"
+                        + Style.RESET_ALL
+                        + "\n"
+                        + Fore.GREEN
+                        + "Line:",
+                        self.params[3],
+                        Style.RESET_ALL,
+                        "functoin",
+                        Fore.YELLOW,
                         function_name,
+                        Style.RESET_ALL,
                         ": variable",
                         var.name,
                         "expected to be of type",
@@ -216,7 +235,7 @@ class PraserAst:
                         else "vector",
                         "but it is",
                         var.var_type,
-                        "instead",
+                        "instead\n",
                     )
             else:
                 print("### semantic error ###\nvariable has not been declared yet")
@@ -265,7 +284,17 @@ class PraserAst:
                                 self.params[1]
                             ] = self.params[2]
                 else:
-                    print("### semantic error ###\nvariable is not an array")
+                    print(
+                        Fore.RED
+                        + "### semantic error ###"
+                        + Style.RESET_ALL
+                        + "\n"
+                        + Fore.GREEN
+                        + "Line:",
+                        self.params[3],
+                        Style.RESET_ALL,
+                        "variable is not an array\n",
+                    )
             else:
                 print("### semantic error ###\nvariable has not been declared yet")
 
@@ -302,7 +331,9 @@ class PraserAst:
         # ID clist
         elif self.action == "FunctoinCall":
             if not self.params[0] in idenInfo.keys():
-                print("### semantic error ###\nNo such a function exist!")
+                print(
+                    "### semantic error ###\nNo such a function exist!",
+                )
             else:
                 for x in idenInfo:
                     if idenInfo[x].is_function and idenInfo[x].name == self.params[0]:
@@ -326,12 +357,23 @@ class PraserAst:
                 # number of params wrong
                 if not f.num_params == len(self.params[1]):
                     print(
-                        "### semantic error ###\nfunction",
+                        Fore.RED
+                        + "### semantic error ###"
+                        + Style.RESET_ALL
+                        + "\n"
+                        + Fore.GREEN
+                        + "Line:",
+                        self.params[2],
+                        Style.RESET_ALL,
+                        "functino:",
+                        Fore.YELLOW,
                         f.name,
+                        Style.RESET_ALL,
                         "expects",
                         f.num_params,
                         "arguments but got",
                         len(self.params[1]),
+                        "\n",
                     )
                 # params type has mistakes
                 param_type_list = f.param_type_list
@@ -339,8 +381,18 @@ class PraserAst:
                 for j_index, j in enumerate(self.params[1]):
                     if not type(j).__name__ in param_type_list:
                         print(
-                            "### semantic error ###\nfunction",
+                            Fore.RED
+                            + "### semantic error ###"
+                            + Style.RESET_ALL
+                            + "\n"
+                            + Fore.GREEN
+                            + "Line:",
+                            self.params[2],
+                            Style.RESET_ALL,
+                            "function",
+                            Fore.YELLOW,
                             f.name,
+                            Style.RESET_ALL,
                             "expected",
                             j,
                             "to be of type of",
@@ -425,8 +477,18 @@ class PraserAst:
 
             else:
                 print(
-                    "### semantic error ###\nfunctoin",
+                    Fore.RED
+                    + "### semantic error ###"
+                    + Style.RESET_ALL
+                    + "\n"
+                    + Fore.GREEN
+                    + "Line:",
+                    self.return_line,
+                    Style.RESET_ALL,
+                    "functoin",
+                    Fore.YELLOW,
                     "find",
+                    Style.RESET_ALL,
                     ": Variables",
                     [
                         x
@@ -435,7 +497,7 @@ class PraserAst:
                         and idenInfo[x].is_argumman == False
                         # if idenInfo[x].value is None
                     ],
-                    "is used before being assigned.",
+                    "is used before being assigned.\n",
                 )
 
                 # raise MyException("semantic error", self.params[1], "=")
