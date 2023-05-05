@@ -219,7 +219,7 @@ def p_expr(p):
         if p[2] == "&&" or p[2] == "||":
             p[0] = PraserAst(action="logop", params=p[1:]).execute()
         elif p[2] == "=":  # ID ASSIGN expr
-            return_line = p.slice[2].lineno - 4
+            return_line = p.slice[2].lineno - 5
 
             p[0] = PraserAst(
                 action="assign", params=[p[1], p[3], p.stack, return_line]

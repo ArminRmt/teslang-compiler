@@ -7,7 +7,7 @@ def int find(vector A, int n) {
             return j;
         }
         j = j + 1;
-    }   
+    }
 
     return -1;
 }

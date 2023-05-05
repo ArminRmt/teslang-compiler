@@ -184,8 +184,8 @@ class PraserAst:
             idenInfo[self.params[0]] = symbol
             result = idenInfo[self.params[0]].value  # .value ??????
 
-        # ID expr p.stack
-        elif self.action == "   ":  # identifire declared, now want to get value
+        # ID, expr, p.stack, return_line
+        elif self.action == "assign":  # identifire declared, now want to get value
             # [$end, LexToken(DEF,'def',21,190), LexToken(TYPE,'int',21,194), LexToken(ID,'main',21,198), LexToken(LPAREN,'(',21,202), flist, LexToken(RPAREN,')',21,203), LexToken(LBRACE,'{',21,205), stmt, stmt]
 
             for item in self.params[2]:
@@ -193,7 +193,7 @@ class PraserAst:
                     function_name = item.value
                     break
 
-                #  and idenInfo[item.value].is_function
+            #  and idenInfo[item.value].is_function
 
             var = None
             for x in idenInfo:
@@ -293,7 +293,9 @@ class PraserAst:
                         + "Line:",
                         self.params[3],
                         Style.RESET_ALL,
-                        "variable is not an array\n",
+                        "variable",
+                        self.params[0],
+                        "is not an array\n",
                     )
             else:
                 print("### semantic error ###\nvariable has not been declared yet")
@@ -328,7 +330,7 @@ class PraserAst:
             result = res
         ##################################################################
 
-        # ID clist
+        # ID, clist, return_line
         elif self.action == "FunctoinCall":
             if not self.params[0] in idenInfo.keys():
                 print(
@@ -379,33 +381,96 @@ class PraserAst:
                 param_type_list = f.param_type_list
                 # ['A', 'a']
                 for j_index, j in enumerate(self.params[1]):
-                    if not type(j).__name__ in param_type_list:
-                        print(
-                            Fore.RED
-                            + "### semantic error ###"
-                            + Style.RESET_ALL
-                            + "\n"
-                            + Fore.GREEN
-                            + "Line:",
-                            self.params[2],
-                            Style.RESET_ALL,
-                            "function",
-                            Fore.YELLOW,
-                            f.name,
-                            Style.RESET_ALL,
-                            "expected",
-                            j,
-                            "to be of type of",
-                            param_type_list[j_index],
-                            "but it's given",
-                            idenInfo[j].var_type  # if varible with value is given
-                            if isinstance(j, int) == False
-                            and idenInfo[j].value is not None
-                            else "null"  # if varible without value is given
-                            if idenInfo[j].value is None
-                            else type(j).__name__,  # if numbe is given
-                        )
+                    if isinstance(j, int):
+                        if not type(j).__name__ in param_type_list:
+                            print(
+                                Fore.RED
+                                + "### semantic error ###"
+                                + Style.RESET_ALL
+                                + "\n"
+                                + Fore.GREEN
+                                + "Line:",
+                                self.params[2],
+                                Style.RESET_ALL,
+                                "function",
+                                Fore.YELLOW,
+                                f.name,
+                                Style.RESET_ALL,
+                                "expected",
+                                j,
+                                "to be of type of",
+                                param_type_list[j_index],
+                                "but it's given",
+                                idenInfo[j].var_type  # if varible with value is given
+                                if isinstance(j, int) == False
+                                and idenInfo[j].value is not None
+                                else "null"  # if varible without value is given
+                                if idenInfo[j].value is None
+                                else type(j).__name__,  # if numbe is given
+                            )
                         # break
+                    else:
+                        for item in idenInfo:
+                            if (
+                                j == idenInfo[item].name
+                                and not idenInfo[item].is_function
+                                and not idenInfo[item].is_argumman
+                                # and idenInfo[item].value is None
+                            ):
+                                var = idenInfo[item]
+                                break
+
+                        if var:
+                            if (
+                                var.var_type != param_type_list[j_index]
+                            ):  # vartype not in functon type parms
+                                print(
+                                    Fore.RED
+                                    + "### semantic error ###"
+                                    + Style.RESET_ALL
+                                    + "\n"
+                                    + Fore.GREEN
+                                    + "Line:",
+                                    self.params[2],
+                                    Style.RESET_ALL,
+                                    "function",
+                                    Fore.YELLOW,
+                                    f.name,
+                                    Style.RESET_ALL,
+                                    "expected",
+                                    j,
+                                    "to be of type of",
+                                    param_type_list[j_index],
+                                    "but it's given",
+                                    var.var_type  # if varible with value is given
+                                    if isinstance(j, int) == False
+                                    and var.value is not None
+                                    else "null"  # if varible without value is given
+                                    if var.value is None
+                                    else type(j).__name__,  # if numbe is given
+                                )
+                                # break
+                            if (
+                                var.value is None and var.is_array
+                            ):  # call varible not have valible
+                                print(
+                                    Fore.RED
+                                    + "### semantic error ###"
+                                    + Style.RESET_ALL
+                                    + "\n"
+                                    + Fore.GREEN
+                                    + "Line:",
+                                    self.params[2],
+                                    Style.RESET_ALL,
+                                    "function",
+                                    Fore.YELLOW,
+                                    f.name,
+                                    Style.RESET_ALL,
+                                    j,
+                                    "is null",
+                                )
+                        else:
+                            print("variable doesn't have any value")
 
                 # f.name(self.params[1])
 
