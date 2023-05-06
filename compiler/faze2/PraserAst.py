@@ -331,7 +331,7 @@ class PraserAst:
         ##################################################################
 
         # ID, clist, return_line
-        elif self.action == "FunctoinCall":
+        elif self.action == "FunctionCall":
             if not self.params[0] in idenInfo.keys():
                 print(
                     "### semantic error ###\nNo such a function exist!",

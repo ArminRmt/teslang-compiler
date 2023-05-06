@@ -2,13 +2,6 @@ import Mylexer
 from PraserAst import *
 from Mylexer import find_column
 
-# from ply.lex import LexTokens
-
-
-# from main import parser
-
-# from ParserAst import failing_rules
-
 
 funcNames = ["scan", "print", "list", "length", "exit"]
 
@@ -24,23 +17,23 @@ def p_prog(p):
     """
 
     if len(p) == 3:
-        # print("p =", vars(p))
-        p[0] = [p[1], p[2]]
+        p_func, p_prog = p[1], p[2]
+        p[0] = [p_func, p_prog]
+        # p[0] = p[1:]
 
 
 def p_func(p):
     """func : DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     | DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     """
-    # breakpoint()
-    p[0] = PraserAst(action="function", params=[p[2], p[3], p[5], p[8]]).execute()
 
-    # if p[0] is None:
-    #     failed_rules.append("p_func")
+    f_type, f_name, f_args, f_body = p[2], p[3], p[5], p[8]
+    p[0] = PraserAst(
+        action="function", params=[f_type, f_name, f_args, f_body]
+    ).execute()
+
     if p[9] == ";":
-        PraserAst(action="return_type", params=[p[8], p[2]]).execute()
-
-    # p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
+        PraserAst(action="return_type", params=[f_body, f_type]).execute()
 
 
 def p_body(p):
@@ -50,7 +43,8 @@ def p_body(p):
     """
 
     if len(p) == 3:
-        p[0] = [p[1], p[2]]
+        p_stmt, p_body = p[1], p[2]
+        p[0] = [p_stmt, p_body]
 
 
 def p_stmt(p):
@@ -71,39 +65,41 @@ def p_stmt(p):
     ):  # func | if_statement | ifelse_statement | while_statement | for_statement
         p[0] = p[1]
 
-    if len(p) == 3:  # expr SEMI | defvar SEMI
+    elif len(p) == 3:  # expr SEMI | defvar SEMI
         p[0] = p[1]
 
-    if len(p) == 4:  #  RETURN expr SEMI | LBRACE body RBRACE
-        p[0] = p[2]
+    elif len(p) == 4:  #  RETURN expr SEMI | LBRACE body RBRACE
+        p_stack, p_expr, return_line = p.stack, p[2], p.slice[1].lineno - 4
         if p[1] == "return":
-            # breakpoint()
-            return_line = p.slice[1].lineno - 4
-            # print(p.slice[1])
             PraserAst(
-                action="return_type2", params=[p.stack, p[2], return_line]
+                action="return_type2", params=[p_stack, p_expr, return_line]
             ).execute()
+
+        p[0] = p_expr
 
 
 def p_if_statement(p):
     "if_statement : IF LPAREN expr RPAREN stmt"
-    p[0] = PraserAst(action="condition", params=[p[3], p[5]]).execute()
+    p_expr, p_stmt = p[3], p[5]
+    p[0] = PraserAst(action="condition", params=[p_expr, p_stmt]).execute()
 
 
 def p_ifelse_statement(p):
     "ifelse_statement : IF LPAREN expr RPAREN stmt ELSE stmt"
-    p[0] = PraserAst(action="condition", params=[p[3], p[5], p[7]]).execute()
+    p_cond, p_stmt, p_else_stmt = p[3], p[5], p[7]
+    p[0] = PraserAst(action="condition", params=[p_cond, p_stmt, p_else_stmt]).execute()
 
 
 def p_while_statement(p):
     "while_statement : WHILE LPAREN expr RPAREN stmt"
-    p[0] = PraserAst(action="while", params=[p[3], p[5]]).execute()
+    p_cond, p_stmt = p[3], p[5]
+    p[0] = PraserAst(action="while", params=[p_cond, p_stmt]).execute()
 
 
 def p_for_statement(p):
     "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt"
-    # p[0] = [p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]]
-    p[0] = PraserAst(action="for", params=[p[3], p[5], p[7], p[9]]).execute()
+    p_id, p_start, p_end, p_stmt = p[3], p[5], p[7], p[9]
+    p[0] = PraserAst(action="for", params=[p_id, p_start, p_end, p_stmt]).execute()
 
 
 def p_defvar(p):
@@ -112,22 +108,26 @@ def p_defvar(p):
            | VAR type ID ASSIGN expr
     """
 
+    p_type, p_name = p[2], p[3]
+
     if len(p) == 6:
-        p[0] = PraserAst(action="declare_assign", params=[p[3], p[2], p[5]]).execute()
+        p_expr = p[5]
+        p[0] = PraserAst(
+            action="declare_assign", params=[p_name, p_type, p_expr]
+        ).execute()
     else:
-        p[0] = PraserAst(action="declare", params=[p[3], p[2]]).execute()
+        p[0] = PraserAst(action="declare", params=[p_name, p_type]).execute()
 
 
 def p_flist(p):
     """
-    flist :  type ID
-          |  type ID COMMA flist
+    flist : type ID
+          | type ID COMMA flist
           | empty
     """
 
     if len(p) == 3:  #  TYPE ID
         p[0] = [(p[1], p[2])]
-        # PraserAst(action="type_check", params=[p[1]]).execute()
         PraserAst(action="func_arguman", params=[p[2], p[1]]).execute()
         # PraserAst(action="type_cheak", params=[p[1]]).execute()
 
@@ -152,22 +152,7 @@ def p_type(p):
          | STRING
     """
     p[0] = p[1]
-
-    # p[0] = PraserAst(action="type_check", params=[p[1]]).execute()
-
-
-# def p_type_error(p):
-#     """
-#     type : error
-#     """
-
-#     for item in p.stack:
-#         if isinstance(item, LexToken) and item.type == "ID":
-#             function_name = item.value
-#             break
-
-#     print("\n↪ function", function_name)
-#     print("↪ types must be one of the following 'int', 'string', 'vector', 'null'")
+    # return p[1]
 
 
 def p_expr(p):
@@ -203,26 +188,26 @@ def p_expr(p):
         p[0] = p[1]
 
     elif len(p) == 3:  # | NOT expr | SUB expr | ADD expr
-        return_line = p.slice[1].lineno
+        p_expr, return_line = p[2], p.slice[1].lineno
+
         if p[1] == "-":
             p[0] = PraserAst(
-                action="binop", params=[-1, "*", p[2], return_line]
+                action="binop", params=[-1, "*", p_expr, return_line]
             ).execute()
         elif p[1] == "+":
             p[0] = PraserAst(
-                action="binop", params=[1, "*", p[2], return_line]
+                action="binop", params=[1, "*", p_expr, return_line]
             ).execute()
         else:
-            p[0] = PraserAst(action="UnaryNot", params=[p[2], return_line]).execute()
+            p[0] = PraserAst(action="UnaryNot", params=[p_expr, return_line]).execute()
 
     elif len(p) == 4:
         if p[2] == "&&" or p[2] == "||":
             p[0] = PraserAst(action="logop", params=p[1:]).execute()
         elif p[2] == "=":  # ID ASSIGN expr
-            return_line = p.slice[2].lineno - 5
-
+            p_id, p_expr, return_line = p[1], p[3], p.slice[2].lineno - 5
             p[0] = PraserAst(
-                action="assign", params=[p[1], p[3], p.stack, return_line]
+                action="assign", params=[p_id, p_expr, p.stack, return_line]
             ).execute()
             # _______________________ type should be expr type   ______________________________________________________________
         elif p[1] == "[":  # LBLOCK clist RBLOCK    making list
@@ -236,21 +221,27 @@ def p_expr(p):
 
     elif len(p) == 5:
         if p[2] == "(":  # ID LPAREN clist RPAREN
-            return_line = p.slice[1].lineno - 11
-            PraserAst(action="FunctoinCall", params=[p[1], p[3], return_line]).execute()
-            p[0] = [p[1], p[2], p[3], p[4]]
-        else:  # expr LBLOCK expr RBLOCK           list index
-            p[0] = PraserAst(action="ArrayIndex", params=[p[1], p[3]]).execute()
+            p_id, p_clist, return_line = p[1], p[3], p.slice[1].lineno - 11
+            PraserAst(
+                action="FunctionCall", params=[p_id, p_clist, return_line]
+            ).execute()
+            p[0] = [p[i] for i in range(1, 5)]
+
+        else:  # expr LBLOCK expr RBLOCK            list index
+            p_array, p_index, return_line = p[1], p[3]
+            p[0] = PraserAst(action="ArrayIndex", params=[p_array, p_index]).execute()
 
     elif len(p) == 6:  # expr QUESTIONMARK expr COLON expr
-        p[0] = PraserAst(action="thearnaryOp", params=[p[1], p[3], p[5]]).execute()
-
-    elif len(p) == 7:  # ID LBLOCK expr RBLOCK ASSIGN expr
-        return_line = p.slice[2].lineno - 8
-        # return_line = p.lineno(4)
+        p_cond, p_expr, p_else_expr = p[1], p[3], p[5]
 
         p[0] = PraserAst(
-            action="list_assignment", params=[p[1], p[3], p[6], return_line]
+            action="thearnaryOp", params=[p_cond, p_expr, p_else_expr]
+        ).execute()
+
+    elif len(p) == 7:  # ID LBLOCK expr RBLOCK ASSIGN expr
+        p_array, p_index, p_expr, return_line = p[1], p[3], p[6], p.slice[2].lineno - 8
+        p[0] = PraserAst(
+            action="list_assignment", params=[p_array, p_index, p_expr, return_line]
         ).execute()
 
 
@@ -265,8 +256,6 @@ def p_clist(p):
         p[0] = [p[1]]
     elif len(p) == 4:  # expr COMMA clist
         p[0] = [p[1]] + p[3]
-
-    # p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3] if len(p) == 4 else None
 
 
 def p_empty(p):
@@ -296,14 +285,6 @@ def p_builtin_methods(p):
     # p[0] = cases.get(p[1], None)  #  If the key is not found, None is returned.
 
 
-# class SyntaxError():
-#     def __init__(self, token):
-#         self.token = token
-
-#     def __str__(self):
-#         return f"{self.message} at line {self.token.lineno}, position {self.token.lexpos}, near '{self.token.value}'"
-
-
 def p_error(tok):
     if tok is None:
         # Handle unexpected end of input
@@ -314,10 +295,3 @@ def p_error(tok):
             f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {find_column(tok)}",
             end="",
         )
-
-
-#     if failed_rules:
-#         print("Failed rules:")
-#     for rule in failed_rules:
-#         print(f" - {rule}")
-#     failing_rules = []  # Clear for next error
