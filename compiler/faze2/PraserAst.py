@@ -22,14 +22,7 @@ class MyException(Exception):
         self.followed_string = followed_string
         self.res = res
         super().__init__(message)
-
-
-class MyException2(Exception):
-    def __init__(self, message, res, followed_string):
-        self.message = message
-        self.followed_string = followed_string
-        self.res = res
-        super().__init__(message)
+        # raise MyException("semantic error", , self.params[1])
 
 
 class PraserAst:
@@ -44,105 +37,99 @@ class PraserAst:
     def execute(self):
         result = None
 
-        if self.action == "function":  # TYPE ID  flist body/expr
-            if self.params[1] in idenInfo.keys():
-                print("### Semantic Error ###")
-                print("function", self.params[1], "already exist!\n")
-
-            else:
-                symbol = SymbolTable(
-                    self.params[1],
-                    self.params[0],
-                    True,
-                    False,
-                    False,
-                    len(self.params[2]) if self.params[2] else 0,
-                )
-
-                if self.params[2] != None:
-                    [symbol.add_parameter(x[1]) for x in self.params[2]]
-                    [symbol.add_parameter_type(x[0]) for x in self.params[2]]
-
-                idenInfo[self.params[1]] = symbol
-
-                result = symbol.name
-
-        # ID TYPE
-        elif self.action == "func_arguman":
-            symbol = SymbolTable(
+        if self.action == "function":
+            f_type, f_name, f_args, f_body = (
                 self.params[0],
                 self.params[1],
-                False,
-                True,
-                False,
-                0,
+                self.params[2],
+                self.params[3],
             )
 
-            symbol.is_assigned_value = True
-            symbol.assign_value(self.params[1])
-            result = symbol.value
+            if f_name in idenInfo.keys():
+                print("### Semantic Error ###")
+                print("function", f_name, "already exist!\n")
 
-            idenInfo[self.params[0]] = symbol
-
-            # result = [(self.params[0], self.params[1])]
-
-        elif self.action == "type_check":
-            valid_types = ["str", "int", "null", "vector"]
-
-            if self.params[0] in valid_types:
-                print("unaxpected type of identifire")
             else:
-                result = self.params[0]
+                function_symbol = SymbolTable(
+                    name=f_name,
+                    var_type=f_type,
+                    is_function=True,
+                    is_argumman=False,
+                    is_array=False,
+                    num_params=len(f_args) if f_args else 0,
+                )
+
+                if f_args:
+                    [function_symbol.add_parameter(x[1]) for x in f_args]
+                    [function_symbol.add_parameter_type(x[0]) for x in f_args]
+
+                idenInfo[f_name] = function_symbol
+
+                result = function_symbol.name
+
+        elif self.action == "func_arguman":
+            arg_value, arge_type = (
+                self.params[0],
+                self.params[1],
+            )
+
+            arg_symbol = SymbolTable(
+                name=arg_value,
+                var_type=arge_type,
+                is_function=False,
+                is_argumman=True,
+                is_array=False,
+                num_params=0,
+            )
+
+            arg_symbol.is_assigned_value = True
+            arg_symbol.assign_value(arge_type)
+
+            idenInfo[self.params[0]] = arg_symbol
+
+            result = arg_symbol.value
 
         elif self.action == "return_type":
-            if type(self.params[0]).__name__ != self.params[1]:
+            f_body, f_type = self.params[0], self.params[1]
+
+            if type(f_body).__name__ != f_type:
                 print(
                     "### semantic error ###\nfunction return type does not match with what it actually returns!\n"
                 )
 
-        # stack expr
         elif self.action == "return_type2":
-            for item in self.params[0]:
+            p_stack, p_expr, return_line = (
+                self.params[0],
+                self.params[1],
+                self.params[2],
+            )
+
+            for item in p_stack:
                 if isinstance(item, LexToken) and item.type == "ID":
                     function_name = item.value
                     break
 
-            for item in self.params[0]:
+            for item in p_stack:
                 if item.type == "type":
                     function_reutrn_type = item.value
 
-            if isinstance(self.params[1], int):
-                what_function_reutrns = type(self.params[1]).__name__
+            if isinstance(p_expr, int):
+                what_function_reutrns = type(p_expr).__name__
             else:
-                if self.params[1] in idenInfo:
-                    what_function_reutrns = idenInfo[self.params[1]].var_type
+                if p_expr in idenInfo:
+                    what_function_reutrns = idenInfo[p_expr].var_type
                 else:
-                    raise ValueError(f"Unknown variable name: {self.params[1]}")
+                    raise ValueError(f"Unknown variable name: {p_expr}")
 
             if function_reutrn_type != what_function_reutrns:
-                print(
-                    Fore.RED
-                    + "### semantic error ###"
-                    + Style.RESET_ALL
-                    + "\n"
-                    + Fore.GREEN
-                    + "Line:",
-                    self.params[2],
-                    Style.RESET_ALL,
-                    "function",
-                    Fore.YELLOW,
-                    function_name,
-                    Style.RESET_ALL,
-                    "wrong return type expected",
-                    function_reutrn_type,
-                    "but returned",
-                    what_function_reutrns,
-                    "instead.\n",
+                error_message = (
+                    f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                    f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} "
+                    f"function {Fore.YELLOW}{function_name}{Style.RESET_ALL} "
+                    f"wrong return type expected {function_reutrn_type} "
+                    f"but returned {what_function_reutrns} instead.\n"
                 )
-
-            # raise Exception(self.params[1], "return")
-            # raise MyException("semantic error", , self.params[1])
-            # raise MyException("semantic error", self.params[1], "return")
+                print(error_message)
 
         elif self.action == "condition":
             if self.params[0]:
@@ -151,121 +138,128 @@ class PraserAst:
                 result = self.params[2]
 
         elif self.action == "while":
-            while self.params[0]:
-                result = self.params[1]
+            while_cond, while_stmt = self.params[0], self.params[1]
+            while while_cond:
+                result = while_stmt
 
         elif self.action == "for":
-            symbol = SymbolTable(
+            loop_variable_name, loop_start, loop_end, loop_body = (
                 self.params[0],
-                None,
-                False,
-                False,
-                False,
-                0,
+                self.params[1],
+                self.params[2],
+                self.params[3],
             )
-            idenInfo[self.params[0]] = symbol
 
-            for i in range(self.params[1], self.params[2]):
-                result = self.params[3]
+            for_symbol = SymbolTable(
+                name=loop_variable_name,
+                var_type=None,
+                is_function=False,
+                is_argumman=False,
+                is_array=False,
+                num_params=0,
+            )
 
-        # ID TYPE
+            idenInfo[loop_variable_name] = for_symbol
+
+            loop_index = loop_start
+            while loop_index < loop_end:
+                result = loop_body
+                loop_index += 1
+
         elif self.action == "declare":
+            var_name, var_type = (
+                self.params[0],
+                self.params[1],
+            )
             # type_list = ["str", "int", "null", "vector"]
             # if self.params[1] not in type_list:
             #     print("wrong type", "types must be one of the following", type_list)
-            symbol = SymbolTable(
+
+            declare_symbol = SymbolTable(
+                name=var_name,
+                var_type=var_type,
+                is_function=False,
+                is_argumman=False,
+                is_array=False,
+                num_params=0,
+            )
+
+            idenInfo[var_name] = declare_symbol
+            result = idenInfo[var_name].value  # .value ??????
+
+        elif self.action == "assign":  # identifire declared, now want to get value
+            var_name, var_value, parsing_stack, return_line = (
                 self.params[0],
                 self.params[1],
-                False,
-                False,
-                False,
-                0,
+                self.params[2],
+                self.params[3],
             )
-            idenInfo[self.params[0]] = symbol
-            result = idenInfo[self.params[0]].value  # .value ??????
 
-        # ID, expr, p.stack, return_line
-        elif self.action == "assign":  # identifire declared, now want to get value
-            # [$end, LexToken(DEF,'def',21,190), LexToken(TYPE,'int',21,194), LexToken(ID,'main',21,198), LexToken(LPAREN,'(',21,202), flist, LexToken(RPAREN,')',21,203), LexToken(LBRACE,'{',21,205), stmt, stmt]
-
-            for item in self.params[2]:
+            for item in parsing_stack:
                 if isinstance(item, LexToken) and item.type == "ID":
                     function_name = item.value
                     break
 
-            #  and idenInfo[item.value].is_function
-
             var = None
             for x in idenInfo:
                 if (
-                    idenInfo[x].name == self.params[0]
+                    idenInfo[x].name == var_name
                     and not idenInfo[x].is_function
                     and not idenInfo[x].is_argumman
                 ):
                     var = idenInfo[x]
                     break
 
-            if var:
-                if type(self.params[1]).__name__ == var.var_type:
-                    # if var.is_array:
-                    #     var.value = idenInfo[x].value[self.params[1]]
-                    # else:
-                    var.is_assigned_value = True
-                    var.assign_value(self.params[1])
-                    result = var.value
-                else:
-                    print(
-                        Fore.RED
-                        + "### semantic error ###"
-                        + Style.RESET_ALL
-                        + "\n"
-                        + Fore.GREEN
-                        + "Line:",
-                        self.params[3],
-                        Style.RESET_ALL,
-                        "functoin",
-                        Fore.YELLOW,
-                        function_name,
-                        Style.RESET_ALL,
-                        ": variable",
-                        var.name,
-                        "expected to be of type",
-                        type(self.params[1]).__name__
-                        if type(self.params[1]).__name__ != "list"
-                        else "vector",
-                        "but it is",
-                        var.var_type,
-                        "instead\n",
-                    )
-            else:
+            if not var:
                 print("### semantic error ###\nvariable has not been declared yet")
+                return
+            else:
+                if type(var_value).__name__ != var.var_type:
+                    print(
+                        f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                        f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} "
+                        f"function {Fore.YELLOW}{function_name}{Style.RESET_ALL}: "
+                        f"variable {var.name} expected to be of type "
+                        f"{'vector' if type(var_value).__name__ == 'list' else type(var_value).__name__} "
+                        f"but it is {var.var_type} instead\n"
+                    )
+                    return
 
-        # ID TYPE expr
+                var.is_assigned_value = True
+                var.assign_value(var_value)
+                result = var.value
+
         elif self.action == "declare_assign":
-            if type(self.params[2]).__name__ == self.params[1]:
-                symbol = SymbolTable(
-                    self.params[0],
-                    self.params[1],
-                    False,
-                    False,
-                    True if isinstance(self.params[2], (list)) else False,
-                    0,
+            var_name, var_type, var_value = (
+                self.params[0],
+                self.params[1],
+                self.params[2],
+            )
+
+            if type(var_value).__name__ == var_type:
+                declare_assign_symbol = SymbolTable(
+                    name=var_name,
+                    var_type=var_type,
+                    is_function=False,
+                    is_argumman=False,
+                    is_array=True if isinstance(var_value, (list)) else False,
+                    num_params=0,
                 )
 
-                symbol.is_assigned_value = True
-                symbol.assign_value(self.params[2])
+                declare_assign_symbol.is_assigned_value = True
+                declare_assign_symbol.assign_value(var_value)
 
-                idenInfo[self.params[0]] = symbol
-                result = idenInfo[self.params[0]].value
+                idenInfo[var_name] = declare_assign_symbol
+                result = idenInfo[var_name].value
 
             else:
                 print(
                     "### semantic error ###\nvariable",
-                    self.params[0],
+                    var_name,
                     "should assign",
-                    self.params[1],
+                    var_type,
                     "but given",
-                    type(self.params[2]).__name__,
+                    type(var_value).__name__,
                 )
 
         elif self.action == "print":
