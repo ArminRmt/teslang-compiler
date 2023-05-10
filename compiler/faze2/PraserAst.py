@@ -37,6 +37,22 @@ class PraserAst:
     def execute(self):
         result = None
 
+        def find_symbol(is_what, func_name):
+            if is_what == "is_function":
+                functions = {f.name: f for f in idenInfo.values() if f.is_function}
+            elif is_what == "is_array":
+                functions = {f.name: f for f in idenInfo.values() if f.is_array}
+            else:
+                functions = {
+                    f.name: f
+                    for f in idenInfo.values()
+                    if not f.is_function and not f.is_argumman
+                }
+
+            func = functions.get(func_name)
+
+            return func
+
         if self.action == "function":
             f_type, f_name, f_args, f_body = (
                 self.params[0],
@@ -46,9 +62,10 @@ class PraserAst:
             )
 
             if f_name in idenInfo.keys():
-                print("### Semantic Error ###")
-                print("function", f_name, "already exist!\n")
-
+                error_message = (
+                    f"### Semantic Error ###\nFunction '{f_name}' already exists!\n"
+                )
+                print(error_message)
             else:
                 function_symbol = SymbolTable(
                     name=f_name,
@@ -212,19 +229,18 @@ class PraserAst:
 
             if not var:
                 print("### semantic error ###\nvariable has not been declared yet")
-                return
-            else:
-                if type(var_value).__name__ != var.var_type:
-                    print(
-                        f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
-                        f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} "
-                        f"function {Fore.YELLOW}{function_name}{Style.RESET_ALL}: "
-                        f"variable {var.name} expected to be of type "
-                        f"{'vector' if type(var_value).__name__ == 'list' else type(var_value).__name__} "
-                        f"but it is {var.var_type} instead\n"
-                    )
-                    return
 
+            if type(var_value).__name__ != var.var_type:
+                print(
+                    f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                    f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} "
+                    f"function {Fore.YELLOW}{function_name}{Style.RESET_ALL}: "
+                    f"variable {var.name} expected to be of type "
+                    f"{'vector' if type(var_value).__name__ == 'list' else type(var_value).__name__} "
+                    f"but it is {var.var_type} instead\n"
+                )
+
+            else:
                 var.is_assigned_value = True
                 var.assign_value(var_value)
                 result = var.value
@@ -236,7 +252,17 @@ class PraserAst:
                 self.params[2],
             )
 
-            if type(var_value).__name__ == var_type:
+            if type(var_value).__name__ != var_type:
+                print(
+                    "### semantic error ###\nvariable",
+                    var_name,
+                    "should assign",
+                    var_type,
+                    "but given",
+                    type(var_value).__name__,
+                )
+
+            else:
                 declare_assign_symbol = SymbolTable(
                     name=var_name,
                     var_type=var_type,
@@ -252,16 +278,6 @@ class PraserAst:
                 idenInfo[var_name] = declare_assign_symbol
                 result = idenInfo[var_name].value
 
-            else:
-                print(
-                    "### semantic error ###\nvariable",
-                    var_name,
-                    "should assign",
-                    var_type,
-                    "but given",
-                    type(var_value).__name__,
-                )
-
         elif self.action == "print":
             print(" ".join(str(x) for x in list(self.params)))
 
@@ -270,216 +286,169 @@ class PraserAst:
 
         # ID expr expr
         elif self.action == "list_assignment":
-            if self.params[0] in idenInfo:
-                if idenInfo[self.params[0]].is_array:
-                    for x in idenInfo:
-                        if idenInfo[x].is_array and idenInfo[x].name == self.params[0]:
-                            idenInfo[self.params[0]].value[
-                                self.params[1]
-                            ] = self.params[2]
-                else:
-                    print(
-                        Fore.RED
-                        + "### semantic error ###"
-                        + Style.RESET_ALL
-                        + "\n"
-                        + Fore.GREEN
-                        + "Line:",
-                        self.params[3],
-                        Style.RESET_ALL,
-                        "variable",
-                        self.params[0],
-                        "is not an array\n",
-                    )
-            else:
+            array_name, index, value, return_line = (
+                self.params[0],
+                self.params[1],
+                self.params[2],
+                self.params[3],
+            )
+
+            if array_name not in idenInfo:
                 print("### semantic error ###\nvariable has not been declared yet")
+
+            if not idenInfo[array_name].is_array:
+                error_message = (
+                    f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                    f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} "
+                    f"Variable '{array_name}' is not an array\n"
+                )
+                print(error_message)
+
+            else:
+                for x in idenInfo:
+                    if idenInfo[x].is_array and idenInfo[x].name == array_name:
+                        idenInfo[array_name].value[index] = value
+                        break
 
         # expr[expr]
         elif self.action == "ArrayIndex":
-            if self.params[0] in idenInfo:
-                if idenInfo[self.params[0]].is_array:
-                    for x in idenInfo:
-                        if idenInfo[x].is_array and idenInfo[x].name == self.params[0]:
-                            result = idenInfo[x].value[self.params[1]]
-                            break
+            array_name, index, return_line = (
+                self.params[0],
+                self.params[1],
+                self.params[2],
+            )
 
-        # expr
+            if array_name not in idenInfo:
+                print("### semantic error ###\nvariable has not been declared yet")
+
+            if not idenInfo[array_name].is_array:
+                error_message = (
+                    f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                    f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} "
+                    f"Variable '{array_name}' is not an array\n"
+                )
+                print(error_message)
+
+            else:
+                for x in idenInfo:
+                    if idenInfo[x].is_array and idenInfo[x].name == array_name:
+                        result = idenInfo[x].value[index]
+                        break
+
         elif self.action == "builtin_list":
-            res = []
-            for i in range(self.params[0]):
-                res.append(None)
+            list_length = self.params[0]
+            result = [None for _ in range(list_length)]
 
-            result = res
-
-            # restult = list(range(int(self.params[0])))
-
-        ##################################################################
-        # clist
-        elif self.action == "ListNode":
-            res = []
-            for n in self.params[0]:
-                res.append(n)
-
-            # idenInfo[self.params[0]].value = res
-            result = res
-        ##################################################################
+        elif self.action == "ListNode":  # what if sting also be in list near int
+            list_elements = self.params[0]
+            result = [int(e) for e in list_elements]
 
         # ID, clist, return_line
         elif self.action == "FunctionCall":
-            if not self.params[0] in idenInfo.keys():
-                print(
-                    "### semantic error ###\nNo such a function exist!",
-                )
+            func_name, func_args, return_line = (
+                self.params[0],
+                self.params[1],
+                self.params[2],
+            )
+
+            func = find_symbol("is_function", func_name)
+
+            if not func:
+                error_message = "### semantic error ###\nNo such a function exist!"
+                print(error_message)
+
             else:
-                for x in idenInfo:
-                    if idenInfo[x].is_function and idenInfo[x].name == self.params[0]:
-                        f = idenInfo[x]
-                # f = next((idenInfo[x] for x in idenInfo if callable(idenInfo[x]) and idenInfo[x].__name__ == self.params[0]), None)
-
-                # func_params = f.get_parameter()
-                # for x in func_params:
-                #     symbol = SymbolTable(
-                #         x,
-                #         type(x),
-                #         False,
-                #         True,
-                #         False,
-                #         0,
-                #     )
-                #     symbol.is_assigned_value = True
-                #     symbol.assign_value(x)
-                #     idenInfo[x] = symbol
-
                 # number of params wrong
-                if not f.num_params == len(self.params[1]):
-                    print(
-                        Fore.RED
-                        + "### semantic error ###"
-                        + Style.RESET_ALL
-                        + "\n"
-                        + Fore.GREEN
-                        + "Line:",
-                        self.params[2],
-                        Style.RESET_ALL,
-                        "functino:",
-                        Fore.YELLOW,
-                        f.name,
-                        Style.RESET_ALL,
-                        "expects",
-                        f.num_params,
-                        "arguments but got",
-                        len(self.params[1]),
-                        "\n",
+                if not func.num_params == len(func_args):
+                    error_message = (
+                        f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                        f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} Function: "
+                        f"{Fore.YELLOW}{func.name}{Style.RESET_ALL} expects {func.num_params} arguments "
+                        f"but got {len(func_args)}\n"
                     )
+                    print(error_message)
+
                 # params type has mistakes
-                param_type_list = f.param_type_list
-                # ['A', 'a']
-                for j_index, j in enumerate(self.params[1]):
+                param_type_list = func.param_type_list
+                for j_index, j in enumerate(func_args):
                     if isinstance(j, int):
                         if not type(j).__name__ in param_type_list:
-                            print(
-                                Fore.RED
-                                + "### semantic error ###"
-                                + Style.RESET_ALL
-                                + "\n"
-                                + Fore.GREEN
-                                + "Line:",
-                                self.params[2],
-                                Style.RESET_ALL,
-                                "function",
-                                Fore.YELLOW,
-                                f.name,
-                                Style.RESET_ALL,
-                                "expected",
-                                j,
-                                "to be of type of",
-                                param_type_list[j_index],
-                                "but it's given",
-                                idenInfo[j].var_type  # if varible with value is given
-                                if isinstance(j, int) == False
-                                and idenInfo[j].value is not None
-                                else "null"  # if varible without value is given
-                                if idenInfo[j].value is None
-                                else type(j).__name__,  # if numbe is given
-                            )
-                        # break
-                    else:
-                        for item in idenInfo:
+                            arg_value = None
                             if (
-                                j == idenInfo[item].name
-                                and not idenInfo[item].is_function
-                                and not idenInfo[item].is_argumman
-                                # and idenInfo[item].value is None
+                                isinstance(j, int) == False
+                                and idenInfo[j].value is not None
                             ):
-                                var = idenInfo[item]
-                                break
+                                arg_value = idenInfo[j].var_type
+                            elif idenInfo[j].value is None:
+                                arg_value = "null"
+                            else:
+                                arg_value = type(j).__name__
+
+                            error_message = (
+                                f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                                f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} Function: "
+                                f"{Fore.YELLOW}{func.name}{Style.RESET_ALL} expected argument {j} "
+                                f"to be of type {param_type_list[j_index]}, but it is {arg_value}\n"
+                            )
+
+                            print(error_message)
+
+                    else:
+                        var = find_symbol("noFunc_noArgs", j)
 
                         if var:
                             if (
                                 var.var_type != param_type_list[j_index]
                             ):  # vartype not in functon type parms
-                                print(
-                                    Fore.RED
-                                    + "### semantic error ###"
-                                    + Style.RESET_ALL
-                                    + "\n"
-                                    + Fore.GREEN
-                                    + "Line:",
-                                    self.params[2],
-                                    Style.RESET_ALL,
-                                    "function",
-                                    Fore.YELLOW,
-                                    f.name,
-                                    Style.RESET_ALL,
-                                    "expected",
-                                    j,
-                                    "to be of type of",
-                                    param_type_list[j_index],
-                                    "but it's given",
-                                    var.var_type  # if varible with value is given
-                                    if isinstance(j, int) == False
+                                arg_value = None
+                                if (
+                                    isinstance(j, int) == False
                                     and var.value is not None
-                                    else "null"  # if varible without value is given
-                                    if var.value is None
-                                    else type(j).__name__,  # if numbe is given
+                                ):
+                                    arg_value = var.var_type
+                                elif var.value is None:
+                                    arg_value = "null"
+                                else:
+                                    arg_value = type(j).__name__
+
+                                error_message = (
+                                    f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                                    f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} Function: "
+                                    f"{Fore.YELLOW}{func.name}{Style.RESET_ALL} expected argument {j} "
+                                    f"to be of type {param_type_list[j_index]}, but it is {arg_value}\n"
                                 )
-                                # break
+
+                                print(error_message)
+
                             if (
                                 var.value is None and var.is_array
                             ):  # call varible not have valible
-                                print(
-                                    Fore.RED
-                                    + "### semantic error ###"
-                                    + Style.RESET_ALL
-                                    + "\n"
-                                    + Fore.GREEN
-                                    + "Line:",
-                                    self.params[2],
-                                    Style.RESET_ALL,
-                                    "function",
-                                    Fore.YELLOW,
-                                    f.name,
-                                    Style.RESET_ALL,
-                                    j,
-                                    "is null",
+                                error_message = (
+                                    f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
+                                    f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} Function: "
+                                    f"{Fore.YELLOW}{func.name}{Style.RESET_ALL} {j} "
+                                    f"(value: null)\n"
                                 )
+
+                                print(error_message)
+
                         else:
                             print("variable doesn't have any value")
 
-                # f.name(self.params[1])
-
         elif self.action == "thearnaryOp":
-            result = self.params[1] if self.params[0] else self.params[2]
+            condition, expr, else_expr = (
+                self.params[0],
+                self.params[1],
+                self.params[2],
+            )
+            result = expr if condition else else_expr
 
         # elif self.action == "get":
         #     result = symbols.get(self.params[0], 0)
 
         elif self.action == "UnaryNot":
-            result = (
-                not self.params[0]
-                if isinstance(self.params[0], int)
-                else not idenInfo[self.params[0]].value
-            )
+            expr = self.params[0]
+            result = not expr if isinstance(expr, int) else not idenInfo[expr].value
 
         elif self.action == "logop":
             params = list(self.params)
@@ -535,34 +504,18 @@ class PraserAst:
                 debug("[BINOP]", a, op, b, result)
 
             else:
-                print(
-                    Fore.RED
-                    + "### semantic error ###"
-                    + Style.RESET_ALL
-                    + "\n"
-                    + Fore.GREEN
-                    + "Line:",
-                    self.return_line,
-                    Style.RESET_ALL,
-                    "functoin",
-                    Fore.YELLOW,
-                    "find",
-                    Style.RESET_ALL,
-                    ": Variables",
-                    [
-                        x
-                        for x in (self.params[0], self.params[2])
-                        if isinstance(x, int) == False
-                        and idenInfo[x].is_argumman == False
-                        # if idenInfo[x].value is None
-                    ],
-                    "is used before being assigned.\n",
+                variables = [
+                    x
+                    for x in (self.params[0], self.params[2])
+                    if not isinstance(x, int) and not idenInfo[x].is_argumman
+                ]
+                error_message = (
+                    f"{Fore.RED}### Semantic Error ###{Style.RESET_ALL}\n"
+                    f"{Fore.GREEN}Line: {self.return_line}{Style.RESET_ALL}"
+                    f"function {Fore.YELLOW}find{Style.RESET_ALL}"
+                    f": Variables {variables} are used before being assigned.\n"
                 )
-
-                # raise MyException("semantic error", self.params[1], "=")
-
-                # raise Exception(self.params[2], self.params[0])
-                # raise MyException("semantic error", "=", self.params[0])
+                print(error_message)
 
         debug("Resolving", str(self), result)
 
