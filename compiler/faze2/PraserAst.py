@@ -37,21 +37,33 @@ class PraserAst:
     def execute(self):
         result = None
 
-        def find_symbol(is_what, func_name):
+        def find_symbol(is_what, name):
             if is_what == "is_function":
-                functions = {f.name: f for f in idenInfo.values() if f.is_function}
+                symbol = {f.name: f for f in idenInfo.values() if f.is_function}
             elif is_what == "is_array":
-                functions = {f.name: f for f in idenInfo.values() if f.is_array}
+                symbol = {f.name: f for f in idenInfo.values() if f.is_array}
+            elif is_what == "expr":
+                if isinstance(name, int):
+                    return name
+                else:
+                    symbol = {
+                        f.name: f
+                        for f in idenInfo.values()
+                        if not f.is_function and not f.is_argumman and not f.is_array
+                    }
+
+                    return symbol.get(name).value
+
             else:
-                functions = {
+                symbol = {
                     f.name: f
                     for f in idenInfo.values()
                     if not f.is_function and not f.is_argumman
                 }
 
-            func = functions.get(func_name)
+            res_symbol = symbol.get(name)
 
-            return func
+            return res_symbol
 
         if self.action == "function":
             f_type, f_name, f_args, f_body = (
@@ -252,6 +264,10 @@ class PraserAst:
                 self.params[2],
             )
 
+            var_type = (
+                "list" if var_type == "vector" else var_type
+            )  # when var_type is vector it should change to list
+
             if type(var_value).__name__ != var_type:
                 print(
                     "### semantic error ###\nvariable",
@@ -279,10 +295,23 @@ class PraserAst:
                 result = idenInfo[var_name].value
 
         elif self.action == "print":
-            print(" ".join(str(x) for x in list(self.params)))
+            expr = self.params[0]
+
+            node = find_symbol("expr", expr)
+
+            print(node)
 
         elif self.action == "builtin_length":
-            restult = len(self.params[0])
+            array = self.params[0]
+            node = find_symbol("is_array", array)
+
+            result = len(node.value)
+
+        elif self.action == "builtin_scan":
+            # result = input("testing scan enter s.th\n")
+            x = input("testing scan enter s.th\n")
+            # result = x
+            print(x)
 
         # ID expr expr
         elif self.action == "list_assignment":
@@ -305,10 +334,13 @@ class PraserAst:
                 print(error_message)
 
             else:
-                for x in idenInfo:
-                    if idenInfo[x].is_array and idenInfo[x].name == array_name:
-                        idenInfo[array_name].value[index] = value
-                        break
+                # for x in idenInfo:
+                #     if idenInfo[x].is_array and idenInfo[x].name == array_name:
+                #         idenInfo[array_name].value[index] = value
+                #         break
+
+                array_node = find_symbol("is_array", array_name)
+                array_node.value[index] = value
 
         # expr[expr]
         elif self.action == "ArrayIndex":
@@ -330,10 +362,8 @@ class PraserAst:
                 print(error_message)
 
             else:
-                for x in idenInfo:
-                    if idenInfo[x].is_array and idenInfo[x].name == array_name:
-                        result = idenInfo[x].value[index]
-                        break
+                array_node = find_symbol("is_array", array_name)
+                array_node.value[index] = value
 
         elif self.action == "builtin_list":
             list_length = self.params[0]

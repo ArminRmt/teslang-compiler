@@ -1,14 +1,14 @@
 class SymbolTable:
     def __init__(
         self,
-        name,
-        var_type,
-        is_function,
-        is_argumman,
-        is_array,
-        num_params,
-        is_assigned_value=False,
-        is_defined_symbol=True,
+        name: str,
+        var_type: str,
+        is_function: bool,
+        is_argumman: bool,
+        is_array: bool,
+        num_params: int = 0,
+        is_assigned_value: bool = False,
+        is_defined_symbol: bool = True,
     ):
         self.name = name
         self.var_type = var_type

@@ -46,6 +46,20 @@ def int res(int a) {
 }
 
 
+def int main() {
+    var int a = 2;
+    var int b = 1;
+
+    print(a - b);
+}
+
+
+def int main() {
+    var vector a = [1, 2, 3, 4, 5];
+
+    print(length(a));
+}
+
 
 
 

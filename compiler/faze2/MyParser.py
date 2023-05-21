@@ -273,7 +273,13 @@ def p_builtin_methods(p):
     """
     if p[1] == "list":
         p[0] = PraserAst(action="builtin_list", params=[p[3]]).execute()
-
+    elif p[1] == "print":
+        p[0] = PraserAst(action="print", params=[p[3]]).execute()
+    elif p[1] == "length":
+        array = p[3]
+        p[0] = PraserAst(action="builtin_length", params=[array]).execute()
+    elif p[1] == "scan":
+        p[0] = PraserAst(action="builtin_scan").execute()
     # cases = {
     #     # "length": PraserAst(action="builtin_length", params=[p[3]]).execute(),
     #     # "scan": input(),
