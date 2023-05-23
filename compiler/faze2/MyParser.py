@@ -279,7 +279,7 @@ def p_builtin_methods(p):
         array = p[3]
         p[0] = PraserAst(action="builtin_length", params=[array]).execute()
     elif p[1] == "scan":
-        p[0] = PraserAst(action="builtin_scan").execute()
+        p[0] = int(input("testing scan enter s.th\n"))
     # cases = {
     #     # "length": PraserAst(action="builtin_length", params=[p[3]]).execute(),
     #     # "scan": input(),

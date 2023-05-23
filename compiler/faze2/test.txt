@@ -2,5 +2,4 @@
 def int main() {
 
     var int a = scan();
-    print(a)
 }

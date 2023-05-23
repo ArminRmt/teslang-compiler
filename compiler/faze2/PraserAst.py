@@ -307,11 +307,9 @@ class PraserAst:
 
             result = len(node.value)
 
-        elif self.action == "builtin_scan":
-            # result = input("testing scan enter s.th\n")
-            x = input("testing scan enter s.th\n")
-            # result = x
-            print(x)
+        # elif self.action == "builtin_scan":
+        #     x = int(input("testing scan enter s.th\n"))
+        #     result = x
 
         # ID expr expr
         elif self.action == "list_assignment":
