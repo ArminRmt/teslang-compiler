@@ -160,7 +160,7 @@ def p_expr(p):
     """expr : expr QUESTIONMARK expr COLON expr
     | ID LPAREN clist RPAREN
     | ID LBLOCK expr RBLOCK ASSIGN expr
-    | expr LBLOCK expr RBLOCK
+    | ID LBLOCK expr RBLOCK
     | LBLOCK clist RBLOCK
     | expr ADD expr
     | expr SUB expr
@@ -185,7 +185,7 @@ def p_expr(p):
     | builtin_methods
     """
 
-    if len(p) == 2:  # INT | STRING | ID | builtin_methods
+    if len(p) == 2:  # INT | STRING | ID | VECTOR | builtin_methods
         p[0] = p[1]
 
     elif len(p) == 3:  # | NOT expr | SUB expr | ADD expr
@@ -218,7 +218,6 @@ def p_expr(p):
             p[0] = PraserAst(
                 action="binop", params=p[1:], return_line=return_line
             ).execute()
-            # PraserAst(action="binop2", params=[p[0], p[2], p.stack]).execute()
 
     elif len(p) == 5:
         if p[2] == "(":  # ID LPAREN clist RPAREN
@@ -228,9 +227,11 @@ def p_expr(p):
             ).execute()
             p[0] = [p[i] for i in range(1, 5)]
 
-        else:  # expr LBLOCK expr RBLOCK            list index
-            p_array, p_index, return_line = p[1], p[3]
-            p[0] = PraserAst(action="ArrayIndex", params=[p_array, p_index]).execute()
+        else:  # ID LBLOCK expr RBLOCK            list index
+            p_array, p_index, return_line = p[1], p[3], p.slice[1].lineno - 11
+            p[0] = PraserAst(
+                action="ArrayIndex", params=[p_array, p_index, return_line]
+            ).execute()
 
     elif len(p) == 6:  # expr QUESTIONMARK expr COLON expr
         p_cond, p_expr, p_else_expr = p[1], p[3], p[5]
@@ -297,3 +298,24 @@ def p_error(tok):
             f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {find_column(tok)}",
             end="",
         )
+
+
+# parser = None
+
+
+# def p_error(tok):
+#     global parser
+
+#     if tok is None:
+#         print("Unexpected EOF")
+#         parser.errok()
+
+#     else:
+#         print(f"Invalid token {tok.value} at line {tok.lineno}")
+#         parser.errok()
+#         while True:
+#             tok = parser.token()
+#             if tok and tok.type == "MY_SYNC_TOKEN":
+#                 print(f"Found synchronizing token {tok.value}")
+#                 break
+#     parser.restart()

@@ -3,6 +3,7 @@ import ply.yacc as yacc
 import MyParser
 import Mylexer
 
+# from MyParser import p_error
 
 if __name__ == "__main__":
     with open("test.txt", "r") as f:
@@ -15,7 +16,11 @@ if __name__ == "__main__":
 
         ###########   faze 2    ###########
         parser = yacc.yacc(module=MyParser)
+        parser.errok()
         try:
             parser.parse(lexer=lexer)
+
         except Exception as e:
             print(e)
+
+        MyParser.parser = parser

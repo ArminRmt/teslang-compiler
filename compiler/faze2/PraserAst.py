@@ -190,10 +190,12 @@ class PraserAst:
 
             idenInfo[loop_variable_name] = for_symbol
 
-            loop_index = loop_start
-            while loop_index < loop_end:
+            while loop_start < loop_end:
                 result = loop_body
-                loop_index += 1
+                loop_start += 1
+
+            # for i in range(loop_start, loop_end):
+            #     result = loop_body
 
         elif self.action == "declare":
             var_name, var_type = (
@@ -304,7 +306,11 @@ class PraserAst:
         elif self.action == "builtin_length":
             array = self.params[0]
             node = find_symbol("is_array", array)
-            result = len(node.value)
+            result = int(len(node.value))
+
+        elif self.action == "builtin_list":
+            list_length = self.params[0]
+            result = [None for _ in range(list_length)]
 
         # elif self.action == "builtin_scan":
         #     x = int(input("testing scan enter s.th\n"))
@@ -360,11 +366,8 @@ class PraserAst:
 
             else:
                 array_node = find_symbol("is_array", array_name)
-                array_node.value[index] = value
-
-        elif self.action == "builtin_list":
-            list_length = self.params[0]
-            result = [None for _ in range(list_length)]
+                # print(array_node)
+                result = array_node.value[index]
 
         elif self.action == "ListNode":  # what if sting also be in list near int
             list_elements = self.params[0]
