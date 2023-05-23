@@ -304,7 +304,6 @@ class PraserAst:
         elif self.action == "builtin_length":
             array = self.params[0]
             node = find_symbol("is_array", array)
-
             result = len(node.value)
 
         # elif self.action == "builtin_scan":

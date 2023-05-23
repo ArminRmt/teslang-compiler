@@ -1,6 +1,7 @@
 import Mylexer
 from PraserAst import *
 from Mylexer import find_column
+import sys
 
 
 funcNames = ["scan", "print", "list", "length", "exit"]
@@ -280,15 +281,10 @@ def p_builtin_methods(p):
         p[0] = PraserAst(action="builtin_length", params=[array]).execute()
     elif p[1] == "scan":
         p[0] = int(input("testing scan enter s.th\n"))
-    # cases = {
-    #     # "length": PraserAst(action="builtin_length", params=[p[3]]).execute(),
-    #     # "scan": input(),
-    #     # "print": PraserAst(action="print", params=[p[3]]).execute(),
-    #     "list": PraserAst(action="builtin_list", params=[p[3]]).execute(),
-    #     # "exit": sys.exit(int(p[3])),
-    # }
-
-    # p[0] = cases.get(p[1], None)  #  If the key is not found, None is returned.
+    elif p[1] == "exit":
+        return_code = p[3]
+        print("system exit code: " + str(return_code))
+        sys.exit(return_code)
 
 
 def p_error(tok):
