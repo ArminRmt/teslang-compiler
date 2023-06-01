@@ -53,6 +53,20 @@ def int main() {
     print(a - b);
 }
 
+def int main() {
+    var vector a = [1, 2, 3, 4, 5];
+    var int result = 0;
+    
+    for(i = 0 to length(a)) {
+      for(i = 0 to length(a)) {
+        result = result + a[i];
+        }
+    }
+
+}
+
+
+
 
 def int main() {
     var vector a = [1, 2, 3, 4, 5];
@@ -62,6 +76,17 @@ def int main() {
 
 
 
+def int main() {
+
+    var int a = 1;
+
+    def int res() {
+          var int a = 2;
+          print(a);
+    }
+
+   print(a);
+}
 
 def int find(vector A, int n) {
     var int k;

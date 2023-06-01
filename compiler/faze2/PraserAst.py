@@ -1,6 +1,7 @@
 DEBUG_MODE = False
 
 from SymbolTable import SymbolTable
+
 from ply.lex import LexToken
 from colorama import init
 
@@ -50,7 +51,10 @@ class PraserAst:
                         f.name: f
                         for f in idenInfo.values()
                         if not f.is_function and not f.is_argumman and not f.is_array
+                        # and f.scope == function_name
                     }
+
+                    # reversed_dict = dict(reversed(list(symbol.items())))
 
                     return symbol.get(name).value
 
@@ -193,6 +197,10 @@ class PraserAst:
             while loop_start < loop_end:
                 result = loop_body
                 loop_start += 1
+                # PraserAst(
+                #     action="for",
+                #     params=[loop_variable_name, loop_start, loop_end, result],
+                # ).execute()
 
             # for i in range(loop_start, loop_end):
             #     result = loop_body
@@ -260,11 +268,18 @@ class PraserAst:
                 result = var.value
 
         elif self.action == "declare_assign":
-            var_name, var_type, var_value = (
+            var_name, var_type, var_value, p_stack = (
                 self.params[0],
                 self.params[1],
                 self.params[2],
+                self.params[3],
             )
+
+            # [::-1] == .reverse() for finding function scope and dont get confliet wiht other scope
+            # for item in p_stack[::-1]:
+            #     if isinstance(item, LexToken) and item.type == "ID":
+            #         function_name = item.value
+            #         break
 
             var_type = (
                 "list" if var_type == "vector" else var_type
@@ -288,6 +303,7 @@ class PraserAst:
                     is_argumman=False,
                     is_array=True if isinstance(var_value, (list)) else False,
                     num_params=0,
+                    # scope=function_name,
                 )
 
                 declare_assign_symbol.is_assigned_value = True
@@ -297,10 +313,15 @@ class PraserAst:
                 result = idenInfo[var_name].value
 
         elif self.action == "print":
-            expr = self.params[0]
+            expr, p_stack = self.params[0], self.params[1]
+
+            # [::-1] == .reverse() for finding function scope and dont get confliet wiht other scope
+            # for item in p_stack[::-1]:
+            #     if isinstance(item, LexToken) and item.type == "ID":
+            #         function_name = item.value
+            #         break
 
             node = find_symbol("expr", expr)
-
             print(node)
 
         elif self.action == "builtin_length":
@@ -541,7 +562,7 @@ class PraserAst:
                 ]
                 error_message = (
                     f"{Fore.RED}### Semantic Error ###{Style.RESET_ALL}\n"
-                    f"{Fore.GREEN}Line: {self.return_line}{Style.RESET_ALL}"
+                    f"{Fore.GREEN}Line: {self.return_line}{Style.RESET_ALL} "
                     f"function {Fore.YELLOW}find{Style.RESET_ALL}"
                     f": Variables {variables} are used before being assigned.\n"
                 )

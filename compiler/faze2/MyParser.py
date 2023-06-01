@@ -29,6 +29,7 @@ def p_func(p):
     """
 
     f_type, f_name, f_args, f_body = p[2], p[3], p[5], p[8]
+
     p[0] = PraserAst(
         action="function", params=[f_type, f_name, f_args, f_body]
     ).execute()
@@ -114,7 +115,7 @@ def p_defvar(p):
     if len(p) == 6:
         p_expr = p[5]
         p[0] = PraserAst(
-            action="declare_assign", params=[p_name, p_type, p_expr]
+            action="declare_assign", params=[p_name, p_type, p_expr, p.stack]
         ).execute()
     else:
         p[0] = PraserAst(action="declare", params=[p_name, p_type]).execute()
@@ -276,7 +277,8 @@ def p_builtin_methods(p):
     if p[1] == "list":
         p[0] = PraserAst(action="builtin_list", params=[p[3]]).execute()
     elif p[1] == "print":
-        p[0] = PraserAst(action="print", params=[p[3]]).execute()
+        p_stack = p.stack
+        p[0] = PraserAst(action="print", params=[p[3], p_stack]).execute()
     elif p[1] == "length":
         array = p[3]
         p[0] = PraserAst(action="builtin_length", params=[array]).execute()
@@ -296,7 +298,7 @@ def p_error(tok):
         # Handle invalid token
         print(
             f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {find_column(tok)}",
-            end="",
+            end="\n\n",
         )
 
 
