@@ -1,2 +1,0 @@
-def int res(int c) return 5;
-res(8)

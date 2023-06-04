@@ -1,6 +1,0 @@
-func : def TYPE ID LPAREN flist RPAREN LBRACE body RBRACE | def TYPE ID LPAREN flist RPAREN RETURN expr SEMI
-stmt : expr SEMI | defvar SEMI | IF LPAREN expr RPAREN stmt | IF LPAREN expr RPAREN stmt ELSE stmt| WHILE LPAREN expr RPAREN stmt	| FOR LPAREN ID EQUAL expr TO expr RPAREN stmt | RETURN expr SEMI   | LBRACE body RBRACE  | func 
-defvar : VAR TYPE ID | VAR TYPE ID ASSIGN expr
-expr : expr LBLOCK expr RBLOCK | LBLOCK clist RBLOCK | expr QUESTIONMARK expr COLON expr | expr ADD expr | expr SUB expr | expr MULT expr | expr DIV expr	| expr MOD expr	| expr GREATER expr  | expr LESS expr	| expr EQUAL expr | expr GREATEREQ expr	 | expr LESSEQ expr	 | expr NOTEQUAL expr  | expr OR expr | expr AND expr  | NOT expr  | ADD expr | SUB expr | ID | ID ASSIGN expr | ID LPAREN clist RPAREN +| INT | STRING
-clist : empty | exp | expr COMMA clist
-flist : empty | ID COLON TYPE | ID COLON TYPE COMMA flist
