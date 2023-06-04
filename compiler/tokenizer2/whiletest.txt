@@ -1,4 +1,0 @@
-def int res(int c) {
-    int x = 2
-    while(x) print("salam ")
-}
