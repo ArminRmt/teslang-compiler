@@ -9,7 +9,7 @@ class SymbolTable:
         num_params: int = 0,
         is_assigned_value: bool = False,
         is_defined_symbol: bool = True,
-        # scope: str = None,
+        scope: int = 1,
     ):
         self.name = name
         self.var_type = var_type
@@ -22,7 +22,7 @@ class SymbolTable:
         self.param_list = []
         self.param_type_list = []
         self.value = None
-        # self.scope = scope
+        self.scope = scope
 
     def add_parameter(self, arguman_name):
         self.param_list.append(arguman_name)

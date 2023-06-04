@@ -82,8 +82,8 @@ def p_stmt(p):
 
 def p_if_statement(p):
     "if_statement : IF LPAREN expr RPAREN stmt"
-    p_expr, p_stmt = p[3], p[5]
-    p[0] = PraserAst(action="condition", params=[p_expr, p_stmt]).execute()
+    p_cond, p_stmt = p[3], p[5]
+    p[0] = PraserAst(action="condition", params=[p_cond, p_stmt]).execute()
 
 
 def p_ifelse_statement(p):
@@ -99,9 +99,22 @@ def p_while_statement(p):
 
 
 def p_for_statement(p):
-    "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt"
-    p_id, p_start, p_end, p_stmt = p[3], p[5], p[7], p[9]
-    p[0] = PraserAst(action="for", params=[p_id, p_start, p_end, p_stmt]).execute()
+    # "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt"
+    "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE"
+
+    loop_variable_name, loop_start, loop_end, loop_body = p[3], p[5], p[7], p[10]
+    # p[0] = PraserAst(action="for", params=[loop_variable_name, loop_start, loop_end, loop_body]).execute()
+    # while loop_start < loop_end:
+    #     result = loop_body
+    #     loop_start += 1
+
+    # for i in range(0, 2):
+    #     loop_body
+    # result = exec(loop_body)
+
+    # p[0] = result
+
+    pass
 
 
 def p_defvar(p):
@@ -194,11 +207,11 @@ def p_expr(p):
 
         if p[1] == "-":
             p[0] = PraserAst(
-                action="binop", params=[-1, "*", p_expr, return_line]
+                action="binop", params=[-1, "*", p_expr, return_line], stack=p.stack
             ).execute()
         elif p[1] == "+":
             p[0] = PraserAst(
-                action="binop", params=[1, "*", p_expr, return_line]
+                action="binop", params=[1, "*", p_expr, return_line], stack=p.stack
             ).execute()
         else:
             p[0] = PraserAst(action="UnaryNot", params=[p_expr, return_line]).execute()
@@ -216,17 +229,19 @@ def p_expr(p):
             p[0] = PraserAst(action="ListNode", params=[p[2]]).execute()
         else:
             return_line = p.lineno(2) - 2
+
             p[0] = PraserAst(
-                action="binop", params=p[1:], return_line=return_line
+                action="binop", params=p[1:], return_line=return_line, stack=p.stack
             ).execute()
 
     elif len(p) == 5:
         if p[2] == "(":  # ID LPAREN clist RPAREN
             p_id, p_clist, return_line = p[1], p[3], p.slice[1].lineno - 11
-            PraserAst(
+
+            p[0] = PraserAst(
                 action="FunctionCall", params=[p_id, p_clist, return_line]
             ).execute()
-            p[0] = [p[i] for i in range(1, 5)]
+            # p[0] = [p[i] for i in range(1, 5)]
 
         else:  # ID LBLOCK expr RBLOCK            list index
             p_array, p_index, return_line = p[1], p[3], p.slice[1].lineno - 11

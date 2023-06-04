@@ -21,7 +21,7 @@ Rule 15    stmt -> func
 Rule 16    if_statement -> IF LPAREN expr RPAREN stmt
 Rule 17    ifelse_statement -> IF LPAREN expr RPAREN stmt ELSE stmt
 Rule 18    while_statement -> WHILE LPAREN expr RPAREN stmt
-Rule 19    for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt
+Rule 19    for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
 Rule 20    defvar -> VAR type ID
 Rule 21    defvar -> VAR type ID ASSIGN expr
 Rule 22    flist -> type ID
@@ -86,7 +86,7 @@ ID                   : 3 4 19 20 21 22 23 30 31 32 47 51
 IF                   : 16 17
 INT                  : 25 52
 LBLOCK               : 31 32 33
-LBRACE               : 3 14
+LBRACE               : 3 14 19
 LENGTH               : 59
 LESS                 : 40
 LESSEQ               : 43
@@ -101,7 +101,7 @@ OR                   : 45
 PRINT                : 61
 QUESTIONMARK         : 29
 RBLOCK               : 31 32 33
-RBRACE               : 3 14
+RBRACE               : 3 14 19
 RETURN               : 4 13
 RPAREN               : 3 4 16 17 18 19 30 59 60 61 62 63
 SCAN                 : 60
@@ -116,7 +116,7 @@ error                :
 
 Nonterminals, with rules where they appear
 
-body                 : 3 5 14
+body                 : 3 5 14 19
 builtin_methods      : 54
 clist                : 30 33 56
 defvar               : 8
@@ -128,7 +128,7 @@ func                 : 1 15
 if_statement         : 9
 ifelse_statement     : 10
 prog                 : 1 0
-stmt                 : 5 16 17 17 18 19
+stmt                 : 5 16 17 17 18
 type                 : 3 4 20 21 22 23
 while_statement      : 11
 
@@ -378,7 +378,7 @@ state 19
     (16) if_statement -> . IF LPAREN expr RPAREN stmt
     (17) ifelse_statement -> . IF LPAREN expr RPAREN stmt ELSE stmt
     (18) while_statement -> . WHILE LPAREN expr RPAREN stmt
-    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
     (3) func -> . DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     (4) func -> . DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     (59) builtin_methods -> . LENGTH LPAREN expr RPAREN
@@ -557,7 +557,7 @@ state 23
     (16) if_statement -> . IF LPAREN expr RPAREN stmt
     (17) ifelse_statement -> . IF LPAREN expr RPAREN stmt ELSE stmt
     (18) while_statement -> . WHILE LPAREN expr RPAREN stmt
-    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
     (3) func -> . DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     (4) func -> . DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     (59) builtin_methods -> . LENGTH LPAREN expr RPAREN
@@ -652,7 +652,7 @@ state 25
     (16) if_statement -> . IF LPAREN expr RPAREN stmt
     (17) ifelse_statement -> . IF LPAREN expr RPAREN stmt ELSE stmt
     (18) while_statement -> . WHILE LPAREN expr RPAREN stmt
-    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
     (3) func -> . DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     (4) func -> . DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     (59) builtin_methods -> . LENGTH LPAREN expr RPAREN
@@ -1251,7 +1251,7 @@ state 44
 
 state 45
 
-    (19) for_statement -> FOR . LPAREN ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> FOR . LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
 
     LPAREN          shift and go to state 84
 
@@ -2663,7 +2663,7 @@ state 83
 
 state 84
 
-    (19) for_statement -> FOR LPAREN . ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> FOR LPAREN . ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
 
     ID              shift and go to state 115
 
@@ -3976,7 +3976,7 @@ state 114
 
 state 115
 
-    (19) for_statement -> FOR LPAREN ID . ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> FOR LPAREN ID . ASSIGN expr TO expr RPAREN LBRACE body RBRACE
 
     ASSIGN          shift and go to state 128
 
@@ -4355,7 +4355,7 @@ state 126
     (16) if_statement -> . IF LPAREN expr RPAREN stmt
     (17) ifelse_statement -> . IF LPAREN expr RPAREN stmt ELSE stmt
     (18) while_statement -> . WHILE LPAREN expr RPAREN stmt
-    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
     (3) func -> . DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     (4) func -> . DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     (59) builtin_methods -> . LENGTH LPAREN expr RPAREN
@@ -4437,7 +4437,7 @@ state 127
     (16) if_statement -> . IF LPAREN expr RPAREN stmt
     (17) ifelse_statement -> . IF LPAREN expr RPAREN stmt ELSE stmt
     (18) while_statement -> . WHILE LPAREN expr RPAREN stmt
-    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
     (3) func -> . DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     (4) func -> . DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     (59) builtin_methods -> . LENGTH LPAREN expr RPAREN
@@ -4478,7 +4478,7 @@ state 127
 
 state 128
 
-    (19) for_statement -> FOR LPAREN ID ASSIGN . expr TO expr RPAREN stmt
+    (19) for_statement -> FOR LPAREN ID ASSIGN . expr TO expr RPAREN LBRACE body RBRACE
     (29) expr -> . expr QUESTIONMARK expr COLON expr
     (30) expr -> . ID LPAREN clist RPAREN
     (31) expr -> . ID LBLOCK expr RBLOCK ASSIGN expr
@@ -4846,7 +4846,7 @@ state 137
 
 state 138
 
-    (19) for_statement -> FOR LPAREN ID ASSIGN expr . TO expr RPAREN stmt
+    (19) for_statement -> FOR LPAREN ID ASSIGN expr . TO expr RPAREN LBRACE body RBRACE
     (29) expr -> expr . QUESTIONMARK expr COLON expr
     (34) expr -> expr . ADD expr
     (35) expr -> expr . SUB expr
@@ -4977,7 +4977,7 @@ state 140
     (16) if_statement -> . IF LPAREN expr RPAREN stmt
     (17) ifelse_statement -> . IF LPAREN expr RPAREN stmt ELSE stmt
     (18) while_statement -> . WHILE LPAREN expr RPAREN stmt
-    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
     (3) func -> . DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     (4) func -> . DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     (59) builtin_methods -> . LENGTH LPAREN expr RPAREN
@@ -5018,7 +5018,7 @@ state 140
 
 state 141
 
-    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO . expr RPAREN stmt
+    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO . expr RPAREN LBRACE body RBRACE
     (29) expr -> . expr QUESTIONMARK expr COLON expr
     (30) expr -> . ID LPAREN clist RPAREN
     (31) expr -> . ID LBLOCK expr RBLOCK ASSIGN expr
@@ -5096,7 +5096,7 @@ state 142
 
 state 143
 
-    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO expr . RPAREN stmt
+    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO expr . RPAREN LBRACE body RBRACE
     (29) expr -> expr . QUESTIONMARK expr COLON expr
     (34) expr -> expr . ADD expr
     (35) expr -> expr . SUB expr
@@ -5131,7 +5131,16 @@ state 143
 
 state 144
 
-    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN . stmt
+    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN . LBRACE body RBRACE
+
+    LBRACE          shift and go to state 145
+
+
+state 145
+
+    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE . body RBRACE
+    (5) body -> . stmt body
+    (6) body -> . empty
     (7) stmt -> . expr SEMI
     (8) stmt -> . defvar SEMI
     (9) stmt -> . if_statement
@@ -5141,6 +5150,7 @@ state 144
     (13) stmt -> . RETURN expr SEMI
     (14) stmt -> . LBRACE body RBRACE
     (15) stmt -> . func
+    (58) empty -> .
     (29) expr -> . expr QUESTIONMARK expr COLON expr
     (30) expr -> . ID LPAREN clist RPAREN
     (31) expr -> . ID LBLOCK expr RBLOCK ASSIGN expr
@@ -5172,7 +5182,7 @@ state 144
     (16) if_statement -> . IF LPAREN expr RPAREN stmt
     (17) ifelse_statement -> . IF LPAREN expr RPAREN stmt ELSE stmt
     (18) while_statement -> . WHILE LPAREN expr RPAREN stmt
-    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt
+    (19) for_statement -> . FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE
     (3) func -> . DEF type ID LPAREN flist RPAREN LBRACE body RBRACE
     (4) func -> . DEF type ID LPAREN flist RPAREN RETURN expr SEMI
     (59) builtin_methods -> . LENGTH LPAREN expr RPAREN
@@ -5183,6 +5193,7 @@ state 144
 
     RETURN          shift and go to state 33
     LBRACE          shift and go to state 23
+    RBRACE          reduce using rule 58 (empty -> .)
     ID              shift and go to state 22
     LBLOCK          shift and go to state 35
     NOT             shift and go to state 38
@@ -5202,7 +5213,9 @@ state 144
     EXIT            shift and go to state 50
 
     expr                           shift and go to state 27
-    stmt                           shift and go to state 145
+    body                           shift and go to state 146
+    stmt                           shift and go to state 25
+    empty                          shift and go to state 26
     defvar                         shift and go to state 28
     if_statement                   shift and go to state 29
     ifelse_statement               shift and go to state 30
@@ -5211,31 +5224,38 @@ state 144
     func                           shift and go to state 34
     builtin_methods                shift and go to state 41
 
-state 145
+state 146
 
-    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .
+    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body . RBRACE
 
-    RETURN          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    LBRACE          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    ID              reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    LBLOCK          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    NOT             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    ADD             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    SUB             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    INT             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    STRING          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    VAR             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    IF              reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    WHILE           reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    FOR             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    DEF             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    LENGTH          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    SCAN            reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    PRINT           reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    LIST            reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    EXIT            reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    RBRACE          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
-    ELSE            reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt .)
+    RBRACE          shift and go to state 147
+
+
+state 147
+
+    (19) for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .
+
+    RETURN          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    LBRACE          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    ID              reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    LBLOCK          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    NOT             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    ADD             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    SUB             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    INT             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    STRING          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    VAR             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    IF              reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    WHILE           reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    FOR             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    DEF             reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    LENGTH          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    SCAN            reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    PRINT           reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    LIST            reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    EXIT            reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    RBRACE          reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
+    ELSE            reduce using rule 19 (for_statement -> FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE .)
 
 WARNING: 
 WARNING: Conflicts:
