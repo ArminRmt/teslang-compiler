@@ -1,5 +1,4 @@
-DEBUG_MODE = False
-
+import re
 from SymbolTable import SymbolTable
 
 from ply.lex import LexToken
@@ -11,11 +10,6 @@ from colorama import Fore, Style, Back
 
 idenInfo = []
 return_call = []
-
-
-def debug(*params):
-    if DEBUG_MODE:
-        print("[DBG] %s" % (" : ".join(str(x) for x in params),))
 
 
 class MyException(Exception):
@@ -157,6 +151,8 @@ class PraserAst:
                     function_reutrn_type = item.value
                     break
 
+            what_function_reutrns = None
+
             if isinstance(p_expr, int):
                 what_function_reutrns = type(p_expr).__name__
             else:
@@ -179,6 +175,7 @@ class PraserAst:
                             f"function {Fore.YELLOW}{function_name}{Style.RESET_ALL} "
                             f"return varible ( {p_expr} ) doesn't have value\n"
                         )
+
                         print(error_message)
 
                     what_function_reutrns = symbol.var_type
@@ -232,6 +229,8 @@ class PraserAst:
             # )
 
             # idenInfo[loop_variable_name] = for_symbol
+            print()
+            # if loop_end.type()
 
             while loop_start < loop_end:
                 result = loop_body
@@ -242,9 +241,6 @@ class PraserAst:
                 self.params[0],
                 self.params[1],
             )
-            # type_list = ["str", "int", "null", "vector"]
-            # if self.params[1] not in type_list:
-            #     print("wrong type", "types must be one of the following", type_list)
 
             declare_symbol = SymbolTable(
                 name=var_name,
@@ -278,7 +274,7 @@ class PraserAst:
                     f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
                     f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} "
                     f"function {Fore.YELLOW}{function_name}{Style.RESET_ALL}: "
-                    f"variable {var.name} has not been declared yet \n"
+                    f"variable {var_name} has not been declared yet \n"
                 )
 
             else:
@@ -309,15 +305,12 @@ class PraserAst:
             # [::-1] == .reverse() for finding function scope and dont get confliet wiht other scope
             for item in p_stack[::-1]:
                 if isinstance(item, LexToken) and item.type == "ID":
-                    # function_name = item.value
                     count += 1
-                    # break
 
             var_type = (
                 "list" if var_type == "vector" else var_type
             )  # when var_type is vector it should change to list
 
-            # TODO we have error when function call happens, the return type is list
             if type(var_value).__name__ != var_type:
                 print(
                     "### semantic error ###\nvariable",
@@ -342,7 +335,6 @@ class PraserAst:
                 symbol.is_assigned_value = True
                 symbol.assign_value(var_value)
 
-                # idenInfo[var_name] = symbol
                 idenInfo.append(symbol)
 
                 result = var_value
@@ -350,34 +342,32 @@ class PraserAst:
         elif self.action == "print":
             expr, p_stack = self.params[0], self.params[1]
 
-            # [::-1] == .reverse() for finding function scope and dont get confliet wiht other scope
             count = 0
             # [::-1] == .reverse() for finding function scope and dont get confliet wiht other scope
             for item in p_stack[::-1]:
                 if isinstance(item, LexToken) and item.type == "ID":
-                    # function_name = item.value
                     count += 1
-                    # break
 
             node = find_symbol(expr, count)
 
             if isinstance(node, int):
-                print(node)
+                print(f"---   print built-in method printed {node}   ---\n")
+            elif node is not None:
+                print(f"---   print built-in method printed {node.value}   ---\n")
             else:
-                print(node.value)
+                print("---   print built-in method printed (None)   ---\n")
 
         elif self.action == "builtin_length":
             array = self.params[0]
             node = find_symbol(array, 0)
-            result = int(len(node.value))
+            if node:
+                result = int(len(node.value))
+            else:
+                print(f"{array} hasn't been declared")
 
         elif self.action == "builtin_list":
             list_length = self.params[0]
             result = [None for _ in range(list_length)]
-
-        # elif self.action == "builtin_scan":
-        #     x = int(input("testing scan enter s.th\n"))
-        #     result = x
 
         # ID expr expr
         elif self.action == "list_assignment":
@@ -450,9 +440,10 @@ class PraserAst:
 
             else:
                 # assigning function with acutally it returnes
-                func.is_assigned_value = True
-                func.assign_value(return_call[0][1])
-                return_call.pop()
+                if return_call:
+                    func.is_assigned_value = True
+                    func.assign_value(return_call[0][1])
+                    return_call.pop()
 
                 # number of params wrong
                 if not func.num_params == len(func_args):

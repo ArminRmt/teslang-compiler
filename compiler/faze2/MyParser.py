@@ -20,7 +20,6 @@ def p_prog(p):
     if len(p) == 3:
         p_func, p_prog = p[1], p[2]
         p[0] = [p_func, p_prog]
-        # p[0] = p[1:]
 
 
 def p_func(p):
@@ -99,22 +98,13 @@ def p_while_statement(p):
 
 
 def p_for_statement(p):
-    # "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt"
-    "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE"
+    "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt"
+    # "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE"
 
-    loop_variable_name, loop_start, loop_end, loop_body = p[3], p[5], p[7], p[10]
-    # p[0] = PraserAst(action="for", params=[loop_variable_name, loop_start, loop_end, loop_body]).execute()
-    # while loop_start < loop_end:
-    #     result = loop_body
-    #     loop_start += 1
-
-    # for i in range(0, 2):
-    #     loop_body
-    # result = exec(loop_body)
-
-    # p[0] = result
-
-    pass
+    loop_variable_name, loop_start, loop_end, loop_body = p[3], p[5], p[7], p[9]
+    p[0] = PraserAst(
+        action="for", params=[loop_variable_name, loop_start, loop_end, loop_body]
+    ).execute()
 
 
 def p_defvar(p):
@@ -134,6 +124,16 @@ def p_defvar(p):
         p[0] = PraserAst(action="declare", params=[p_name, p_type]).execute()
 
 
+def p_defvar_error(p):
+    """
+    defvar : VAR error ID
+           | VAR error ID ASSIGN expr
+    """
+    print(
+        f"\n### Syntax error ###\nUnknown type '{p[2].value}' for variable ( {p[3]} )\n"
+    )
+
+
 def p_flist(p):
     """
     flist : type ID
@@ -151,14 +151,6 @@ def p_flist(p):
         PraserAst(action="func_arguman", params=[p[2], p[1]]).execute()
 
 
-# def p_flist_error(p):
-#     """
-#     flist : error ID
-#     """
-#     valid_types = ['str', 'int', 'null', 'vector']
-#     print("grammer flist has error type should be in",valid_types)
-
-
 def p_type(p):
     """
     type : INT
@@ -167,7 +159,6 @@ def p_type(p):
          | STRING
     """
     p[0] = p[1]
-    # return p[1]
 
 
 def p_expr(p):

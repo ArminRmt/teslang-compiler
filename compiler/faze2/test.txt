@@ -1,11 +1,4 @@
-def int main() {
-
-    var int a = 1;
-
-    def int res() {
-          var int a = 2;
-          print(a);
-    }
-
-   print(a);
+def int main(int b, int c) {
+    a = 5;
+    
 }

@@ -201,3 +201,28 @@ def int main() {
 }
 
 
+comments
+
+def int main() {
+    # wieojfiewfjejwfowofijoiewjf
+}
+
+
+string
+
+def int main() {
+
+      var str c = "Hello, World!";
+      print(c);
+}
+
+
+not main function test
+
+def int res() {
+      var str c = "Hello, World!";
+}
+
+def int notmain() {
+      var str c = "Hello, World!";
+}
