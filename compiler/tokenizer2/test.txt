@@ -1,6 +1,0 @@
-def int res(int c) {
-    var int a = 5;
-    print(a);
-}
-
-def int main() return 2;
