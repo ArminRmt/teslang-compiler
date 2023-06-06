@@ -2,11 +2,11 @@
 Compiler Frontend  +  IR  Built  in Pythone
 
 # Design patterns           
-## **Singelton**  : with just one instance of CodeGenerator()              
-## **Composite**: Create tree like structure with Ast                     
-## **Visitor**: AstVisitor class exploar Object without changing it            
-## **Iterator**: Acess symbol table class objects one by one           
-## **Decorator**: Add new feature to existing symbolal-table Object in symbolal-table class              
+### **Singelton**  : with just one instance of CodeGenerator()              
+### **Composite**: Create tree like structure with Ast                     
+### **Visitor**: AstVisitor class exploar Object without changing it            
+### **Iterator**: Acess symbol table class objects one by one           
+### **Decorator**: Add new feature to existing symbolal-table Object in symbolal-table class              
 
 <br>        
 <br>        
