@@ -1,0 +1,13 @@
+proc main:
+mov r1, 10
+mov r2, 15
+mov r1, 10
+mov r2, 15
+cmp> r3, r1, r2
+mov r1, 10
+mov r2, 15
+cmp> r3, r1, r2
+label0:
+label1:
+ret
+

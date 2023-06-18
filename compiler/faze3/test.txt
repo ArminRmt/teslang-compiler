@@ -1,0 +1,12 @@
+
+def int main() {
+    var int x = 10;
+    var int y = 15;
+    if (x > y){
+        print("x: is greater than y");
+    }
+    print("x: is less than y");
+
+    return 0;
+}
+
