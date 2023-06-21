@@ -4,8 +4,6 @@ import MyParser
 import Mylexer
 import re
 
-# from MyParser import p_error
-
 
 def has_main_function(input_string):
     pattern = r"def\s+\w+\s+main\s*\(\s*\)"
@@ -28,7 +26,6 @@ if __name__ == "__main__":
 
         ###########   faze 2    ###########
         parser = yacc.yacc(module=MyParser)
-        # parser.errok()
         try:
             parser.parse(lexer=lexer)
         except Exception as e:

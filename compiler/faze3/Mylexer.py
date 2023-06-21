@@ -9,13 +9,6 @@ tokens = (
     # "INT",
     "SEMI",
     "ID",
-    # "COMMENT",
-    # "TYPE",
-    # "BUILTIN_METHODES",
-    # "SCAN",
-    # "LIST",
-    # "LENGTH",
-    # "EXIT",
 )
 
 reserved = {
@@ -23,7 +16,6 @@ reserved = {
     "else": "ELSE",
     "while": "WHILE",
     "list": "LIST",
-    # "in": "IN",
     "print": "PRINT",
     "scan": "SCAN",
     "length": "LENGTH",
@@ -37,7 +29,6 @@ reserved = {
     "str": "STRING",
     "int": "INT",
     "vector": "VECTOR",
-    # "main": "MAIN",
 }
 
 # List of single character literals
@@ -116,14 +107,9 @@ specials_sc_re = "[" + escape("".join(specials_sc.keys())) + "]"
 specials_mc_re = "(" + "|".join(escape(x) for x in specials_mc.keys()) + ")"
 
 
-# t_AND = r"\&\&"
-# t_OR = r"\|\|"
-
-
 def t_newline(t):
     r"\n+"
     t.lexer.lineno += t.value.count("\n")
-    # t.lexer.lineno += len(t.value)
 
 
 def find_column(token):
@@ -133,20 +119,7 @@ def find_column(token):
     return token.lexpos - last_cr
 
 
-# def t_TYPE(t):
-#     r"int|vector|str|null"
-#     t.type = reserved.get(t.value.lower())
-#     return t
-
-
-# def t_BUILTIN_METHODES(t):
-#     # r"scan|print|list|length|exit"
-#     r"scan()|print([a-zA-Z_][a-zA-Z_0-9]*)|list()|length([a-zA-Z_][a-zA-Z_0-9])|exit(\d+)"
-#     return t
-
-
 def t_COMMENT(t):
-    # r'(\\\\(.|\n)*?\\\\)'
     r"\#.*"
     # print(t.value + 'ignored')
     pass
@@ -198,7 +171,7 @@ def t_string_newline(t):
 
 def t_string_end(t):
     r"[\"\']"
-
+    # If the current string marker matches the end character, set the token type to "STRING", extract the string value and switch back to the initial state
     if t.lexer.str_marker == t.value:
         t.type = "STRING"
         t.value = t.lexer.lexdata[t.lexer.str_start : t.lexer.lexpos - 1]

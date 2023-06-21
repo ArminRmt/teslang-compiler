@@ -4,9 +4,6 @@ from Mylexer import find_column
 import sys
 
 
-funcNames = ["scan", "print", "list", "length", "exit"]
-
-# import some required globals from tokenizer
 tokens = Mylexer.tokens
 precedence = Mylexer.precedence
 
@@ -215,7 +212,7 @@ def p_expr(p):
             p[0] = AstVistor(
                 action="assign", params=[p_id, p_expr, p.stack, return_line]
             ).execute()
-            # _______________________ type should be expr type   ______________________________________________________________
+            # TODO type should be expr type
         elif p[1] == "[":  # LBLOCK clist RBLOCK    making list
             p[0] = AstVistor(action="ListNode", params=[p[2]]).execute()
         else:
@@ -307,24 +304,3 @@ def p_error(tok):
             f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {find_column(tok)}",
             end="\n\n",
         )
-
-
-# parser = None
-
-
-# def p_error(tok):
-#     global parser
-
-#     if tok is None:
-#         print("Unexpected EOF")
-#         parser.errok()
-
-#     else:
-#         print(f"Invalid token {tok.value} at line {tok.lineno}")
-#         parser.errok()
-#         while True:
-#             tok = parser.token()
-#             if tok and tok.type == "MY_SYNC_TOKEN":
-#                 print(f"Found synchronizing token {tok.value}")
-#                 break
-#     parser.restart()

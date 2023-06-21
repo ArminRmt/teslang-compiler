@@ -1,4 +1,6 @@
 
+# assignment test
+
 def int find(vector A, int n) {
     var int k;
     var int j;
@@ -35,7 +37,7 @@ def int main() {
 
 
 
-while loop
+# while loop
 
 def int res(int c) {
     int x = 2
@@ -43,7 +45,7 @@ def int res(int c) {
 }
 
 
-logical operator
+# logical operator
 
 def int res(int a) {
     b = 2 > 1;
@@ -54,7 +56,7 @@ def int res(int a) {
 
 
 
-nested for loop
+# snested for loop
 
 def int main() {
     var vector a = [1, 2, 3, 4, 5];
@@ -71,7 +73,7 @@ def int main() {
 
 
 
-built in length
+# built in length
 
 def int main() {
     var vector a = [1, 2, 3, 4, 5];
@@ -80,7 +82,7 @@ def int main() {
 }
 
 
-Scope
+# Scope
 
 def int main() {
 
@@ -98,7 +100,7 @@ def int main() {
 
 
 
-it shouldnt run what is inside the function
+# it shouldnt run what is inside the function
 
 def int res() {
     var int a = 1;
@@ -111,7 +113,7 @@ def int res() {
 
 
 
-func argumans
+# func argumans
 
 def int res(int b, int c) {
     var int a = 1;
@@ -119,7 +121,7 @@ def int res(int b, int c) {
 }
 
 
-return type
+# return type
 
 def str main(int b, int c) {
     var int a = 1;
@@ -130,7 +132,7 @@ def str main(int b, int c) {
 
 
 
-For loop
+# For loop
 
 def int main(int b, int c) {
     var int a = 1;
@@ -145,7 +147,7 @@ def int main(int b, int c) {
 
 
 
-assign varible
+# assign varible
 
 def int main(int b, int c) {
     var int a;
@@ -156,7 +158,7 @@ def int main(int b, int c) {
 
 
 
-list 
+# list 
 
 def int main(int b, int c) {
     var vector a = [1,2,3];
@@ -169,7 +171,7 @@ def int main(int b, int c) {
 
 
 
-functoin call
+# functoin call
 
 def int res(int b, int c) {
       var int a = 5;
@@ -182,7 +184,7 @@ def int main() {
 
 
 
-UnaryNot
+# UnaryNot
 
 def int main() {
     b = !1;
@@ -191,7 +193,7 @@ def int main() {
 
 
 
-unarry operation
+# unarry operation
 
 def int main() {
       var int a = 8;
@@ -201,14 +203,14 @@ def int main() {
 }
 
 
-comments
+# comments
 
 def int main() {
     # wieojfiewfjejwfowofijoiewjf
 }
 
 
-string
+# string
 
 def int main() {
 
@@ -231,7 +233,12 @@ def int notmain() {
 
 
 
+# intermidate code
 
+
+
+
+# main test
 
 def int adder(int a, int b) {
     var int aa = 1;
@@ -247,4 +254,20 @@ def int main() {
     var int pp = adder(a1,a2);
     return 0;
 }
+
+
+
+
+# while
+
+def int main() {
+    var int x = 5;
+
+    while(x < 7) {
+        x = x + 1;
+    }
+    return 0;
+}
+
+
 

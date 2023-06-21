@@ -1,4 +1,9 @@
-def int main(int b, int c) {
-    a = 5;
-    
+
+
+def int find() {
+      var str c = "Hello, World!";
+}
+
+def int main() {
+      res();
 }

@@ -6,7 +6,6 @@ import sys
 
 funcNames = ["scan", "print", "list", "length", "exit"]
 
-# import some required globals from tokenizer
 tokens = Mylexer.tokens
 precedence = Mylexer.precedence
 
@@ -99,7 +98,6 @@ def p_while_statement(p):
 
 def p_for_statement(p):
     "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN stmt"
-    # "for_statement : FOR LPAREN ID ASSIGN expr TO expr RPAREN LBRACE body RBRACE"
 
     loop_variable_name, loop_start, loop_end, loop_body = p[3], p[5], p[7], p[9]
     p[0] = PraserAst(
@@ -215,7 +213,7 @@ def p_expr(p):
             p[0] = PraserAst(
                 action="assign", params=[p_id, p_expr, p.stack, return_line]
             ).execute()
-            # _______________________ type should be expr type   ______________________________________________________________
+
         elif p[1] == "[":  # LBLOCK clist RBLOCK    making list
             p[0] = PraserAst(action="ListNode", params=[p[2]]).execute()
         else:
@@ -232,7 +230,6 @@ def p_expr(p):
             p[0] = PraserAst(
                 action="FunctionCall", params=[p_id, p_clist, return_line]
             ).execute()
-            # p[0] = [p[i] for i in range(1, 5)]
 
         else:  # ID LBLOCK expr RBLOCK            list index
             p_array, p_index, return_line = p[1], p[3], p.slice[1].lineno - 11
@@ -306,24 +303,3 @@ def p_error(tok):
             f"\nunexpected token ({tok.value}) at line {tok.lineno}, column {find_column(tok)}",
             end="\n\n",
         )
-
-
-# parser = None
-
-
-# def p_error(tok):
-#     global parser
-
-#     if tok is None:
-#         print("Unexpected EOF")
-#         parser.errok()
-
-#     else:
-#         print(f"Invalid token {tok.value} at line {tok.lineno}")
-#         parser.errok()
-#         while True:
-#             tok = parser.token()
-#             if tok and tok.type == "MY_SYNC_TOKEN":
-#                 print(f"Found synchronizing token {tok.value}")
-#                 break
-#     parser.restart()

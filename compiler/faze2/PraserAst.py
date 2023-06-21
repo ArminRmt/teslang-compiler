@@ -12,15 +12,6 @@ idenInfo = []
 return_call = []
 
 
-class MyException(Exception):
-    def __init__(self, message, res, followed_string):
-        self.message = message
-        self.followed_string = followed_string
-        self.res = res
-        super().__init__(message)
-        # raise MyException("semantic error", , self.params[1])
-
-
 class PraserAst:
     action = None
     params = None
@@ -83,7 +74,6 @@ class PraserAst:
             if functoin_name:
                 flag = True
 
-            # TODO: it shouldnt run what is inside the function
             if flag:
                 error_message = (
                     f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
@@ -190,7 +180,7 @@ class PraserAst:
                 )
                 print(error_message)
 
-            else:  # storing function return values, later used to update value field of function
+            else:
                 return_var = find_symbol(p_expr, 1)
                 if return_var is not None:
                     if isinstance(return_var, int):
@@ -219,19 +209,6 @@ class PraserAst:
                 self.params[3],
             )
 
-            # for_symbol = SymbolTable(
-            #     name=loop_variable_name,
-            #     var_type=None,
-            #     is_function=False,
-            #     is_argumman=False,
-            #     is_array=False,
-            #     num_params=0,
-            # )
-
-            # idenInfo[loop_variable_name] = for_symbol
-            print()
-            # if loop_end.type()
-
             while loop_start < loop_end:
                 result = loop_body
                 loop_start += 1
@@ -253,7 +230,7 @@ class PraserAst:
 
             idenInfo.append(declare_symbol)
 
-        elif self.action == "assign":  # identifire declared, now want to get value
+        elif self.action == "assign":
             var_name, value_to_assign, parsing_stack, return_line = (
                 self.params[0],
                 self.params[1],
@@ -261,7 +238,6 @@ class PraserAst:
                 self.params[3],
             )
 
-            # find function name from stack
             for item in parsing_stack:
                 if isinstance(item, LexToken) and item.type == "ID":
                     function_name = item.value
@@ -302,14 +278,11 @@ class PraserAst:
             )
 
             count = 0
-            # [::-1] == .reverse() for finding function scope and dont get confliet wiht other scope
             for item in p_stack[::-1]:
                 if isinstance(item, LexToken) and item.type == "ID":
                     count += 1
 
-            var_type = (
-                "list" if var_type == "vector" else var_type
-            )  # when var_type is vector it should change to list
+            var_type = "list" if var_type == "vector" else var_type
 
             if type(var_value).__name__ != var_type:
                 print(
@@ -343,7 +316,6 @@ class PraserAst:
             expr, p_stack = self.params[0], self.params[1]
 
             count = 0
-            # [::-1] == .reverse() for finding function scope and dont get confliet wiht other scope
             for item in p_stack[::-1]:
                 if isinstance(item, LexToken) and item.type == "ID":
                     count += 1
@@ -369,7 +341,6 @@ class PraserAst:
             list_length = self.params[0]
             result = [None for _ in range(list_length)]
 
-        # ID expr expr
         elif self.action == "list_assignment":
             array_name, index, value, return_line = (
                 self.params[0],
@@ -392,7 +363,6 @@ class PraserAst:
             else:
                 array_node.value[index] = value
 
-        # expr[expr]
         elif self.action == "ArrayIndex":
             array_name, index, return_line = (
                 self.params[0],
@@ -414,11 +384,10 @@ class PraserAst:
             else:
                 result = array_node.value[index]
 
-        elif self.action == "ListNode":  # what if sting also be in list near int
+        elif self.action == "ListNode":
             list_elements = self.params[0]
             result = [int(e) for e in list_elements]
 
-        # ID, clist, return_line
         elif self.action == "FunctionCall":
             func_name, func_args, return_line = (
                 self.params[0],
@@ -426,9 +395,7 @@ class PraserAst:
                 self.params[2],
             )
 
-            func = find_symbol(
-                func_name, 0
-            )  # 0 for finding in functino mehotd not expresstion
+            func = find_symbol(func_name, 0)
 
             if func is None:
                 error_message = (
@@ -439,13 +406,11 @@ class PraserAst:
                 print(error_message)
 
             else:
-                # assigning function with acutally it returnes
                 if return_call:
                     func.is_assigned_value = True
                     func.assign_value(return_call[0][1])
                     return_call.pop()
 
-                # number of params wrong
                 if not func.num_params == len(func_args):
                     error_message = (
                         f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
@@ -455,7 +420,6 @@ class PraserAst:
                     )
                     print(error_message)
 
-                # params type has mistakes
                 param_type_list = func.param_type_list
 
                 for j_index, j in enumerate(func_args):
@@ -481,9 +445,7 @@ class PraserAst:
 
                     else:
                         if var:
-                            if (
-                                var.var_type != param_type_list[j_index]
-                            ):  # vartype not in functon type parms
+                            if var.var_type != param_type_list[j_index]:
                                 arg_value = None
                                 if (
                                     isinstance(j, int) == False
@@ -504,9 +466,7 @@ class PraserAst:
 
                                 print(error_message)
 
-                            if (
-                                var.value is None and var.is_array
-                            ):  # call varible not have valible
+                            if var.value is None and var.is_array:
                                 error_message = (
                                     f"{Fore.RED}### semantic error ###{Style.RESET_ALL}\n"
                                     f"{Fore.GREEN}Line: {return_line}{Style.RESET_ALL} Function: "
@@ -518,8 +478,6 @@ class PraserAst:
 
                         else:
                             print("variable doesn't have any value")
-
-            # func(*func_args)
 
             result = func.value
 
@@ -535,7 +493,6 @@ class PraserAst:
         elif self.action == "UnaryNot":
             expr = self.params[0]
             var = find_symbol(expr, 0)
-            # result = not expr if isinstance(expr, int) else not var.value
             result = var.value if var else not expr
 
         elif self.action == "logop":
@@ -543,7 +500,7 @@ class PraserAst:
             result = params.pop()
             while len(params) >= 2:
                 prev = result
-                op = params.pop()  # operator ("&&" or "||")
+                op = params.pop()
                 comp = params.pop()
                 result = {
                     "&&": lambda a, b: (a and b),
@@ -553,7 +510,6 @@ class PraserAst:
                 ](prev, comp)
 
         elif self.action == "binop":
-            # finding varibles to be operated
             first_num = find_symbol(self.params[0], 1)
             second_num = find_symbol(self.params[2], 1)
 
@@ -573,7 +529,6 @@ class PraserAst:
                 else None
             )
 
-            # what is our operation
             op = self.params[1]
 
             for item in self.stack:
@@ -581,7 +536,6 @@ class PraserAst:
                     function_name = item.value
                     break
 
-            # and op in "+-*/%**><=" and type(a) == type(b) and type(a) in [int, float] and type(b) in [int, float]
             if a is not None and b is not None:
                 result = {
                     "+": lambda a, b: a + b,
@@ -599,7 +553,6 @@ class PraserAst:
                 }[op](a, b)
 
             else:
-                #  print varibles that used before being declared or wont even declared
                 variables = []
                 for x in (self.params[0], self.params[2]):
                     if not isinstance(x, int):
