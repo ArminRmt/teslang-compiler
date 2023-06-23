@@ -17,21 +17,37 @@
 - Semantic Analysis    
 - Code Generation    
 - Optimization   (register)
-- scope
+- scopes
 - error correction
 - forward referencing
+- solid principles notice carefully
+- comments (faze3)
+- built-in functions
+- interpreter support for debugging or making an entire interpreter in future
 
 <br>    
 
 ## faze 1,2
-
+Lexical Analysis and Parsing implemented
+this faze implemented well organized and maintainable but it is two pass compiler means small tricks for the different parts taken instead of parsing in and Performing semantic operations
 
 <br>    
 
-## faze 3
+## faze 3        
+
+Code Generation implemented based on my teacher doc and TSVM            
+you can find out about TSVM [here](https://github.com/aligrudi/tsvm/tree/master)
+ 
+notice: based on my limited time this faze was not implemented in an efficient way also optimization was not considered done but I entirely gave ideas to follow in TODO and comments in code for implementation of your own.      
 
 
-
+## Special thanks
+[my dear teacher](https://github.com/aligrudi)
+[Younes Nikbin](https://github.com/younes-nb)
+[AmirAli Fallahi]([https://github.com/aligrudi](https://github.com/amoorali))
+[Alireza Zahiri](https://github.com/alirezazahiri)
+[sajjadseifi]([https://github.com/aligrudi](https://github.com/sajjadseifi
+)https://github.com/sajjadseifi)
 
 
 
