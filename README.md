@@ -4,10 +4,10 @@ Teslang-compiler is a Python-based compiler that can generate intermediate code 
 <br> 
 
 ## Installation     
-clone project ```git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git```
+clone project ```git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git```                    
 install ply ```pip install ply``` s.th like this    
-for faze 2 add your test in test.txt file      
-for faze 3 add your test in IRtest.txt file remember to clear it every time you want to test     
+for Phase 2 add your test in test.txt file      
+for Phase 3 add your test in IRtest.txt file remember to clear it every time you want to test     
 run ```python3 main.py```      
 
 
