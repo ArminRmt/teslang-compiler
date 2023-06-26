@@ -63,7 +63,7 @@ Please note that due to limited time, Phase 3 was not implemented in an efficien
 [Younes Nikbin](https://github.com/younes-nb)     
 [AmirAli Fallahi](https://github.com/amoorali)     
 [Alireza Zahiri](https://github.com/alirezazahiri)    
-[Sajjad Seifi](https://github.com/sajjadseifihttps://github.com/sajjadseifi)     
+[Sajjad Seifi](https://github.com/sajjadseifi)     
 
 <br> 
 
