@@ -60,7 +60,6 @@ Please note that due to limited time, Phase 3 was not implemented in an efficien
 
 ## Special thanks     
 [**Ali Gholami Rudi**](https://github.com/aligrudi)    
-<br>   
 [Younes Nikbin](https://github.com/younes-nb)     
 [AmirAli Fallahi](https://github.com/amoorali)     
 [Alireza Zahiri](https://github.com/alirezazahiri)    
